@@ -19,7 +19,7 @@ let historyPos = 0;
 
 const input = document.querySelector('#input');
 
-const print = (str, isImg) => {
+const print = (str, isImg = false) => {
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
 
@@ -45,27 +45,59 @@ const applyInput = (e) => {
   history.push(val);
   historyPos = history.length;
 
+  const exec = (cmd) => {
+    if (cmd) {
+      cmd()
+    } else {
+      print('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
+    }
+  };
+
   const args = val.split(' ');
+  const cmd = args[0];
 
   // nested strategy pattern
   // 1st tier based on # of args in user input
   // 2nd tier based on 1st arg (command)
   strategy = {
     1() {
-      strategy = {
+      cmds = {
         look() {
           const room = getRoom(cart.roomId);
           print(room.desc);
         },
-        go () {
+        go() {
           print('Where would you like to go? Available directions are:');
           cart.room.exits.forEach(exit => print(exit.dir));
-        }
+        },
+        help() {
+          const instructions = `
+            The following commands are available:
+            LOOK
+            LOOK AT [OBJECT NAME] e.g. 'look at key'
+            GO [DIRECTION] e.g. 'go north'
+            HELP
+          `;
+          print(instructions);
+        },
       };
-      strategy[args[0]]();
+      exec(cmds[cmd]);
     },
     2() {
-      print(2);
+      cmds = {
+        look() {
+          print(`You look ${args[1]}.`);
+        },
+        go() {
+          const nextRoom = cart.room.exits.find(exit => exit.dir === args[1]);
+          if (!nextRoom) {
+            print('There is no exit in that direction.');
+          } else {
+            enterRoom(nextRoom.id);
+          }
+        }
+      };
+      exec(cmds[cmd]);
     },
     3() {
       print(3);
@@ -110,12 +142,13 @@ input.onkeydown = navigateHistory;
 
 // String -> Room
 const getRoom = (id) => {
-  return cart.rooms.find(room => room.id === cart.roomId);
+  return cart.rooms.find(room => room.id === id);
 };
 
-// Cart, String
 const enterRoom = (id) => {
-  const room = getRoom(cart.roomId);
+  console.log('entering room with id:', id);
+  const room = getRoom(id);
+  console.log('room:', room);
   print(room.img, true);
 
   print(`---${room.name}---`);
@@ -130,7 +163,7 @@ const enterRoom = (id) => {
 };
 
 const startGame = (cart) => {
-  enterRoom(cart, cart.startingRoom);
+  enterRoom(cart.roomId);
 };
 
 startGame(cart);
