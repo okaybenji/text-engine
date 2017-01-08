@@ -17,7 +17,7 @@ const cart = init(unlimitedAdventure);
 const history = ['']; // store all user commands
 let historyPos = 0;
 
-const input = document.querySelector('#input');
+const inputs = document.querySelector('#input');
 
 const print = (str, isImg = false) => {
   const output = document.querySelector('#output');
@@ -65,8 +65,8 @@ const applyInput = (e) => {
     return;
   }
 
-  const val = input.value;
-  input.value = ''; // reset input field
+  const val = inputs.value;
+  inputs.value = ''; // reset input field
   print('> ' + val);
 
   history.push(val);
@@ -180,7 +180,7 @@ const applyInput = (e) => {
   strategy[args.length]();
 };
 
-input.onkeypress = applyInput;
+inputs.onkeypress = applyInput;
 
 const navigateHistory = (e) => {
   const UP = 38;
@@ -204,8 +204,8 @@ const navigateHistory = (e) => {
     }
   }
 
-  input.value = history[historyPos] || '';
+  inputs.value = history[historyPos] || '';
   return;
 };
 
-input.onkeydown = navigateHistory;
+inputs.onkeydown = navigateHistory;
