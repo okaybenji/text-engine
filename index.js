@@ -47,11 +47,22 @@ const applyInput = (e) => {
 
   const args = val.split(' ');
 
+  // nested strategy pattern
+  // 1st tier based on # of args in user input
+  // 2nd tier based on 1st arg (command)
   strategy = {
     1() {
-      if (args[0] === 'look') {
-        look();
-      }
+      strategy = {
+        look() {
+          const room = getRoom(cart.roomId);
+          print(room.desc);
+        },
+        go () {
+          print('Where would you like to go? Available directions are:');
+          cart.room.exits.forEach(exit => print(exit.dir));
+        }
+      };
+      strategy[args[0]]();
     },
     2() {
       print(2);
@@ -107,18 +118,15 @@ const enterRoom = (id) => {
   const room = getRoom(cart.roomId);
   print(room.img, true);
 
+  print(`---${room.name}---`);
+
   if (room.visits === 0) {
-    print(room.longDesc);
-  } else {
     print(room.desc);
   }
 
   room.visits++;
-};
 
-const look = () => {
-  const room = getRoom(cart.roomId);
-  print(room.longDesc);
+  cart.room = room;
 };
 
 const startGame = (cart) => {
