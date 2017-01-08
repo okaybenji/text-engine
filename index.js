@@ -104,6 +104,7 @@ const applyInput = (e) => {
             LOOK AT [OBJECT NAME] e.g. 'look at key'
             TAKE [OBJECT NAME] e.g. 'take book'
             GO [DIRECTION] e.g. 'go north'
+            USE [OBJECT NAME] e.g. 'use common sense'
             HELP :: this help menu
           `;
           print(instructions);
