@@ -1,6 +1,19 @@
 // TODO: import doesn't work in chrome yet, but eventually, do this:
 // import cart from 'unlimited-adventure'; // like a game cart, get it?
 
+// Cart -> Cart
+const init = (cart) => {
+  const initializedCartridge = Object.assign({}, cart);
+  initializedCartridge.rooms = cart.rooms.map((room) => {
+    room.visits = 0;
+    return room;
+  });
+
+  return initializedCartridge;
+};
+
+const cart = init(unlimitedAdventure);
+
 const history = ['']; // store all user commands
 let historyPos = 0;
 
@@ -36,7 +49,9 @@ const applyInput = (e) => {
 
   strategy = {
     1() {
-      print(1);
+      if (args[0] === 'look') {
+        look();
+      }
     },
     2() {
       print(2);
@@ -62,8 +77,6 @@ const navigateHistory = (e) => {
     return;
   }
 
-  console.log(e.keyCode);
-
   if (e.keyCode === UP) {
     historyPos--;
     if (historyPos < 0) {
@@ -78,33 +91,20 @@ const navigateHistory = (e) => {
     }
   }
 
-  console.log('history:', history);
-  console.log('setting input to:', history[historyPos]);
   input.value = history[historyPos] || '';
   return;
 }
 
 input.onkeydown = navigateHistory;
 
-// Cart -> Cart
-const init = (cart) => {
-  const initializedCartridge = Object.assign({}, cart);
-  initializedCartridge.rooms = cart.rooms.map((room) => {
-    room.visits = 0;
-    return room;
-  });
-
-  return initializedCartridge;
-};
-
-// Cart, String -> Room
-const getRoom = (cart, id) => {
-  return cart.rooms.find(room => room.id === id);
+// String -> Room
+const getRoom = (id) => {
+  return cart.rooms.find(room => room.id === cart.roomId);
 };
 
 // Cart, String
-const enterRoom = (cart, id) => {
-  const room = getRoom(cart, cart.startingRoom);
+const enterRoom = (id) => {
+  const room = getRoom(cart.roomId);
   print(room.img, true);
 
   if (room.visits === 0) {
@@ -116,8 +116,8 @@ const enterRoom = (cart, id) => {
   room.visits++;
 };
 
-const look = (cart, id) => {
-  const room = getRoom(cart, cart.startingRoom);
+const look = () => {
+  const room = getRoom(cart.roomId);
   print(room.longDesc);
 };
 
@@ -125,5 +125,4 @@ const startGame = (cart) => {
   enterRoom(cart, cart.startingRoom);
 };
 
-const cart = init(unlimitedAdventure);
 startGame(cart);

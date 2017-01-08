@@ -1,6 +1,6 @@
 const unlimitedAdventure = {
   title: 'Unlimited Adventure',
-  startingRoom: 'gameOver',
+  roomId: 'gameOver',
   rooms: [
     {
       name: 'Game Over',
