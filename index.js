@@ -132,12 +132,26 @@ const applyInput = (e) => {
             if (item.isTakeable) {
               cart.inventory.push(item);
               cart.room.items.splice(itemIndex, 1);
-              print(`You took the ${item.name}`);
+              print(`You took the ${item.name}.`);
             } else {
               print('You can\'t take that.');
             }
           } else {
             print('You don\'t see any such thing.');
+          }
+        },
+        use() {
+          const findItem = item => item.name === args[1];
+          const item = (cart.room.items && cart.room.items.find(findItem)) || cart.inventory.find(findItem);
+
+          if (item) {
+            if (item.use) {
+              item.use();
+            } else {
+              print('That item doesn\'t have a use.');
+            }
+          } else {
+            print('You don\'t have that.');
           }
         }
       };
