@@ -54,7 +54,7 @@ const unlimitedAdventure = {
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
       `,
       items: [
-        { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: () => {
+        { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, log}) => {
           const door = disk.room.items.find(item => item.name === 'door');
           if (door) {
             log('The door has opened!');
@@ -63,7 +63,7 @@ const unlimitedAdventure = {
             log('There\'s nothing to use the key on.');
           }
         }},
-        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: () => {
+        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: ({disk, log}) => {
           const door = disk.room.items.find(item => item.name === 'door');
 
           if (door) {
@@ -72,7 +72,7 @@ const unlimitedAdventure = {
           }
 
           log('A door has appeared from nothing! It seems to go nowhere...');
-          disk.room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: () => {
+          disk.room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: ({disk, log, enterRoom}) => {
             const door = disk.room.items.find(item => item.name === 'door');
             if (door.isOpen) {
               enterRoom('gameReallyOver');

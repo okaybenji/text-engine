@@ -3,7 +3,9 @@
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 
-<!-- Sample Game Cartridge -->
-<script src="unlimited-adventure.js"></script>
-<!-- Text Adventure Game Engine -->
+<!-- Include game data ('disk') -->
+<script src="game-disks/unlimited-adventure.js"></script>
+<!-- Include game engine -->
 <script src="index.js"></script>
+<!-- Load disk into engine -->
+<script>loadDisk(unlimitedAdventure);</script>
