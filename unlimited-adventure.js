@@ -55,7 +55,7 @@ const unlimitedAdventure = {
       `,
       items: [
         { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: () => {
-          const door = cart.room.items.find(item => item.name === 'door');
+          const door = disk.room.items.find(item => item.name === 'door');
           if (door) {
             log('The door has opened!');
             door.isOpen = true;
@@ -64,7 +64,7 @@ const unlimitedAdventure = {
           }
         }},
         { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: () => {
-          const door = cart.room.items.find(item => item.name === 'door');
+          const door = disk.room.items.find(item => item.name === 'door');
 
           if (door) {
             log('You already used the book!');
@@ -72,8 +72,8 @@ const unlimitedAdventure = {
           }
 
           log('A door has appeared from nothing! It seems to go nowhere...');
-          cart.room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: () => {
-            const door = cart.room.items.find(item => item.name === 'door');
+          disk.room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: () => {
+            const door = disk.room.items.find(item => item.name === 'door');
             if (door.isOpen) {
               enterRoom('gameReallyOver');
             } else {

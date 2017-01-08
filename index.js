@@ -1,18 +1,18 @@
 // TODO: import doesn't work in chrome yet, but eventually, do this:
-// import cart from 'unlimited-adventure'; // like a game cart, get it?
+// import disk from 'unlimited-adventure'; // like a game on floppy disk, get it?
 
-// Cart -> Cart
-const init = (cart) => {
-  const initializedCartridge = Object.assign({}, cart);
-  initializedCartridge.rooms = cart.rooms.map((room) => {
+// Disk -> Disk
+const init = (disk) => {
+  const initializedDisk = Object.assign({}, disk);
+  initializedDisk.rooms = disk.rooms.map((room) => {
     room.visits = 0;
     return room;
   });
 
-  return initializedCartridge;
+  return initializedDisk;
 };
 
-const cart = init(unlimitedAdventure);
+const disk = init(unlimitedAdventure);
 
 const inputs = ['']; // store all user commands
 let inputsPos = 0;
@@ -33,7 +33,7 @@ const log = (str, isImg = false) => {
 
 // String -> Room
 const getRoom = (id) => {
-  return cart.rooms.find(room => room.id === id);
+  return disk.rooms.find(room => room.id === id);
 };
 
 const enterRoom = (id) => {
@@ -49,14 +49,14 @@ const enterRoom = (id) => {
 
   room.visits++;
 
-  cart.room = room;
+  disk.room = room;
 };
 
-const startGame = (cart) => {
-  enterRoom(cart.roomId);
+const startGame = (disk) => {
+  enterRoom(disk.roomId);
 };
 
-startGame(cart);
+startGame(disk);
 
 const applyInput = (e) => {
   const ENTER = 13;
@@ -90,11 +90,11 @@ const applyInput = (e) => {
     1() {
       const cmds = {
         look() {
-          const room = getRoom(cart.roomId);
+          const room = getRoom(disk.roomId);
           log(room.desc);
         },
         go() {
-          const exits = cart.room.exits;
+          const exits = disk.room.exits;
           if (!exits) {
             log('There\'s nowhere to go.');
             return;
@@ -123,7 +123,7 @@ const applyInput = (e) => {
           log(`You look ${args[1]}.`);
         },
         go() {
-          const exits = cart.room.exits;
+          const exits = disk.room.exits;
           if (!exits) {
             log('There\'s nowhere to go.');
             return;
@@ -137,12 +137,12 @@ const applyInput = (e) => {
         },
         take() {
           const findItem = item => item.name === args[1];
-          const itemIndex = cart.room.items && cart.room.items.findIndex(findItem);
+          const itemIndex = disk.room.items && disk.room.items.findIndex(findItem);
           if (typeof itemIndex === 'number' && itemIndex > -1) {
-            const item = cart.room.items[itemIndex];
+            const item = disk.room.items[itemIndex];
             if (item.isTakeable) {
-              cart.inventory.push(item);
-              cart.room.items.splice(itemIndex, 1);
+              disk.inventory.push(item);
+              disk.room.items.splice(itemIndex, 1);
               log(`You took the ${item.name}.`);
             } else {
               log('You can\'t take that.');
@@ -153,7 +153,7 @@ const applyInput = (e) => {
         },
         use() {
           const findItem = item => item.name === args[1];
-          const item = (cart.room.items && cart.room.items.find(findItem)) || cart.inventory.find(findItem);
+          const item = (disk.room.items && disk.room.items.find(findItem)) || disk.inventory.find(findItem);
 
           if (item) {
             if (item.use) {
@@ -172,7 +172,7 @@ const applyInput = (e) => {
       const cmds = {
         look() {
           const findItem = item => item.name === args[2];
-          const item = (cart.room.items && cart.room.items.find(findItem)) || cart.inventory.find(findItem);
+          const item = (disk.room.items && disk.room.items.find(findItem)) || disk.inventory.find(findItem);
           if (!item) {
             log('You don\'t see any such thing.');
           } else {
