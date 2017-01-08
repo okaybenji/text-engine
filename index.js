@@ -31,6 +31,33 @@ const print = (str, isImg = false) => {
   output.scrollTop = output.scrollHeight;
 };
 
+// String -> Room
+const getRoom = (id) => {
+  return cart.rooms.find(room => room.id === id);
+};
+
+const enterRoom = (id) => {
+  const room = getRoom(id);
+
+  print(room.img, true);
+
+  print(`---${room.name}---`);
+
+  if (room.visits === 0) {
+    print(room.desc);
+  }
+
+  room.visits++;
+
+  cart.room = room;
+};
+
+const startGame = (cart) => {
+  enterRoom(cart.roomId);
+};
+
+startGame(cart);
+
 const applyInput = (e) => {
   const ENTER = 13;
 
@@ -47,7 +74,7 @@ const applyInput = (e) => {
 
   const exec = (cmd) => {
     if (cmd) {
-      cmd()
+      cmd();
     } else {
       print('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
     }
@@ -59,9 +86,9 @@ const applyInput = (e) => {
   // nested strategy pattern
   // 1st tier based on # of args in user input
   // 2nd tier based on 1st arg (command)
-  strategy = {
+  const strategy = {
     1() {
-      cmds = {
+      const cmds = {
         look() {
           const room = getRoom(cart.roomId);
           print(room.desc);
@@ -73,10 +100,10 @@ const applyInput = (e) => {
         help() {
           const instructions = `
             The following commands are available:
-            LOOK
+            LOOK :: repeat room description
             LOOK AT [OBJECT NAME] e.g. 'look at key'
             GO [DIRECTION] e.g. 'go north'
-            HELP
+            HELP :: this help menu
           `;
           print(instructions);
         },
@@ -84,7 +111,7 @@ const applyInput = (e) => {
       exec(cmds[cmd]);
     },
     2() {
-      cmds = {
+      const cmds = {
         look() {
           print(`You look ${args[1]}.`);
         },
@@ -100,7 +127,17 @@ const applyInput = (e) => {
       exec(cmds[cmd]);
     },
     3() {
-      print(3);
+      const cmds = {
+        look() {
+          const item = cart.room.items && cart.room.items.find(item => item.name === args[2]);
+          if (!item) {
+            print('You don\'t see any such thing.');
+          } else {
+            print(item.desc);
+          }
+        },
+      };
+      exec(cmds[cmd]);
     },
     4() {
       print(4);
@@ -136,34 +173,6 @@ const navigateHistory = (e) => {
 
   input.value = history[historyPos] || '';
   return;
-}
+};
 
 input.onkeydown = navigateHistory;
-
-// String -> Room
-const getRoom = (id) => {
-  return cart.rooms.find(room => room.id === id);
-};
-
-const enterRoom = (id) => {
-  console.log('entering room with id:', id);
-  const room = getRoom(id);
-  console.log('room:', room);
-  print(room.img, true);
-
-  print(`---${room.name}---`);
-
-  if (room.visits === 0) {
-    print(room.desc);
-  }
-
-  room.visits++;
-
-  cart.room = room;
-};
-
-const startGame = (cart) => {
-  enterRoom(cart.roomId);
-};
-
-startGame(cart);

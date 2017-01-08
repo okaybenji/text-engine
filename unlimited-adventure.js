@@ -49,6 +49,9 @@ const unlimitedAdventure = {
       desc: `
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
       `,
+      items: [
+        { name: 'key', desc: 'It looks like a key.'}
+      ],
       exits: [
         { dir: 'north', id: 'endOfTheWorld' }
       ]

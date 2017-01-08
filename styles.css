@@ -16,7 +16,7 @@ body {
 }
 
 #output {
-  width: 100vw;
+  width: 95vw;
   height: 80vh;
   margin-bottom: 2vw;
   overflow-y: scroll;
