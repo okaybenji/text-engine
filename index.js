@@ -14,12 +14,12 @@ const init = (cart) => {
 
 const cart = init(unlimitedAdventure);
 
-const history = ['']; // store all user commands
-let historyPos = 0;
+const inputs = ['']; // store all user commands
+let inputsPos = 0;
 
-const inputs = document.querySelector('#input');
+const inputBox = document.querySelector('#input');
 
-const print = (str, isImg = false) => {
+const log = (str, isImg = false) => {
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
 
@@ -39,12 +39,12 @@ const getRoom = (id) => {
 const enterRoom = (id) => {
   const room = getRoom(id);
 
-  print(room.img, true);
+  log(room.img, true);
 
-  print(`---${room.name}---`);
+  log(`---${room.name}---`);
 
   if (room.visits === 0) {
-    print(room.desc);
+    log(room.desc);
   }
 
   room.visits++;
@@ -65,18 +65,18 @@ const applyInput = (e) => {
     return;
   }
 
-  const val = inputs.value;
-  inputs.value = ''; // reset input field
-  print('> ' + val);
+  const val = inputBox.value;
+  inputBox.value = ''; // reset input field
+  log('> ' + val);
 
-  history.push(val);
-  historyPos = history.length;
+  inputs.push(val);
+  inputsPos = inputs.length;
 
   const exec = (cmd) => {
     if (cmd) {
       cmd();
     } else {
-      print('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
+      log('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
     }
   };
 
@@ -91,16 +91,16 @@ const applyInput = (e) => {
       const cmds = {
         look() {
           const room = getRoom(cart.roomId);
-          print(room.desc);
+          log(room.desc);
         },
         go() {
           const exits = cart.room.exits;
           if (!exits) {
-            print('There\'s nowhere to go.');
+            log('There\'s nowhere to go.');
             return;
           }
-          print('Where would you like to go? Available directions are:');
-          exits.forEach(exit => print(exit.dir));
+          log('Where would you like to go? Available directions are:');
+          exits.forEach(exit => log(exit.dir));
         },
         help() {
           const instructions = `
@@ -112,7 +112,7 @@ const applyInput = (e) => {
             USE [OBJECT NAME] e.g. 'use common sense'
             HELP :: this help menu
           `;
-          print(instructions);
+          log(instructions);
         },
       };
       exec(cmds[cmd]);
@@ -120,17 +120,17 @@ const applyInput = (e) => {
     2() {
       const cmds = {
         look() {
-          print(`You look ${args[1]}.`);
+          log(`You look ${args[1]}.`);
         },
         go() {
           const exits = cart.room.exits;
           if (!exits) {
-            print('There\'s nowhere to go.');
+            log('There\'s nowhere to go.');
             return;
           }
           const nextRoom = exits.find(exit => exit.dir === args[1]);
           if (!nextRoom) {
-            print('There is no exit in that direction.');
+            log('There is no exit in that direction.');
           } else {
             enterRoom(nextRoom.id);
           }
@@ -143,12 +143,12 @@ const applyInput = (e) => {
             if (item.isTakeable) {
               cart.inventory.push(item);
               cart.room.items.splice(itemIndex, 1);
-              print(`You took the ${item.name}.`);
+              log(`You took the ${item.name}.`);
             } else {
-              print('You can\'t take that.');
+              log('You can\'t take that.');
             }
           } else {
-            print('You don\'t see any such thing.');
+            log('You don\'t see any such thing.');
           }
         },
         use() {
@@ -159,10 +159,10 @@ const applyInput = (e) => {
             if (item.use) {
               item.use();
             } else {
-              print('That item doesn\'t have a use.');
+              log('That item doesn\'t have a use.');
             }
           } else {
-            print('You don\'t have that.');
+            log('You don\'t have that.');
           }
         }
       };
@@ -174,23 +174,20 @@ const applyInput = (e) => {
           const findItem = item => item.name === args[2];
           const item = (cart.room.items && cart.room.items.find(findItem)) || cart.inventory.find(findItem);
           if (!item) {
-            print('You don\'t see any such thing.');
+            log('You don\'t see any such thing.');
           } else {
-            print(item.desc);
+            log(item.desc);
           }
         },
       };
       exec(cmds[cmd]);
-    },
-    4() {
-      print(4);
     }
   };
 
   strategy[args.length]();
 };
 
-inputs.onkeypress = applyInput;
+inputBox.onkeypress = applyInput;
 
 const navigateHistory = (e) => {
   const UP = 38;
@@ -201,21 +198,21 @@ const navigateHistory = (e) => {
   }
 
   if (e.keyCode === UP) {
-    historyPos--;
-    if (historyPos < 0) {
-      historyPos = 0;
+    inputsPos--;
+    if (inputsPos < 0) {
+      inputsPos = 0;
     }
   }
 
   if (e.keyCode === DOWN) {
-    historyPos++;
-    if (historyPos > history.length) {
-      historyPos = history.length;
+    inputsPos++;
+    if (inputsPos > inputs.length) {
+      inputsPos = inputs.length;
     }
   }
 
-  inputs.value = history[historyPos] || '';
+  inputBox.value = inputs[inputsPos] || '';
   return;
 };
 
-inputs.onkeydown = navigateHistory;
+inputBox.onkeydown = navigateHistory;

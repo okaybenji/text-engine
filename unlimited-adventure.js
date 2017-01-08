@@ -57,27 +57,27 @@ const unlimitedAdventure = {
         { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: () => {
           const door = cart.room.items.find(item => item.name === 'door');
           if (door) {
-            print('The door has opened!');
+            log('The door has opened!');
             door.isOpen = true;
           } else {
-            print('There\'s nothing to use the key on.');
+            log('There\'s nothing to use the key on.');
           }
         }},
         { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: () => {
           const door = cart.room.items.find(item => item.name === 'door');
 
           if (door) {
-            print('You already used the book!');
+            log('You already used the book!');
             return;
           }
 
-          print('A door has appeared from nothing! It seems to go nowhere...');
+          log('A door has appeared from nothing! It seems to go nowhere...');
           cart.room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: () => {
             const door = cart.room.items.find(item => item.name === 'door');
             if (door.isOpen) {
               enterRoom('gameReallyOver');
             } else {
-              print('The door is locked.');
+              log('The door is locked.');
             }
           }});
         }},
