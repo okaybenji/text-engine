@@ -26,6 +26,7 @@ const loadDisk = (disk) => {
     }
 
     output.appendChild(newLine).innerText = str;
+    // TODO: why doesn't this scroll to bottom on initial load?
     output.scrollTop = output.scrollHeight;
   };
 
