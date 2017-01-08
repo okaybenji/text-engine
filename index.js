@@ -94,8 +94,13 @@ const applyInput = (e) => {
           print(room.desc);
         },
         go() {
+          const exits = cart.room.exits;
+          if (!exits) {
+            print('There\'s nowhere to go.');
+            return;
+          }
           print('Where would you like to go? Available directions are:');
-          cart.room.exits.forEach(exit => print(exit.dir));
+          exits.forEach(exit => print(exit.dir));
         },
         help() {
           const instructions = `
@@ -118,7 +123,12 @@ const applyInput = (e) => {
           print(`You look ${args[1]}.`);
         },
         go() {
-          const nextRoom = cart.room.exits.find(exit => exit.dir === args[1]);
+          const exits = cart.room.exits;
+          if (!exits) {
+            print('There\'s nowhere to go.');
+            return;
+          }
+          const nextRoom = exits.find(exit => exit.dir === args[1]);
           if (!nextRoom) {
             print('There is no exit in that direction.');
           } else {

@@ -82,9 +82,6 @@ const unlimitedAdventure = {
           }});
         }},
         { name: 'castle', desc: 'It has been... corrupted somehow.' },
-      ],
-      exits: [
-        { dir: 'north', id: 'endOfTheWorld' }
       ]
     },
     {
