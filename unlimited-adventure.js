@@ -25,6 +25,9 @@ const unlimitedAdventure = {
         Congratulations, IkariDude09! You have defeated the evil emperor Zylzyx and restored peace to the k†ngdøm.
         You have no quests left to complete. Stay tuned for more adventures from SquigglySoft!
       `,
+      items: [
+        { name: 'castle', desc: 'It\'s quite impressive.' },
+      ],
       exits: [
         { dir: 'north', id: 'endOfTheWorld' }
       ]
@@ -51,7 +54,9 @@ const unlimitedAdventure = {
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
       `,
       items: [
-        { name: 'key', desc: 'It looks like a key.'}
+        { name: 'key', desc: 'It looks like a key.', isTakeable: true },
+        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true },
+        { name: 'castle', desc: 'It has been... corrupted somehow.' },
       ],
       exits: [
         { dir: 'north', id: 'endOfTheWorld' }

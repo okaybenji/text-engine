@@ -102,6 +102,7 @@ const applyInput = (e) => {
             The following commands are available:
             LOOK :: repeat room description
             LOOK AT [OBJECT NAME] e.g. 'look at key'
+            TAKE [OBJECT NAME] e.g. 'take book'
             GO [DIRECTION] e.g. 'go north'
             HELP :: this help menu
           `;
@@ -127,9 +128,14 @@ const applyInput = (e) => {
           const findItem = item => item.name === args[1];
           const itemIndex = cart.room.items && cart.room.items.findIndex(findItem);
           if (typeof itemIndex === 'number' && itemIndex > -1) {
-            cart.inventory.push(cart.room.items[itemIndex]);
-            cart.room.items.splice(itemIndex, 1);
-            print('You took the key.');
+            const item = cart.room.items[itemIndex];
+            if (item.isTakeable) {
+              cart.inventory.push(item);
+              cart.room.items.splice(itemIndex, 1);
+              print(`You took the ${item.name}`);
+            } else {
+              print('You can\'t take that.');
+            }
           } else {
             print('You don\'t see any such thing.');
           }
