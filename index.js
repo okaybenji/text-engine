@@ -122,6 +122,17 @@ const applyInput = (e) => {
           } else {
             enterRoom(nextRoom.id);
           }
+        },
+        take() {
+          const findItem = item => item.name === args[1];
+          const itemIndex = cart.room.items && cart.room.items.findIndex(findItem);
+          if (typeof itemIndex === 'number' && itemIndex > -1) {
+            cart.inventory.push(cart.room.items[itemIndex]);
+            cart.room.items.splice(itemIndex, 1);
+            print('You took the key.');
+          } else {
+            print('You don\'t see any such thing.');
+          }
         }
       };
       exec(cmds[cmd]);
@@ -129,7 +140,8 @@ const applyInput = (e) => {
     3() {
       const cmds = {
         look() {
-          const item = cart.room.items && cart.room.items.find(item => item.name === args[2]);
+          const findItem = item => item.name === args[2];
+          const item = (cart.room.items && cart.room.items.find(findItem)) || cart.inventory.find(findItem);
           if (!item) {
             print('You don\'t see any such thing.');
           } else {
