@@ -6,13 +6,16 @@ let historyPos = 0;
 
 const input = document.querySelector('#input');
 
-const print = (str) => {
+const print = (str, isImg) => {
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
+
+  if (isImg) {
+    newLine.classList.add('img');
+  }
+
   output.appendChild(newLine).innerText = str;
   output.scrollTop = output.scrollHeight;
-
-  // console.log(str); // debugging
 };
 
 const applyInput = (e) => {
@@ -102,6 +105,8 @@ const getRoom = (cart, id) => {
 // Cart, String
 const enterRoom = (cart, id) => {
   const room = getRoom(cart, cart.startingRoom);
+  print(room.img, true);
+
   if (room.visits === 0) {
     print(room.longDesc);
   } else {
