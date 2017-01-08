@@ -1,5 +1,28 @@
+body {
+  color: #00ee00;
+  background: #111111;
+  font-size: 2.5vh;
+  font-family: Helvetica;
+}
+
 #output {
-  width: 320;
-  height: 240;
-  overflow-y: scroll
+  width: 100vw;
+  height: 80vh;
+  margin-bottom: 2vw;
+  overflow-y: scroll;
+  padding: 2vw;
+}
+
+#output div {
+  margin-bottom: 1vw;
+}
+
+#input {
+  width: 98.5vw;
+  height: 10vh;
+  color: #00ee00;
+  background: #111111;
+  position: fixed;
+  bottom: 0;
+  font-size: 2.5vh;
 }
