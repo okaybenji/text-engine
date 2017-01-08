@@ -4,15 +4,16 @@
 const history = ['']; // store all user commands
 let historyPos = 0;
 
+const input = document.querySelector('#input');
+
 const print = (str) => {
-  console.log(str);
-};
+  const output = document.querySelector('#output');
+  const newLine = document.createElement('div');
+  output.appendChild(newLine).innerText = str;
+  output.scrollTop = output.scrollHeight;
 
-const cmd = () => {
-  print('testing...')
+  // console.log(str); // debugging
 };
-
-const input = document.querySelector('#console');
 
 const applyInput = (e) => {
   const ENTER = 13;
