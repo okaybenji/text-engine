@@ -87,9 +87,7 @@ const unlimitedAdventure = {
     {
       name: 'GAME REALLY OVER',
       id: 'gameReallyOver',
-      img: `
-        ¯\_(ツ)_/¯
-      `,
+      img: '¯\\_(ツ)_/¯',
       desc: `
         That's all I've written so far! If you liked this and want more, write me on Twitter: @okaybenji
       `,
