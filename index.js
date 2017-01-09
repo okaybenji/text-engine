@@ -156,7 +156,7 @@ const loadDisk = (disk) => {
 
             if (item) {
               if (item.use) {
-                item.use(game); // use item and give it a reference to the disk
+                item.use({disk, log, getRoom, enterRoom}); // use item and give it a reference to the game
               } else {
                 log('That item doesn\'t have a use.');
               }
@@ -215,6 +215,4 @@ const loadDisk = (disk) => {
   };
 
   inputBox.onkeydown = navigateHistory;
-
-  const game = {disk, log, getRoom, enterRoom};
 };

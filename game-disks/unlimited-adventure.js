@@ -1,5 +1,4 @@
 const unlimitedAdventure = {
-  title: 'Unlimited Adventure',
   roomId: 'gameOver',
   inventory: [],
   rooms: [
