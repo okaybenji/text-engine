@@ -26,7 +26,7 @@ A disk is a JavaScript object which describes your game. It has three top-level 
 
 * `inventory` (Array) - List of `item`s in the player's inventory. `item`s will be discussed in more detail below.
 
-* `rooms` (Array) - List of `room`s in the game. `room`s will be discussed in more detail below.
+* `rooms` (Array) - List of `room`s in the game.
 
 ### What's a room?
 A room is an object with the following properties:
