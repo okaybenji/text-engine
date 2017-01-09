@@ -28,6 +28,8 @@ A disk is a JavaScript object which describes your game. It has three top-level 
 
 * `rooms` (Array) - List of `room`s in the game.
 
+Note that you can also add any custom properties you want anywhere on this object. You will be able to access and modify them via the `use` functions on your items, which will be passed a reference to your disk. More on the `use` functions later...
+
 ### What's a room?
 A room is an object with the following properties:
 
