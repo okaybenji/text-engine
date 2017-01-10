@@ -48,7 +48,7 @@ const loadDisk = (disk) => {
 
     room.visits++;
 
-    disk.room = room;
+    disk.roomId = id;
   };
 
   const startGame = (disk) => {
@@ -81,6 +81,7 @@ const loadDisk = (disk) => {
 
     const args = val.split(' ');
     const cmd = args[0];
+    const room = getRoom(disk.roomId);
 
     // nested strategy pattern
     // 1st tier based on # of args in user input
@@ -89,11 +90,10 @@ const loadDisk = (disk) => {
       1() {
         const cmds = {
           look() {
-            const room = getRoom(disk.roomId);
             log(room.desc);
           },
           go() {
-            const exits = disk.room.exits;
+            const exits = room.exits;
             if (!exits) {
               log('There\'s nowhere to go.');
               return;
@@ -122,7 +122,7 @@ const loadDisk = (disk) => {
             log(`You look ${args[1]}.`);
           },
           go() {
-            const exits = disk.room.exits;
+            const exits = room.exits;
             if (!exits) {
               log('There\'s nowhere to go.');
               return;
@@ -136,12 +136,12 @@ const loadDisk = (disk) => {
           },
           take() {
             const findItem = item => item.name === args[1];
-            const itemIndex = disk.room.items && disk.room.items.findIndex(findItem);
+            const itemIndex = room.items && room.items.findIndex(findItem);
             if (typeof itemIndex === 'number' && itemIndex > -1) {
-              const item = disk.room.items[itemIndex];
+              const item = room.items[itemIndex];
               if (item.isTakeable) {
                 disk.inventory.push(item);
-                disk.room.items.splice(itemIndex, 1);
+                room.items.splice(itemIndex, 1);
                 log(`You took the ${item.name}.`);
               } else {
                 log('You can\'t take that.');
@@ -152,7 +152,7 @@ const loadDisk = (disk) => {
           },
           use() {
             const findItem = item => item.name === args[1];
-            const item = (disk.room.items && disk.room.items.find(findItem)) || disk.inventory.find(findItem);
+            const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
 
             if (item) {
               if (item.use) {
@@ -171,7 +171,7 @@ const loadDisk = (disk) => {
         const cmds = {
           look() {
             const findItem = item => item.name === args[2];
-            const item = (disk.room.items && disk.room.items.find(findItem)) || disk.inventory.find(findItem);
+            const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
             if (!item) {
               log('You don\'t see any such thing.');
             } else {
