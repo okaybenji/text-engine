@@ -17,7 +17,7 @@ const loadDisk = (disk) => {
 
   const inputBox = document.querySelector('#input');
 
-  const log = (str, isImg = false) => {
+  const println = (str, isImg = false) => {
     const output = document.querySelector('#output');
     const newLine = document.createElement('div');
 
@@ -38,12 +38,12 @@ const loadDisk = (disk) => {
   const enterRoom = (id) => {
     const room = getRoom(id);
 
-    log(room.img, true);
+    println(room.img, true);
 
-    log(`---${room.name}---`);
+    println(`---${room.name}---`);
 
     if (room.visits === 0) {
-      log(room.desc);
+      println(room.desc);
     }
 
     room.visits++;
@@ -66,7 +66,7 @@ const loadDisk = (disk) => {
 
     const val = inputBox.value;
     inputBox.value = ''; // reset input field
-    log('> ' + val);
+    println('> ' + val);
 
     inputs.push(val);
     inputsPos = inputs.length;
@@ -75,7 +75,7 @@ const loadDisk = (disk) => {
       if (cmd) {
         cmd();
       } else {
-        log('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
+        println('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
       }
     };
 
@@ -90,16 +90,16 @@ const loadDisk = (disk) => {
       1() {
         const cmds = {
           look() {
-            log(room.desc);
+            println(room.desc);
           },
           go() {
             const exits = room.exits;
             if (!exits) {
-              log('There\'s nowhere to go.');
+              println('There\'s nowhere to go.');
               return;
             }
-            log('Where would you like to go? Available directions are:');
-            exits.forEach(exit => log(exit.dir));
+            println('Where would you like to go? Available directions are:');
+            exits.forEach(exit => println(exit.dir));
           },
           help() {
             const instructions = `
@@ -111,7 +111,7 @@ const loadDisk = (disk) => {
               USE [OBJECT NAME] e.g. 'use common sense'
               HELP :: this help menu
             `;
-            log(instructions);
+            println(instructions);
           },
         };
         exec(cmds[cmd]);
@@ -119,17 +119,17 @@ const loadDisk = (disk) => {
       2() {
         const cmds = {
           look() {
-            log(`You look ${args[1]}.`);
+            println(`You look ${args[1]}.`);
           },
           go() {
             const exits = room.exits;
             if (!exits) {
-              log('There\'s nowhere to go.');
+              println('There\'s nowhere to go.');
               return;
             }
             const nextRoom = exits.find(exit => exit.dir === args[1]);
             if (!nextRoom) {
-              log('There is no exit in that direction.');
+              println('There is no exit in that direction.');
             } else {
               enterRoom(nextRoom.id);
             }
@@ -142,12 +142,12 @@ const loadDisk = (disk) => {
               if (item.isTakeable) {
                 disk.inventory.push(item);
                 room.items.splice(itemIndex, 1);
-                log(`You took the ${item.name}.`);
+                println(`You took the ${item.name}.`);
               } else {
-                log('You can\'t take that.');
+                println('You can\'t take that.');
               }
             } else {
-              log('You don\'t see any such thing.');
+              println('You don\'t see any such thing.');
             }
           },
           use() {
@@ -156,12 +156,12 @@ const loadDisk = (disk) => {
 
             if (item) {
               if (item.use) {
-                item.use({disk, log, getRoom, enterRoom}); // use item and give it a reference to the game
+                item.use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
               } else {
-                log('That item doesn\'t have a use.');
+                println('That item doesn\'t have a use.');
               }
             } else {
-              log('You don\'t have that.');
+              println('You don\'t have that.');
             }
           }
         };
@@ -173,9 +173,9 @@ const loadDisk = (disk) => {
             const findItem = item => item.name === args[2];
             const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
             if (!item) {
-              log('You don\'t see any such thing.');
+              println('You don\'t see any such thing.');
             } else {
-              log(item.desc);
+              println(item.desc);
             }
           },
         };

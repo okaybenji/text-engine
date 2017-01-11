@@ -53,32 +53,32 @@ const unlimitedAdventure = {
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
       `,
       items: [
-        { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, log, getRoom}) => {
+        { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, println, getRoom}) => {
           const room = getRoom(disk.roomId);
           const door = room.items.find(item => item.name === 'door');
           if (door) {
-            log('The door has opened!');
+            println('The door has opened!');
             door.isOpen = true;
           } else {
-            log('There\'s nothing to use the key on.');
+            println('There\'s nothing to use the key on.');
           }
         }},
-        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: ({disk, log, getRoom}) => {
+        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: ({disk, println, getRoom}) => {
           const room = getRoom(disk.roomId);
           const door = room.items.find(item => item.name === 'door');
 
           if (door) {
-            log('You already used the book!');
+            println('You already used the book!');
             return;
           }
 
-          log('A door has appeared from nothing! It seems to go nowhere...');
-          room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: ({disk, log, enterRoom}) => {
+          println('A door has appeared from nothing! It seems to go nowhere...');
+          room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: ({disk, println, enterRoom}) => {
             const door = room.items.find(item => item.name === 'door');
             if (door.isOpen) {
               enterRoom('gameReallyOver');
             } else {
-              log('The door is locked.');
+              println('The door is locked.');
             }
           }});
         }},
