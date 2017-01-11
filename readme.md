@@ -70,7 +70,7 @@ Use functions accept a `game` object, which is a JavaScript object with the foll
 
 `disk` (Object) - A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable.
 
-`log` (Function) - The function which prints output for the player to see. Accepts a string.
+`println` (Function) - The function which prints output for the player to see. Accepts a string.
 
 `getRoom` (Function) - Convenience function for retrieving a reference to a room on the disk. Accepts `roomId` as a String.
 
