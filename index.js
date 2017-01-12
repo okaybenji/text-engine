@@ -64,12 +64,12 @@ const loadDisk = (disk) => {
       return;
     }
 
+    inputs.push(inputBox.value);
+    inputsPos = inputs.length;
+    println('> ' + inputBox.value);
+
     const val = inputBox.value.toLowerCase();
     inputBox.value = ''; // reset input field
-    println('> ' + val);
-
-    inputs.push(val);
-    inputsPos = inputs.length;
 
     const exec = (cmd) => {
       if (cmd) {
