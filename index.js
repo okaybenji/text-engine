@@ -64,7 +64,7 @@ const loadDisk = (disk) => {
       return;
     }
 
-    const val = inputBox.value;
+    const val = inputBox.value.toLowerCase();
     inputBox.value = ''; // reset input field
     println('> ' + val);
 
