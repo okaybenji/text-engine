@@ -40,6 +40,10 @@ const applyInput = (e) => {
   const args = val.split(' ');
   const cmd = args[0];
 
+  const adventur = () => {
+    loadDisk(unlimitedAdventure);
+  };
+
   const cmds = {
     dir() {
       const output =
@@ -50,9 +54,10 @@ ADVENTUR  EXE  3193  12-04-80  11:59a
 1 file  521095 bytes free`;
       println(output, true);
     },
-    adventur() {
-      loadDisk(unlimitedAdventure);
-    },
+    adventur,
+    'adventur.exe': adventur,
+    'x:\\adventur': adventur,
+    'x:\\adventur.exe': adventur,
     help() {
       const instructions =
 `The following commands are available:
