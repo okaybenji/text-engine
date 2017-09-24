@@ -31,9 +31,7 @@ const loadDisk = (disk) => {
   };
 
   // String -> Room
-  const getRoom = (id) => {
-    return disk.rooms.find(room => room.id === id);
-  };
+  const getRoom = (id) => disk.rooms.find(room => room.id === id);
 
   const enterRoom = (id) => {
     const room = getRoom(id);
@@ -89,6 +87,16 @@ const loadDisk = (disk) => {
     const strategy = {
       1() {
         const cmds = {
+          inv() {
+            if (!disk.inventory.length) {
+              println('You don\'t have any items in your inventory.')
+              return;
+            }
+            println('You have the following items in your inventory:');
+            disk.inventory.forEach(item => {
+              println(`* ${item.name}`);
+            });
+          },
           look() {
             println(room.desc);
           },
@@ -108,7 +116,8 @@ const loadDisk = (disk) => {
               LOOK AT [OBJECT NAME] e.g. 'look at key'
               TAKE [OBJECT NAME] e.g. 'take book'
               GO [DIRECTION] e.g. 'go north'
-              USE [OBJECT NAME] e.g. 'use common sense'
+              USE [OBJECT NAME] e.g. 'use door'
+              INV :: list inventory items
               HELP :: this help menu
             `;
             println(instructions);
