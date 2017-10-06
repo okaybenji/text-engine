@@ -1,6 +1,6 @@
 {
   "name": "text-engine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A browser-based text adventure game engine",
   "main": "index.js",
   "scripts": {
