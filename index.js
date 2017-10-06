@@ -14,7 +14,6 @@ const loadDisk = (disk) => {
 
   const inputs = ['']; // store all user commands
   let inputsPos = 0;
-
   const inputBox = document.querySelector('#input');
 
   const println = (str, isImg = false) => {
@@ -165,7 +164,8 @@ const loadDisk = (disk) => {
 
             if (item) {
               if (item.use) {
-                item.use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
+                const use = typeof item.use === 'string' ? eval(item.use) : item.use;
+                use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
               } else {
                 println('That item doesn\'t have a use.');
               }
