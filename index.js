@@ -21,7 +21,7 @@ const loadDisk = (disk, config = {}) => {
       output.scrollTop = output.scrollHeight;
     },
     // prepare the environment
-    setup: () => {
+    setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
       const inputBox = document.querySelector('#input');
       inputBox.onkeypress = (e) => {
         const ENTER = 13;
@@ -45,8 +45,6 @@ const loadDisk = (disk, config = {}) => {
   };
 
   const {getInput, setInput, println, setup} = Object.assign(defaults, config);
-
-  setup();
 
   // Disk -> Disk
   const init = (disk) => {
@@ -240,6 +238,8 @@ const loadDisk = (disk, config = {}) => {
 
     setInput(inputs[inputsPos] || '');
   };
+
+  setup({applyInput, navigateHistory});
 };
 
 // npm support
