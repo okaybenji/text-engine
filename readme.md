@@ -103,3 +103,7 @@ You can use the included `index.html` file in your own project, or you can creat
 * Engine inspired in part by [TextAdventure.js](https://github.com/TheBroox/TextAdventure.js).
 * Demo inspired by [Forgotten](https://sophiapark.itch.io/forgotten) by Sophia Park, Arielle Grimes, and Emilie Sovis and also [this screenshot](https://cdn-images-1.medium.com/max/1600/1*IRP1NLN5jQTwuWNfXXhjPA.gif), whatever it is.
 * Apple ][ font by Zeb downloaded from [dafont.com](http://www.dafont.com/apple.font).
+
+### Updates
+
+1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
