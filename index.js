@@ -241,3 +241,8 @@ const loadDisk = (disk, config = {}) => {
     setInput(inputs[inputsPos] || '');
   };
 };
+
+// npm support
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = loadDisk;
+}
