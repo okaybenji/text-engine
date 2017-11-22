@@ -1,4 +1,51 @@
-const loadDisk = (disk) => {
+const loadDisk = (disk, config = {}) => {
+  // build default (DOM) configuration
+  const defaults = {
+    // retrieve user input
+    getInput: () => document.querySelector('#input').value,
+    // overwrite user input
+    setInput: (str) => {
+      document.querySelector('#input').value = str;
+    },
+    // render output
+    println: (str, isImg = false) => {
+      const output = document.querySelector('#output');
+      const newLine = document.createElement('div');
+
+      if (isImg) {
+        newLine.classList.add('img');
+      }
+
+      output.appendChild(newLine).innerText = str;
+      // TODO: why doesn't this scroll to bottom on initial load?
+      output.scrollTop = output.scrollHeight;
+    },
+    // prepare the environment
+    setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
+      const inputBox = document.querySelector('#input');
+      inputBox.onkeypress = (e) => {
+        const ENTER = 13;
+
+        if (e.keyCode === ENTER) {
+          applyInput();
+        }
+      };
+
+      inputBox.onkeydown = (e) => {
+        const UP = 38;
+        const DOWN = 40;
+
+        if (e.keyCode === UP) {
+          navigateHistory('prev');
+        } else if (e.keyCode === DOWN) {
+          navigateHistory('next');
+        }
+      };
+    }
+  };
+
+  const {getInput, setInput, println, setup} = Object.assign(defaults, config);
+
   // Disk -> Disk
   const init = (disk) => {
     const initializedDisk = Object.assign({}, disk);
@@ -14,20 +61,6 @@ const loadDisk = (disk) => {
 
   const inputs = ['']; // store all user commands
   let inputsPos = 0;
-  const inputBox = document.querySelector('#input');
-
-  const println = (str, isImg = false) => {
-    const output = document.querySelector('#output');
-    const newLine = document.createElement('div');
-
-    if (isImg) {
-      newLine.classList.add('img');
-    }
-
-    output.appendChild(newLine).innerText = str;
-    // TODO: why doesn't this scroll to bottom on initial load?
-    output.scrollTop = output.scrollHeight;
-  };
 
   // String -> Room
   const getRoom = (id) => disk.rooms.find(room => room.id === id);
@@ -54,19 +87,14 @@ const loadDisk = (disk) => {
 
   startGame(disk);
 
-  const applyInput = (e) => {
-    const ENTER = 13;
-
-    if (e.keyCode !== ENTER) {
-      return;
-    }
-
-    inputs.push(inputBox.value);
+  const applyInput = () => {
+    const input = getInput();
+    inputs.push(input);
     inputsPos = inputs.length;
-    println('> ' + inputBox.value);
+    println('> ' + input);
 
-    const val = inputBox.value.toLowerCase();
-    inputBox.value = ''; // reset input field
+    const val = input.toLowerCase();
+    setInput(''); // reset input field
 
     const exec = (cmd) => {
       if (cmd) {
@@ -195,33 +223,26 @@ const loadDisk = (disk) => {
     strategy[args.length]();
   };
 
-  inputBox.onkeypress = applyInput;
-
-  const navigateHistory = (e) => {
-    const UP = 38;
-    const DOWN = 40;
-
-    if (e.keyCode !== UP && e.keyCode !== DOWN) {
-      return;
-    }
-
-    if (e.keyCode === UP) {
+  const navigateHistory = (dir) => {
+    if (dir === 'prev') {
       inputsPos--;
       if (inputsPos < 0) {
         inputsPos = 0;
       }
-    }
-
-    if (e.keyCode === DOWN) {
+    } else if (dir === 'next') {
       inputsPos++;
       if (inputsPos > inputs.length) {
         inputsPos = inputs.length;
       }
     }
 
-    inputBox.value = inputs[inputsPos] || '';
-    return;
+    setInput(inputs[inputsPos] || '');
   };
 
-  inputBox.onkeydown = navigateHistory;
+  setup({applyInput, navigateHistory});
 };
+
+// npm support
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = loadDisk;
+}
