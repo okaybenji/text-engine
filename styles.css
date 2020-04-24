@@ -20,10 +20,6 @@ body {
 }
 
 #output {
-  width: 95vw;
-  height: 80vh;
-  margin-bottom: 2vw;
-  overflow-y: scroll;
   padding: 2vw;
 }
 
@@ -37,8 +33,6 @@ body {
   color: transparent;
   text-shadow: 0 0 0 #00ee00;
   background: #111111;
-  position: fixed;
-  bottom: 0;
   font-size: 2vh;
   font-family: "Apple II";
   border: none;
@@ -52,8 +46,10 @@ body {
   width: 1vw;
   height: 2vw;
   background: #00ee00;
-  position: absolute;
   animation: blink 0.5s infinite;
+  display: inline-block;
+  position: relative;
+  top: 0.5vh;
 }
 
 @keyframes blink {

@@ -8,10 +8,10 @@ input.onblur = (event) => {
 // move the caret to the left of the input text
 const caret = document.querySelector('#caret');
 const updateCaretPositionPre = () => {
-  caret.style.left = (input.value.length + 2) + 'vw';
+  caret.style.left = (input.value.length * 2 - 98) + 'vh';
 };
 const updateCaretPositionPost = () => {
-  caret.style.left = (input.value.length + 1) + 'vw';
+  caret.style.left = (input.value.length * 2 - 100) + 'vh';
 };
 document.onkeydown = document.onkeypress = updateCaretPositionPre;
 document.onkeyup = updateCaretPositionPost;
@@ -37,8 +37,7 @@ const loadDisk = (disk, config = {}) => {
       }
 
       output.appendChild(newLine).innerText = str;
-      // TODO: why doesn't this scroll to bottom on initial load?
-      output.scrollTop = output.scrollHeight;
+      window.scrollTo(0, document.body.scrollHeight);
     },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
