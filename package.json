@@ -1,0 +1,27 @@
+{
+  "name": "text-engine",
+  "version": "1.1.1",
+  "description": "A browser-based text adventure game engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okaybenji/text-engine.git"
+  },
+  "keywords": [
+    "text-adventure",
+    "engine",
+    "adventure-game-engine",
+    "javascript",
+    "text-adventure-game",
+    "repl"
+  ],
+  "author": "Benji Kay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/okaybenji/text-engine/issues"
+  },
+  "homepage": "https://github.com/okaybenji/text-engine#readme"
+}

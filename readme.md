@@ -11,7 +11,7 @@ Include your 'game disk' (JSON data) in `index.html` and load it with `loadDisk(
 #### What good will it do me?
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine).
 
-![Demo Screenshot](screenshot.png "Demo Screenshot")
+![Demo Screenshot](screenshot.gif "Demo Screenshot")
 
 #### That was a little fast...
 You're right. Here are some more in-depth instructions...
@@ -103,3 +103,7 @@ You can use the included `index.html` file in your own project, or you can creat
 * Engine inspired in part by [TextAdventure.js](https://github.com/TheBroox/TextAdventure.js).
 * Demo inspired by [Forgotten](https://sophiapark.itch.io/forgotten) by Sophia Park, Arielle Grimes, and Emilie Sovis and also [this screenshot](https://cdn-images-1.medium.com/max/1600/1*IRP1NLN5jQTwuWNfXXhjPA.gif), whatever it is.
 * Apple ][ font by Zeb downloaded from [dafont.com](http://www.dafont.com/apple.font).
+
+### Updates
+
+1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)

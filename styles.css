@@ -1,14 +1,30 @@
 @font-face{
-  font-family: "Apple II";
-  src: url('font.ttf');
+  font-family: 'Apple II';
+  src: url('fonts/font.ttf');
 }
 
 body {
-  color: #00ee00;
-  background: #111111;
-  font-size: 2vh;
-  font-family: "Apple II";
+  color: #ff8012;
+  font-size: 2.2vh;
+  font-family: 'Apple II';
   line-height: 4vh;
+  /* screen glow */
+  background-image: radial-gradient(
+    #1f0b00, black 120%
+  );
+  /* text glow */
+  text-shadow: 0 0 5px rgba(255, 78, 0, 0.6);
+}
+
+/* scanlines */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(rgba(255, 78, 0, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
 }
 
 .img {
@@ -20,11 +36,7 @@ body {
 }
 
 #output {
-  width: 95vw;
-  height: 80vh;
-  margin-bottom: 2vw;
-  overflow-y: scroll;
-  padding: 2vw;
+  padding: 2vw 2vw 0 2vw;
 }
 
 #output div {
@@ -32,12 +44,40 @@ body {
 }
 
 #input {
-  width: 98.5vw;
-  height: 10vh;
-  color: #00ee00;
-  background: #111111;
-  position: fixed;
-  bottom: 0;
+  height: 4vh;
+  width: 98.5vh;
+  color: transparent;
+  text-shadow: 0 0 0 orange;
+  background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
+  border: none;
+  position: relative;
+  bottom: 0.175vh;
+}
+
+span {
+  margin-left: 2vw;
+}
+
+#input:focus {
+  outline: none;
+}
+
+#caret {
+  width: 1vw;
+  height: 2vw;
+  background: orange;
+  animation: blink 0.5s infinite;
+  display: inline-block;
+  position: relative;
+  top: 0.3vh;
+}
+
+@keyframes blink {
+  0% {background: orange;}
+  49% {background: orange;}
+  60% {background: transparent;}
+  99% {background: transparent;}
+  100% {background: orange;}
 }

@@ -1,4 +1,75 @@
-const loadDisk = (disk) => {
+// keep focus on input
+const input = document.querySelector('#input');
+input.onblur = (event) => {
+  input.focus();
+  input.selectionStart = input.selectionEnd = 10000;
+};
+
+// move the caret to the left of the input text
+const caret = document.querySelector('#caret');
+// update position on keypress, but before character is in text box
+const updateCaretPositionPre = (event) => {
+  // Bail if this is a backspace.
+  if (event.keyCode === 8) {
+    return;
+  }
+  caret.style.left = (input.value.length * 1.75 - 96) + 'vh';
+};
+// update position after character is in text box
+const updateCaretPositionPost = () => {
+  caret.style.left = (input.value.length * 1.75 - 98) + 'vh';
+};
+document.onkeydown = document.onkeypress = updateCaretPositionPre;
+document.onkeyup = updateCaretPositionPost;
+// initialize caret position
+updateCaretPositionPost();
+
+const loadDisk = (disk, config = {}) => {
+  // build default (DOM) configuration
+  const defaults = {
+    // retrieve user input
+    getInput: () => input.value,
+    // overwrite user input
+    setInput: (str) => {
+      input.value = str;
+    },
+    // render output
+    println: (str, isImg = false) => {
+      const output = document.querySelector('#output');
+      const newLine = document.createElement('div');
+
+      if (isImg) {
+        newLine.classList.add('img');
+      }
+
+      output.appendChild(newLine).innerText = str;
+      window.scrollTo(0, document.body.scrollHeight);
+    },
+    // prepare the environment
+    setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
+      input.onkeypress = (e) => {
+        const ENTER = 13;
+
+        if (e.keyCode === ENTER) {
+          applyInput();
+        }
+      };
+
+      input.onkeydown = (e) => {
+        const UP = 38;
+        const DOWN = 40;
+
+        if (e.keyCode === UP) {
+          navigateHistory('prev');
+        } else if (e.keyCode === DOWN) {
+          navigateHistory('next');
+        }
+      };
+    }
+  };
+
+  const {getInput, setInput, println, setup} = Object.assign(defaults, config);
+
   // Disk -> Disk
   const init = (disk) => {
     const initializedDisk = Object.assign({}, disk);
@@ -15,25 +86,8 @@ const loadDisk = (disk) => {
   const inputs = ['']; // store all user commands
   let inputsPos = 0;
 
-  const inputBox = document.querySelector('#input');
-
-  const println = (str, isImg = false) => {
-    const output = document.querySelector('#output');
-    const newLine = document.createElement('div');
-
-    if (isImg) {
-      newLine.classList.add('img');
-    }
-
-    output.appendChild(newLine).innerText = str;
-    // TODO: why doesn't this scroll to bottom on initial load?
-    output.scrollTop = output.scrollHeight;
-  };
-
   // String -> Room
-  const getRoom = (id) => {
-    return disk.rooms.find(room => room.id === id);
-  };
+  const getRoom = (id) => disk.rooms.find(room => room.id === id);
 
   const enterRoom = (id) => {
     const room = getRoom(id);
@@ -57,19 +111,14 @@ const loadDisk = (disk) => {
 
   startGame(disk);
 
-  const applyInput = (e) => {
-    const ENTER = 13;
-
-    if (e.keyCode !== ENTER) {
-      return;
-    }
-
-    inputs.push(inputBox.value);
+  const applyInput = () => {
+    const input = getInput();
+    inputs.push(input);
     inputsPos = inputs.length;
-    println('> ' + inputBox.value);
+    println('> ' + input);
 
-    const val = inputBox.value.toLowerCase();
-    inputBox.value = ''; // reset input field
+    const val = input.toLowerCase();
+    setInput(''); // reset input field
 
     const exec = (cmd) => {
       if (cmd) {
@@ -89,6 +138,16 @@ const loadDisk = (disk) => {
     const strategy = {
       1() {
         const cmds = {
+          inv() {
+            if (!disk.inventory.length) {
+              println('You don\'t have any items in your inventory.')
+              return;
+            }
+            println('You have the following items in your inventory:');
+            disk.inventory.forEach(item => {
+              println(`* ${item.name}`);
+            });
+          },
           look() {
             println(room.desc);
           },
@@ -108,7 +167,8 @@ const loadDisk = (disk) => {
               LOOK AT [OBJECT NAME] e.g. 'look at key'
               TAKE [OBJECT NAME] e.g. 'take book'
               GO [DIRECTION] e.g. 'go north'
-              USE [OBJECT NAME] e.g. 'use common sense'
+              USE [OBJECT NAME] e.g. 'use door'
+              INV :: list inventory items
               HELP :: this help menu
             `;
             println(instructions);
@@ -156,7 +216,8 @@ const loadDisk = (disk) => {
 
             if (item) {
               if (item.use) {
-                item.use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
+                const use = typeof item.use === 'string' ? eval(item.use) : item.use;
+                use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
               } else {
                 println('That item doesn\'t have a use.');
               }
@@ -183,36 +244,33 @@ const loadDisk = (disk) => {
       }
     };
 
-    strategy[args.length]();
+    if (args.length <= 3) {
+      strategy[args.length]();
+    } else {
+      strategy[1]();
+    }
   };
 
-  inputBox.onkeypress = applyInput;
-
-  const navigateHistory = (e) => {
-    const UP = 38;
-    const DOWN = 40;
-
-    if (e.keyCode !== UP && e.keyCode !== DOWN) {
-      return;
-    }
-
-    if (e.keyCode === UP) {
+  const navigateHistory = (dir) => {
+    if (dir === 'prev') {
       inputsPos--;
       if (inputsPos < 0) {
         inputsPos = 0;
       }
-    }
-
-    if (e.keyCode === DOWN) {
+    } else if (dir === 'next') {
       inputsPos++;
       if (inputsPos > inputs.length) {
         inputsPos = inputs.length;
       }
     }
 
-    inputBox.value = inputs[inputsPos] || '';
-    return;
+    setInput(inputs[inputsPos] || '');
   };
 
-  inputBox.onkeydown = navigateHistory;
+  setup({applyInput, navigateHistory});
 };
+
+// npm support
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = loadDisk;
+}
