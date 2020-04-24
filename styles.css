@@ -40,4 +40,9 @@ body {
   bottom: 0;
   font-size: 2vh;
   font-family: "Apple II";
+  border: none;
+}
+
+#input:focus {
+  outline: none;
 }
