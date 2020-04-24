@@ -1,11 +1,18 @@
+// keep focus on input
+const input = document.querySelector('#input');
+input.onblur = (event) => {
+  input.focus();
+  input.selectionStart = input.selectionEnd = 10000;
+};
+
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
   const defaults = {
     // retrieve user input
-    getInput: () => document.querySelector('#input').value,
+    getInput: () => input.value,
     // overwrite user input
     setInput: (str) => {
-      document.querySelector('#input').value = str;
+      input.value = str;
     },
     // render output
     println: (str, isImg = false) => {
@@ -22,8 +29,7 @@ const loadDisk = (disk, config = {}) => {
     },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
-      const inputBox = document.querySelector('#input');
-      inputBox.onkeypress = (e) => {
+      input.onkeypress = (e) => {
         const ENTER = 13;
 
         if (e.keyCode === ENTER) {
@@ -31,7 +37,7 @@ const loadDisk = (disk, config = {}) => {
         }
       };
 
-      inputBox.onkeydown = (e) => {
+      input.onkeydown = (e) => {
         const UP = 38;
         const DOWN = 40;
 
