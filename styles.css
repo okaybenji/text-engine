@@ -20,7 +20,7 @@ body {
 }
 
 #output {
-  padding: 2vw;
+  padding: 2vw 2vw 0 2vw;
 }
 
 #output div {
@@ -36,6 +36,10 @@ body {
   font-size: 2vh;
   font-family: "Apple II";
   border: none;
+}
+
+span {
+  margin-left: 2vw;
 }
 
 #input:focus {

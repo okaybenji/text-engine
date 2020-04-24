@@ -8,10 +8,10 @@ input.onblur = (event) => {
 // move the caret to the left of the input text
 const caret = document.querySelector('#caret');
 const updateCaretPositionPre = () => {
-  caret.style.left = (input.value.length * 2 - 98) + 'vh';
+  caret.style.left = (input.value.length * 2 - 96) + 'vh';
 };
 const updateCaretPositionPost = () => {
-  caret.style.left = (input.value.length * 2 - 100) + 'vh';
+  caret.style.left = (input.value.length * 2 - 98) + 'vh';
 };
 document.onkeydown = document.onkeypress = updateCaretPositionPre;
 document.onkeyup = updateCaretPositionPost;
