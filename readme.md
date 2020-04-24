@@ -11,7 +11,7 @@ Include your 'game disk' (JSON data) in `index.html` and load it with `loadDisk(
 #### What good will it do me?
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine).
 
-![Demo Screenshot](screenshot.png "Demo Screenshot")
+![Demo Screenshot](screenshot.gif "Demo Screenshot")
 
 #### That was a little fast...
 You're right. Here are some more in-depth instructions...

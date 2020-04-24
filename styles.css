@@ -73,9 +73,9 @@ span {
 }
 
 @keyframes blink {
-    0%{     background: orange;    }
-    49%{    background: orange; }
-    60%{    background: transparent; }
-    99%{    background: transparent;  }
-    100%{   background: orange;    }
+  0% {background: orange;}
+  49% {background: orange;}
+  60% {background: transparent;}
+  99% {background: transparent;}
+  100% {background: orange;}
 }
