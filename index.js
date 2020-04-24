@@ -5,6 +5,19 @@ input.onblur = (event) => {
   input.selectionStart = input.selectionEnd = 10000;
 };
 
+// move the caret to the left of the input text
+const caret = document.querySelector('#caret');
+const updateCaretPositionPre = () => {
+  caret.style.left = (input.value.length + 2) + 'vw';
+};
+const updateCaretPositionPost = () => {
+  caret.style.left = (input.value.length + 1) + 'vw';
+};
+document.onkeydown = document.onkeypress = updateCaretPositionPre;
+document.onkeyup = updateCaretPositionPost;
+// initialize caret position
+updateCaretPositionPost();
+
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
   const defaults = {

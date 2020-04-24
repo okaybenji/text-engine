@@ -32,9 +32,10 @@ body {
 }
 
 #input {
-  width: 98.5vw;
   height: 10vh;
-  color: #00ee00;
+  width: 98.5vh;
+  color: transparent;
+  text-shadow: 0 0 0 #00ee00;
   background: #111111;
   position: fixed;
   bottom: 0;
@@ -45,4 +46,20 @@ body {
 
 #input:focus {
   outline: none;
+}
+
+#caret {
+  width: 1vw;
+  height: 2vw;
+  background: #00ee00;
+  position: absolute;
+  animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+    0%{     background: #00ee00;    }
+    49%{    background: #00ee00; }
+    60%{    background: transparent; }
+    99%{    background: transparent;  }
+    100%{   background: #00ee00;    }
 }
