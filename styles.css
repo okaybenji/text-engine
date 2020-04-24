@@ -52,6 +52,8 @@ body::after {
   font-size: 2vh;
   font-family: "Apple II";
   border: none;
+  position: relative;
+  bottom: 0.175vh;
 }
 
 span {
@@ -69,7 +71,7 @@ span {
   animation: blink 0.5s infinite;
   display: inline-block;
   position: relative;
-  top: 0.5vh;
+  top: 0.3vh;
 }
 
 @keyframes blink {
