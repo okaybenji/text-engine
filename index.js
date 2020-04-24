@@ -13,11 +13,11 @@ const updateCaretPositionPre = (event) => {
   if (event.keyCode === 8) {
     return;
   }
-  caret.style.left = (input.value.length * 2 - 96) + 'vh';
+  caret.style.left = (input.value.length * 1.75 - 96) + 'vh';
 };
 // update position after character is in text box
 const updateCaretPositionPost = () => {
-  caret.style.left = (input.value.length * 2 - 98) + 'vh';
+  caret.style.left = (input.value.length * 1.75 - 98) + 'vh';
 };
 document.onkeydown = document.onkeypress = updateCaretPositionPre;
 document.onkeyup = updateCaretPositionPost;

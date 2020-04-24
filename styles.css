@@ -1,11 +1,11 @@
 @font-face{
   font-family: "Apple II";
-  src: url('font.ttf');
+  src: url('fonts/font.ttf');
 }
 
 body {
   color: #ff8012;
-  font-size: 2vh;
+  font-size: 2.2vh;
   font-family: "Apple II";
   line-height: 4vh;
   /* screen glow */
