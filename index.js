@@ -7,7 +7,11 @@ input.onblur = (event) => {
 
 // move the caret to the left of the input text
 const caret = document.querySelector('#caret');
-const updateCaretPositionPre = () => {
+const updateCaretPositionPre = (event) => {
+  // Bail if this is a backspace.
+  if (event.keyCode === 8) {
+    return;
+  }
   caret.style.left = (input.value.length * 2 - 96) + 'vh';
 };
 const updateCaretPositionPost = () => {
