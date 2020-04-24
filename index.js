@@ -7,6 +7,7 @@ input.onblur = (event) => {
 
 // move the caret to the left of the input text
 const caret = document.querySelector('#caret');
+// update position on keypress, but before character is in text box
 const updateCaretPositionPre = (event) => {
   // Bail if this is a backspace.
   if (event.keyCode === 8) {
@@ -14,6 +15,7 @@ const updateCaretPositionPre = (event) => {
   }
   caret.style.left = (input.value.length * 2 - 96) + 'vh';
 };
+// update position after character is in text box
 const updateCaretPositionPost = () => {
   caret.style.left = (input.value.length * 2 - 98) + 'vh';
 };
