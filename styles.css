@@ -4,11 +4,27 @@
 }
 
 body {
-  color: #00ee00;
-  background: #111111;
+  color: #ff8012;
   font-size: 2vh;
   font-family: "Apple II";
   line-height: 4vh;
+  /* screen glow */
+  background-image: radial-gradient(
+    #1f0b00, black 120%
+  );
+  /* text glow */
+  text-shadow: 0 0 5px rgba(255, 78, 0, 0.6);
+}
+
+/* scanlines */
+body::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(rgba(255, 78, 0, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
 }
 
 .img {
@@ -31,8 +47,8 @@ body {
   height: 4vh;
   width: 98.5vh;
   color: transparent;
-  text-shadow: 0 0 0 #00ee00;
-  background: #111111;
+  text-shadow: 0 0 0 orange;
+  background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
   border: none;
@@ -49,7 +65,7 @@ span {
 #caret {
   width: 1vw;
   height: 2vw;
-  background: #00ee00;
+  background: orange;
   animation: blink 0.5s infinite;
   display: inline-block;
   position: relative;
@@ -57,9 +73,9 @@ span {
 }
 
 @keyframes blink {
-    0%{     background: #00ee00;    }
-    49%{    background: #00ee00; }
+    0%{     background: orange;    }
+    49%{    background: orange; }
     60%{    background: transparent; }
     99%{    background: transparent;  }
-    100%{   background: #00ee00;    }
+    100%{   background: orange;    }
 }
