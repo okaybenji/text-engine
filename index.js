@@ -244,7 +244,11 @@ const loadDisk = (disk, config = {}) => {
       }
     };
 
-    strategy[args.length]();
+    if (args.length <= 3) {
+      strategy[args.length]();
+    } else {
+      strategy[1]();
+    }
   };
 
   const navigateHistory = (dir) => {
