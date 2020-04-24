@@ -1,12 +1,12 @@
 @font-face{
-  font-family: "Apple II";
+  font-family: 'Apple II';
   src: url('fonts/font.ttf');
 }
 
 body {
   color: #ff8012;
   font-size: 2.2vh;
-  font-family: "Apple II";
+  font-family: 'Apple II';
   line-height: 4vh;
   /* screen glow */
   background-image: radial-gradient(
@@ -18,8 +18,8 @@ body {
 
 /* scanlines */
 body::after {
-  content: "";
-  position: absolute;
+  content: '';
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
