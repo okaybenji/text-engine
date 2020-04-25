@@ -107,5 +107,5 @@ You can use the included `index.html` file in your own project, or you can creat
 
 ### Updates
 
-1.2.0: New orange default theme.
-1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
+* 1.2.0: New orange default theme.
+* 1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
