@@ -6,19 +6,21 @@ const unlimitedAdventure = {
       name: 'GAME OVER',
       id: 'gameOver',
       img: `
-         ~~~       ~~~
-           1         1
-        !!!!!!!   !!!!!!!
-        !     !   !     !
-    !!!!!  #  !!!!!  #  !!!!!
-    !   !  #  !   !  #  !   !
-    ! # !  #  !   !  #  ! # !
-    !   !     !   !     !   !
-    !   !     !###!     !   !
-    ! # ! ### !###! ### ! # !
-    ! # ! ### !###! ### ! # !
-    ! # ! ### !###! ### ! # !
-"""""""""""""""""""""""""""""""""
+               T~~
+               |
+              /"\\
+      T~~     |'| T~~
+  T~~ |    T~ WWW |
+  |  /"\\   |  | | /\\T~~
+ /"\\ WWW  /"\\ |' |WW|
+WWWWW/\\| /   \\|'/\\|/"\\
+|   /__\\/_WWW_\\/__\\WWWW
+\\"  WWWW'|___|'WWWW'  /
+ |  |' |/  -  \\|' |' |
+ |' |  |WWWWWWW|' |  |
+ |  |' | |[-]| |  |' |
+ |  |  | |[-]| |  |  |
+'---'--'-/___\\-'--'---'
       `,
       desc: `
         Congratulations, IkariDude09! You have defeated the evil emperor Zylzyx and restored peace to the k†ngdøm.
@@ -35,19 +37,21 @@ const unlimitedAdventure = {
       name: 'The End of the World',
       id: 'endOfTheWorld',
       img: `
-   xx    ~~~       ~~~
-     xxxxx 1         1
-        x1!!!!! 0 !!!!!!!
-        x1    !  0000000000
-    !!xx!11#  !xx000000000000
-    ! x x11x000 00!00000!   !
-    !xxx!110  0 x !  0  ! # !
-    !   !1111 0 x !  0  !   !
-    !   0 1 1 0#x#!   00!   !
-    ! #0! #1# 0##x00011111# !
-    ! 00! #11 0000!11111!000!
-    ! # ! ### !###! 1111111100
-"""""""""""""""""""""""00000100"""""
+               T~~
+               |
+              /█\\
+      0~1     1'1 0~~
+  0~~ 1    0~ 010 1
+  1  /█\\   1  1 1 /\\T~~
+ /█\\ 010  /█\\ 1' |0|
+0000/\\| 0   \\|'/\\|/█\\
+|   1__\\/_101_\\/__\\0110
+\\█  11WW'|_0_|'0011'  /
+ 1  1' |/  -  \\|' |' |
+ 10 |  |1011000|' |  1
+ 1  |' | |[-0| |  |' 0
+ 0  |  | 10-]| |  |  1
+'0--'--'-/___\\-'1101--'
       `,
       desc: `
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
