@@ -102,6 +102,7 @@ You can use the included `index.html` file in your own project, or you can creat
 ### Acknowledgments
 * Engine inspired in part by [TextAdventure.js](https://github.com/TheBroox/TextAdventure.js).
 * Demo inspired by [Forgotten](https://sophiapark.itch.io/forgotten) by Sophia Park, Arielle Grimes, and Emilie Sovis and also [this screenshot](https://cdn-images-1.medium.com/max/1600/1*IRP1NLN5jQTwuWNfXXhjPA.gif), whatever it is.
+* "Ultimate Apple II Font" from [KreativeKorp](http://www.kreativekorp.com/software/fonts/apple2.shtml).
 
 ### Updates
 
