@@ -1,28 +1,8 @@
-// keep focus on input
 const input = document.querySelector('#input');
-input.onblur = (event) => {
-  input.focus();
-  input.selectionStart = input.selectionEnd = 10000;
-};
 
-// move the caret to the left of the input text
-const caret = document.querySelector('#caret');
-// update position on keypress, but before character is in text box
-const updateCaretPositionPre = (event) => {
-  // Bail if this is a backspace.
-  if (event.keyCode === 8) {
-    return;
-  }
-  caret.style.left = (input.value.length * 1.75 - 96) + 'vh';
+document.onkeydown = () => {
+  input.focus();
 };
-// update position after character is in text box
-const updateCaretPositionPost = () => {
-  caret.style.left = (input.value.length * 1.75 - 98) + 'vh';
-};
-document.onkeydown = document.onkeypress = updateCaretPositionPre;
-document.onkeyup = updateCaretPositionPost;
-// initialize caret position
-updateCaretPositionPost();
 
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
