@@ -26,7 +26,7 @@ const applyInput = (e) => {
   inputsPos = inputs.length;
   println('X:\\> ' + inputBox.value);
 
-  const val = inputBox.value.toLowerCase();
+  const val = inputBox.value.toLowerCase().trim();
   inputBox.value = ''; // reset input field
 
   const exec = (cmd) => {
