@@ -7,8 +7,8 @@ document.onkeydown = () => {
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
   const defaults = {
-    // retrieve user input
-    getInput: () => input.value,
+    // retrieve user input (remove whitespace at beginning or end)
+    getInput: () => input.value.trim(),
     // overwrite user input
     setInput: (str) => {
       input.value = str;
