@@ -12,7 +12,7 @@ const println = (str, isImg = false) => {
   }
 
   output.appendChild(newLine).innerText = str;
-  output.scrollTop = output.scrollHeight;
+  window.scrollTo(0, document.body.scrollHeight);
 };
 
 const applyInput = (e) => {
