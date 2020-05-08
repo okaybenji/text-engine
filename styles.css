@@ -29,10 +29,12 @@ body::after {
 
 /* highlight color */
 ::selection {
-  background: rgba(255, 60, 24, 0.44); /* WebKit/Blink Browsers */
+  background: rgb(255, 78, 25); /* WebKit/Blink Browsers */
+  color: black;
 }
 ::-moz-selection {
-  background: rgba(255, 60, 24, 0.44); /* Gecko Browsers */
+  background: rgb(255, 78, 25); /* Gecko Browsers */
+  color: black;
 }
 
 /* scrollbar */
