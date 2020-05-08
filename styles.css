@@ -4,7 +4,7 @@
 }
 
 body {
-  color: rgb(255, 61, 25);
+  color: rgb(255, 78, 25);
   font-size: 2.2vh;
   font-family: 'Apple II';
   line-height: 4vh;
@@ -13,7 +13,7 @@ body {
     rgb(21, 5, 2), black 120%
   );
   /* text glow */
-  text-shadow: 0 0 5px rgba(13, 170, 0, 0.69);
+  text-shadow: 0 0 5px rgba(170, 85, 0, 0.69);
 }
 
 /* scanlines */
@@ -54,7 +54,7 @@ body::after {
 #input {
   height: 4vh;
   width: 98.5vh;
-  color: #18ff2a;
+  color: #ff3c18;
   background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
@@ -72,9 +72,9 @@ span {
 }
 
 @keyframes blink {
-  0% {background: #18ff2a;}
-  49% {background: #18ff2a;}
+  0% {background: #ff3c18;}
+  49% {background: #ff3c18;}
   60% {background: transparent;}
   99% {background: transparent;}
-  100% {background: #18ff2a;}
+  100% {background: #ff3c18;}
 }
