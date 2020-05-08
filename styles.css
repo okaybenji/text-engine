@@ -13,7 +13,7 @@ body {
     rgb(21, 5, 2), black 120%
   );
   /* text glow */
-  text-shadow: 0 0 5px rgba(170, 85, 0, 0.69);
+  text-shadow: 0 0 5px rgba(255, 78, 25, 0.5);
 }
 
 /* scanlines */
@@ -29,11 +29,11 @@ body::after {
 
 /* highlight color */
 ::selection {
-  background: rgb(255, 78, 25); /* WebKit/Blink Browsers */
+  background: rgb(255, 111, 21); /* WebKit/Blink Browsers */
   color: black;
 }
 ::-moz-selection {
-  background: rgb(255, 78, 25); /* Gecko Browsers */
+  background: rgb(255, 111, 21); /* Gecko Browsers */
   color: black;
 }
 
@@ -69,7 +69,7 @@ body::after {
 #input {
   height: 4vh;
   width: 98.5vh;
-  color: #ff3c18;
+  color: rgb(255, 78, 25);
   background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
@@ -87,9 +87,9 @@ span {
 }
 
 @keyframes blink {
-  0% {background: #ff3c18;}
-  49% {background: #ff3c18;}
+  0% {background: #ff4e19;}
+  49% {background: #ff4e19;}
   60% {background: transparent;}
   99% {background: transparent;}
-  100% {background: #ff3c18;}
+  100% {background: #ff4e19;}
 }
