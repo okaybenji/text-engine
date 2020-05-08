@@ -35,6 +35,19 @@ body::after {
   background: rgba(255, 60, 24, 0.44); /* Gecko Browsers */
 }
 
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 1vw;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
 .img {
   white-space: pre;
   display: inline-block;
