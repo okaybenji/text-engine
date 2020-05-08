@@ -4,16 +4,16 @@
 }
 
 body {
-  color: #ff8012;
+  color: #efefef;
   font-size: 2.2vh;
   font-family: 'Apple II';
   line-height: 4vh;
   /* screen glow */
   background-image: radial-gradient(
-    #1f0b00, black 120%
+    #1c1c1c, black 120%
   );
   /* text glow */
-  text-shadow: 0 0 5px rgba(255, 78, 0, 0.6);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 /* scanlines */
@@ -24,7 +24,15 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: repeating-linear-gradient(rgba(255, 78, 0, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
+  background: repeating-linear-gradient(rgba(237, 237, 237, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
+}
+
+/* highlight color */
+::selection {
+  background: #d6d6d6; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #d6d6d6; /* Gecko Browsers */
 }
 
 .img {
@@ -46,7 +54,7 @@ body::after {
 #input {
   height: 4vh;
   width: 98.5vh;
-  color: orange;
+  color: white;
   background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
@@ -64,9 +72,9 @@ span {
 }
 
 @keyframes blink {
-  0% {background: orange;}
-  49% {background: orange;}
+  0% {background: white;}
+  49% {background: white;}
   60% {background: transparent;}
   99% {background: transparent;}
-  100% {background: orange;}
+  100% {background: white;}
 }
