@@ -4,13 +4,13 @@
 }
 
 body {
-  color: rgb(0, 255, 20);
+  color: rgb(255, 61, 25);
   font-size: 2.2vh;
   font-family: 'Apple II';
   line-height: 4vh;
   /* screen glow */
   background-image: radial-gradient(
-    rgb(0, 31, 8), black 120%
+    rgb(21, 5, 2), black 120%
   );
   /* text glow */
   text-shadow: 0 0 5px rgba(13, 170, 0, 0.69);
@@ -29,10 +29,10 @@ body::after {
 
 /* highlight color */
 ::selection {
-  background: rgba(24, 255, 42, 0.44); /* WebKit/Blink Browsers */
+  background: rgba(255, 60, 24, 0.44); /* WebKit/Blink Browsers */
 }
 ::-moz-selection {
-  background: rgba(24, 255, 42, 0.44); /* Gecko Browsers */
+  background: rgba(255, 60, 24, 0.44); /* Gecko Browsers */
 }
 
 .img {

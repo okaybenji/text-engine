@@ -1,12 +1,12 @@
 #input {
   color: transparent;
-  text-shadow: 0 0 0 #18ff2a;
+  text-shadow: 0 0 0 #ff3c18;
 }
 
 #caret {
   width: 1vw;
   height: 2vw;
-  background: #18ff2a;
+  background: #ff3c18;
   animation: blink 0.5s infinite;
   display: inline-block;
   position: relative;
