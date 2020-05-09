@@ -1,4 +1,16 @@
-## text-engine
+```
+████████ ███████ ██   ██ ████████                     
+   ██    ██       ██ ██     ██                        
+   ██    █████     ███      ██                        
+   ██    ██       ██ ██     ██                        
+   ██    ███████ ██   ██    ██                        
+                                                      
+      ███████ ███    ██  ██████  ██ ███    ██ ███████ 
+      ██      ████   ██ ██       ██ ████   ██ ██      
+█████ █████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   
+      ██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      
+      ███████ ██   ████  ██████  ██ ██   ████ ███████ 
+```
 
 #### What is it?
 A JavaScript REPL-style text-based adventure game engine. Small (~200 lines) and easy to use with no dependencies.
@@ -98,6 +110,7 @@ You can use the included `index.html` file in your own project, or you can creat
 ### Useful Tools
 * [ASCII Paint](http://www.asciipaint.com) - Makes creating ASCII art super easy.
 * [ASCII-Code.com](http://www.ascii-code.com) - Convenient for copying and pasting ASCII characters.
+* [Text to ASCII Art Generator](http://patorjk.com/software/taag/#p=display&h=2&v=2&f=ANSI%20Regular&t=text%0A-engine) - Make ASCII logos from text.
 
 ### Acknowledgments
 * Engine inspired in part by [TextAdventure.js](https://github.com/TheBroox/TextAdventure.js).
