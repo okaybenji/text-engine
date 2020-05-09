@@ -1,9 +1,19 @@
-const introText = `
-===========
-TEXT-ENGINE
-===========
+const logo = `
+ >>>>>>>> >>>>>>> >>  >> >>>>>>>>
+    >>  >>      >>  >>    >>
+   >>  >>>>>   >>>    >>   >>>>>
+   >>  >>     >> >>   >>
+   >>  >>>>>>> >>  >>   >>
 
-This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
+    >>>>>>> >>>  >>   >>>>>>  >> >>>  >>  >>>>>>>
+    >>      >>  >>  >>       >> >>>> >>  >>
+     >>>>  >> >> >> >> >>>>  >> >> >>>>  >>>>
+     >>     >> >>>>  >>  >> >> >>  >>>>  >>
+    >>>>>>> >>   >>   >>>>>> >> >>   >>  >>>>>>
+
+`;
+
+const introText = `This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
 
 This demo game is designed to be a little obtuse. Try typing something and hitting ENTER. Don't trust everything it tells you. (You will know when you reach the true ending.)
 
@@ -134,5 +144,6 @@ const navigateHistory = (e) => {
 
 inputBox.onkeydown = navigateHistory;
 
+println(logo, true);
 println(introText);
 println('X:\\>');
