@@ -28,12 +28,14 @@ body::after {
 }
 
 /* highlight color */
+/* WebKit/Blink Browsers */
 ::selection {
-  background: rgb(255, 111, 21); /* WebKit/Blink Browsers */
+  background: rgb(255, 111, 21);
   color: black;
 }
+/* Gecko Browsers */
 ::-moz-selection {
-  background: rgb(255, 111, 21); /* Gecko Browsers */
+  background: rgb(255, 111, 21);
   color: black;
 }
 

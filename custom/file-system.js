@@ -1,24 +1,22 @@
-const logo = `
-      █████████ ███████  ██   ██  █████████               
-        ██    ██        ██ ██       ██                  
-        ██   █████     ███      ██   █████            
-        ██   ██       ██ ██     ██                  
-        ██   ███████  ██   ███    ██                  
+const logo =
+`            █████████ ███████  ██   ██  █████████               
+              ██    ██        ██ ██       ██                  
+              ██   █████     ███      ██   █████            
+              ██   ██       ██ ██     ██                  
+              ██   ███████  ██   ███    ██                  
 
-   ███████  ███   ██   ██████   ██  ███  ███  ███████ 
-   ██       ████  ██  ██        ██  ████  ██  ██      
-   █████   ██ ██  ██  ██  ████  ██  ██ ██ ██  █████   
-   ██     ██  ██ ██  ██   ██  ██  ██  ██ ██  ██      
-   ███████  ██   ████   ██████   ██  ██  ████  ███████
-
+         ███████  ███   ██   ██████   ██  ███  ███  ███████ 
+         ██       ████  ██  ██        ██  ████  ██  ██      
+         █████   ██ ██  ██  ██  ████  ██  ██ ██ ██  █████   
+         ██     ██  ██ ██  ██   ██  ██  ██  ██ ██  ██      
+         ███████  ██   ████   ██████   ██  ██  ████  ███████
 `;
 
 const introText = `
-TO GET STARTED, CLICK HERE AND SCROLL WITH YOUR MOUSE.
+This is a live demo of a game made using text-engine, a text adventure game engine written in JavaScript. It's small and easy to use with no dependencies. Read the docs on Github and you can make your own adventure game! github.com/okaybenji/text-engine
 
-This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
+This demo game is a little obtuse. Try typing something and hitting ENTER. Don't trust everything it tells you. (You will know when you reach the true ending.)
 
-This demo game is designed to be a little obtuse. Try typing something and hitting ENTER. Don't trust everything it tells you. (You will know when you reach the true ending.)
 `;
 
 const inputs = ['']; // store all user commands
