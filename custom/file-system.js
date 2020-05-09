@@ -5,8 +5,7 @@ This is a live demo of a game made using text-engine. text-engine is a JavaScrip
 
 This demo game is designed to be a little obtuse. Try typing something and hitting ENTER. Don't trust everything it tells you. (You will know when you reach the true ending.)
 
-ACKNOWLEDGMENTS
-
+<< ACKNOWLEDGMENTS >>
 OBCOM PCT-II designed by Adam Bing!
 Engine inspired in part by TextAdventure.js.
 Demo inspired by Forgotten by Sophia Park, Arielle Grimes, and Emilie Sovis.
