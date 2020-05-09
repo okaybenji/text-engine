@@ -54,7 +54,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
 '0--'--'-/___\\-'1101--'
       `,
       desc: `
-        I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
+        I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k\†ngd\øm. It's time for you to leave.
       `,
       items: [
         { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, println, getRoom}) => {
@@ -92,7 +92,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
     {
       name: 'GAME REALLY OVER',
       id: 'gameReallyOver',
-      img: '¯\\_(ツ)_/¯',
+      img: '\¯\\\_(\ツ)\_/\¯',
       desc: `
         That's all I've written so far! If you liked this and want more, write me on Twitter: @okaybenji
       `,
