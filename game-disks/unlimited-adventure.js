@@ -92,7 +92,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
     {
       name: 'GAME REALLY OVER',
       id: 'gameReallyOver',
-      img: '',
+      img: '\¯\\\_(\ツ)\_/\¯',
       desc: `
         That's all I've written so far! If you liked this and want more, write me on Twitter: @okaybenji
       `,
