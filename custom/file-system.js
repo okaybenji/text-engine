@@ -1,16 +1,15 @@
 const logo = `
- >>>>>>>> >>>>>>> >>  >> >>>>>>>>
-    >>  >>      >>  >>    >>
-   >>  >>>>>   >>>    >>   >>>>>
-   >>  >>     >> >>   >>
-   >>  >>>>>>> >>  >>   >>
+ ████████ ███████ ██   ██ ████████
+    ██   ██      ██ ██     ██
+   ██   █████   ███    ██
+   ██   ██     ██ ██   ██
+   ██   ███████ ██   ██  ██
 
-    >>>>>>> >>>  >>   >>>>>>  >> >>>  >>  >>>>>>>
-    >>      >>  >>  >>       >> >>>> >>  >>
-     >>>>  >> >> >> >> >>>>  >> >> >>>>  >>>>
-     >>     >> >>>>  >>  >> >> >>  >>>>  >>
-    >>>>>>> >>   >>   >>>>>> >> >>   >>  >>>>>>
-
+    ███████ ███   ██  ██████  ██ ███  ███ ███████
+    ██     ████   ██ ██       ██ ████  ██ ██
+ █████ █████  ██ ██  ██ ██  ███  ██ ██ ██ ██ ████
+     ██     ██  ██ ██ ██   ██ ██ ██  ████ ██
+    ███████ ██   ███  ███████  ██ ██  ███ ███████
 `;
 
 const introText = `This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
@@ -48,6 +47,10 @@ const println = (str, isImg = false) => {
       // Preserve backslashes.
       if (char === '\\') {
         return image + char + '\\';
+      }
+      // Preserve blocks.
+      if (char === '█') {
+        return image + char + '\u2588';
       }
 
       return image + char;
