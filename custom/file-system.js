@@ -48,10 +48,6 @@ const println = (str, isImg = false) => {
       if (char === '\\') {
         return image + char + '\\';
       }
-      // Preserve blocks.
-      if (char === '█') {
-        return image + char + '\u2588';
-      }
 
       return image + char;
     }, '');
