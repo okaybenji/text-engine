@@ -1,30 +1,24 @@
 const logo = `
- ████████ ███████ ██   ██ ████████
-    ██   ██      ██ ██     ██
-   ██   █████   ███    ██
-   ██   ██     ██ ██   ██
-   ██   ███████ ██   ██  ██
+      █████████ ███████  ██   ██  █████████               
+        ██    ██        ██ ██       ██                  
+        ██   █████     ███      ██   █████            
+        ██   ██       ██ ██     ██                  
+        ██   ███████  ██   ███    ██                  
 
-    ███████ ███   ██  ██████  ██ ███  ███ ███████
-    ██     ████   ██ ██       ██ ████  ██ ██
- █████ █████  ██ ██  ██ ██  ███  ██ ██ ██ ██ ████
-     ██     ██  ██ ██ ██   ██ ██ ██  ████ ██
-    ███████ ██   ███  ███████  ██ ██  ███ ███████
+   ███████  ███   ██   ██████   ██  ███  ███  ███████ 
+   ██       ████  ██  ██        ██  ████  ██  ██      
+   █████   ██ ██  ██  ██  ████  ██  ██ ██ ██  █████   
+   ██     ██  ██ ██  ██   ██  ██  ██  ██ ██  ██      
+   ███████  ██   ████   ██████   ██  ██  ████  ███████
+
 `;
 
-const introText = `This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
+const introText = `
+TO GET STARTED, CLICK HERE AND SCROLL WITH YOUR MOUSE.
+
+This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
 
 This demo game is designed to be a little obtuse. Try typing something and hitting ENTER. Don't trust everything it tells you. (You will know when you reach the true ending.)
-
-ACKNOWLEDGMENTS
-
-OBCOM PCT-II designed by Adam Bing!
-Engine inspired in part by TextAdventure.js.
-Demo inspired by Forgotten by Sophia Park, Arielle Grimes, and Emilie Sovis.
-Ultimate Apple II Font from KreativeKorp.
-ASCII art adapted from ASCII Art Archive.
-Sounds adapted from freesound.org.
-
 `;
 
 const inputs = ['']; // store all user commands
@@ -32,11 +26,11 @@ let inputsPos = 0;
 
 const inputBox = document.querySelector('#input');
 
-const println = (str, isImg = false) => {
+const println = (str, isImg = false, isCode = false) => {
   const output = document.querySelector('#output');
-  const newLine = document.createElement('div');
+  const newLine = isCode ? document.createElement('code') : document.createElement('div');
 
-  if (isImg) {
+  if (isImg || isCode) {
     newLine.classList.add('img');
     // Preserve characters normally lost in HTML.
     str = str.split('').reduce((image, char) => {
@@ -143,6 +137,6 @@ const navigateHistory = (e) => {
 
 inputBox.onkeydown = navigateHistory;
 
-println(logo, true);
+println(logo, false, true);
 println(introText);
 println('X:\\>');

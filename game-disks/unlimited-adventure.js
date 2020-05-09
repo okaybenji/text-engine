@@ -95,6 +95,15 @@ WWWWW/\\| /   \\|'/\\|/"\\
       img: '\¯\\\_(\ツ)\_/\¯',
       desc: `
         That's all I've written so far! If you liked this and want more, write me on Twitter: @okaybenji
+
+        << ACKNOWLEDGMENTS >>
+
+        OBCOM PCT-II designed by Adam Bing!
+        Engine inspired in part by TextAdventure.js.
+        Demo inspired by Forgotten by Sophia Park, Arielle Grimes, and Emilie Sovis.
+        Ultimate Apple II Font from KreativeKorp.
+        ASCII art adapted from ASCII Art Archive.
+        Sounds adapted from freesound.org.
       `,
     },
   ],
