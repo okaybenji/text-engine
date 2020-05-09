@@ -103,6 +103,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
         Demo inspired by Forgotten by Sophia Park, Arielle Grimes, and Emilie Sovis.
         Ultimate Apple II Font from KreativeKorp.
         ASCII art adapted from ASCII Art Archive.
+        TEXT-ENGINE logo made with Text to ASCII Art Generator.
         Sounds adapted from freesound.org.
       `,
     },
