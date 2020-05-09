@@ -1,5 +1,7 @@
 const introText = `
-<<< TEXT-ENGINE >>>
+===========
+TEXT-ENGINE
+===========
 
 This is a live demo of a game made using text-engine. text-engine is a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies. Read the docs at github.com/okaybenji/text-engine to make your own adventure game!
 
