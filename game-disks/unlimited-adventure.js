@@ -56,6 +56,10 @@ WWWWW/\\| /   \\|'/\\|/"\\
       desc: `
         I don't know how you got here, but you definitely don't belong here. This is the End of the World. You already saved the k†ngdøm. It's time for you to leave.
       `,
+      // This is just here as an example of how you can use the onEnter property.
+      onEnter: ({disk, println, getRoom}) => {
+        console.log('Entered', disk.roomId); // Logs "Entered endOfTheWorld"
+      },
       items: [
         { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, println, getRoom}) => {
           const room = getRoom(disk.roomId);
