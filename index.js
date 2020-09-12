@@ -83,6 +83,10 @@ const loadDisk = (disk, config = {}) => {
     room.visits++;
 
     disk.roomId = id;
+
+    if (typeof room.onEnter == 'function') {
+      room.onEnter({disk, println, getRoom, enterRoom});
+    }
   };
 
   const startGame = (disk) => {

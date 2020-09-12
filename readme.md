@@ -1,4 +1,16 @@
-## text-engine
+```
+   ████████ ███████ ██   ██ ████████               
+      ██    ██       ██ ██     ██                  
+      ██    █████     ███      ██     █████            
+      ██    ██       ██ ██     ██                  
+      ██    ███████ ██   ██    ██                  
+                                                
+███████ ███    ██  ██████  ██ ███    ██ ███████ 
+██      ████   ██ ██       ██ ████   ██ ██      
+█████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   
+██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      
+███████ ██   ████  ██████  ██ ██   ████ ███████
+```
 
 #### What is it?
 A JavaScript REPL-style text-based adventure game engine. Small (~200 lines) and easy to use with no dependencies.
@@ -22,61 +34,61 @@ You're right. Here are some more in-depth instructions...
 #### What's a disk?
 A disk is a JavaScript object which describes your game. It has three top-level properties:
 
-* `roomId` (String) - This is a reference to the room the player currently occupies. Set this to the ID of the `room` the player should start in.
-
-* `inventory` (Array) - List of `item`s in the player's inventory. `item`s will be discussed in more detail below.
-
-* `rooms` (Array) - List of `room`s in the game.
+| Property    | Type     | Description |
+| ----------- | -------- | ----------- | 
+| `roomId`    | String   | This is a reference to the room the player currently occupies. Set this to the ID of the `room` the player should start in. |
+| `inventory` | Array    | List of items in the player's inventory. Items will be discussed in more detail below. |
+| `rooms`     | Array    | List of rooms in the game. |
 
 Note that you can also add any custom properties you want anywhere on this object. You will be able to access and modify them via the `use` functions on your items, which will be passed a reference to your disk. More on the `use` functions later...
 
 ### What's a room?
 A room is an object with the following properties:
 
-* `name` (String) - The name of the room will be displayed each time it is entered.
-
-* `id` (String) - Unique identifier for this room. Can be anything.
-
-* `img` (String) - Graphic to be displayed each time the room is entered. (This is intended to be ASCII art.)
-
-* `desc` (String) - Description of the room, displayed when it is first entered, and also when the player issues the `look` command.
-
-* `items` (Array) - List of `item`s in this room. `item`s can be interacted with by the player.
-
-* `exits` (Array) - List of paths from this room.
+| Property  | Type     | Description |
+| --------- | -------- | ----------- | 
+| `name`    | String   | The name of the room will be displayed each time it is entered. |
+| `id`      | String   | Unique identifier for this room. Can be anything. |
+| `img`     | String   | Graphic to be displayed each time the room is entered. (This is intended to be ASCII art.) |
+| `desc`    | String   | Description of the room, displayed when it is first entered, and also when the player issues the `look` command. |
+| `items`   | Array    | List of items in this room. Items can be interacted with by the player. |
+| `exits`   | Array    | List of paths from this room. |
+| `onEnter` | Function | *Optional* - Function to be called when the player enters this room. |
 
 ### What's an exit?
 
 An exit is an object with the following properties:
 
-* `dir` (String) - The direction the player must go to leave via this exit.
-
-* `id` (String) - The ID of the room this exit leads to.
+| Property | Type   | Description |
+| -------- | ------ | ----------- | 
+| `dir`    | String | The direction the player must go to leave via this exit. |
+| `id`     | String | The ID of the room this exit leads to. |
 
 ### What's an item?
 
 An item is an object with the following properties:
 
-* `name` (String) - How the item is referred to by the game and the player.
-
-* `desc` (String) - Text displayed when the player `look`s at the item.
-
-* `isTakeable` (Boolean) - *Optional* - Whether the player can pick up this item (if it's in a room). Defaults to false.
-
-* `use` (Function) - *Optional* - Function to be called when the player uses the item.
+| Property     | Type     | Description |
+| ------------ | -------- | ----------- | 
+| `name`       | String   | How the item is referred to by the game and the player. |
+| `desc`       | String   | Text displayed when the player looks at the item. |
+| `isTakeable` | Boolean  | *Optional* - Whether the player can pick up this item (if it's in a room). Defaults to false. |
+| `use`        | Function | *Optional* - Function to be called when the player uses the item. |
 
 ### Use functions
-Use functions accept a `game` object, which is a JavaScript object with the following properties:
+use functions accept a `game` object, which is a JavaScript object with the following properties:
 
-`disk` (Object) - A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable.
-
-`println` (Function) - The function which prints output for the player to see. Accepts a string.
-
-`getRoom` (Function) - Convenience function for retrieving a reference to a room on the disk. Accepts `roomId` as a String.
-
-`enterRoom` (Function) - The function which moves a player to a room. Accepts `roomId` as a String.
+| Property     | Type     | Description |
+| ------------ | -------- | ----------- | 
+| `disk`       | Object   | A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable. |
+| `println`    | Function | The function which prints output for the player to see. Accepts a string. |
+| `getRoom`    | Function | Convenience function for retrieving a reference to a room on the disk. Accepts `roomId` as a String. |
+| `enterRoom`  | Function | The function which moves a player to a room. Accepts `roomId` as a String. |
 
 Use functions are just JavaScript functions, with the full power of the language. You can make an item do whatever you want when a player uses it. Knock yourself out.
+
+### onEnter functions
+onEnter functions work just like use functions, but they trigger automatically when the player enters the room to which they are attached.
 
 That's everything! If you've made a JSON object with all these properties -- that is, a disk -- you've got a playable game!
 
@@ -89,15 +101,27 @@ You can use the included `index.html` file in your own project, or you can creat
 ```
 <div id="output"></div>
 ```
-* An `input` with ID `input`. This is where the user will enter commands.
+* An `input` with ID `input`. This is where the player will enter commands.
 ```
 <input id="input" autofocus>
 ```
 
+Once your game is running, the player can use the following commands:
+
+```
+LOOK :: repeat room description
+LOOK AT [OBJECT NAME] e.g. 'look at key'
+TAKE [OBJECT NAME] e.g. 'take book'
+GO [DIRECTION] e.g. 'go north'
+USE [OBJECT NAME] e.g. 'use door'
+INV :: list inventory items
+HELP :: this help menu
+```
 
 ### Useful Tools
 * [ASCII Paint](http://www.asciipaint.com) - Makes creating ASCII art super easy.
 * [ASCII-Code.com](http://www.ascii-code.com) - Convenient for copying and pasting ASCII characters.
+* [Text to ASCII Art Generator](http://patorjk.com/software/taag/#p=display&h=2&v=2&f=ANSI%20Regular&t=text%0A-engine) - Make ASCII logos from text.
 
 ### Acknowledgments
 * Engine inspired in part by [TextAdventure.js](https://github.com/TheBroox/TextAdventure.js).
@@ -107,5 +131,6 @@ You can use the included `index.html` file in your own project, or you can creat
 
 ### Updates
 
+* 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.
 * 1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
