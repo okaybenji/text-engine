@@ -85,7 +85,7 @@ const loadDisk = (disk, config = {}) => {
     disk.roomId = id;
 
     if (typeof room.onEnter == 'function') {
-      room.onEnter({disk, println, getRoom});
+      room.onEnter({disk, println, getRoom, enterRoom});
     }
   };
 
