@@ -37,7 +37,7 @@ A disk is a JavaScript object which describes your game. It has three top-level 
 | Property    | Type     | Description |
 | ----------- | -------- | ----------- | 
 | `roomId`    | String   | This is a reference to the room the player currently occupies. Set this to the ID of the `room` the player should start in. |
-| `inventory` | Array    | List of items in the player's inventory. items will be discussed in more detail below. |
+| `inventory` | Array    | List of items in the player's inventory. Items will be discussed in more detail below. |
 | `rooms`     | Array    | List of rooms in the game. |
 
 Note that you can also add any custom properties you want anywhere on this object. You will be able to access and modify them via the `use` functions on your items, which will be passed a reference to your disk. More on the `use` functions later...
@@ -71,7 +71,7 @@ An item is an object with the following properties:
 | Property     | Type     | Description |
 | ------------ | -------- | ----------- | 
 | `name`       | String   | How the item is referred to by the game and the player. |
-| `desc`       | String   | Text displayed when the player `look`s at the item. |
+| `desc`       | String   | Text displayed when the player looks at the item. |
 | `isTakeable` | Boolean  | *Optional* - Whether the player can pick up this item (if it's in a room). Defaults to false. |
 | `use`        | Function | *Optional* - Function to be called when the player uses the item. |
 
