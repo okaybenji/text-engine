@@ -57,6 +57,8 @@ A room is an object with the following properties:
 
 * `exits` (Array) - List of paths from this room.
 
+* `onEnter` (Function) - Optional - Function to be called when the player enters this room.
+
 ### What's an exit?
 
 An exit is an object with the following properties:
@@ -78,7 +80,7 @@ An item is an object with the following properties:
 * `use` (Function) - *Optional* - Function to be called when the player uses the item.
 
 ### Use functions
-Use functions accept a `game` object, which is a JavaScript object with the following properties:
+use functions accept a `game` object, which is a JavaScript object with the following properties:
 
 `disk` (Object) - A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable.
 
@@ -89,6 +91,9 @@ Use functions accept a `game` object, which is a JavaScript object with the foll
 `enterRoom` (Function) - The function which moves a player to a room. Accepts `roomId` as a String.
 
 Use functions are just JavaScript functions, with the full power of the language. You can make an item do whatever you want when a player uses it. Knock yourself out.
+
+### onEnter functions
+onEnter functions work just like use functions, but they trigger automatically when the user enters the room to which they are attached.
 
 That's everything! If you've made a JSON object with all these properties -- that is, a disk -- you've got a playable game!
 
