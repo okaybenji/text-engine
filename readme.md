@@ -111,6 +111,17 @@ You can use the included `index.html` file in your own project, or you can creat
 <input id="input" autofocus>
 ```
 
+Once your game is running, the player can use the following commands:
+
+```
+LOOK :: repeat room description
+LOOK AT [OBJECT NAME] e.g. 'look at key'
+TAKE [OBJECT NAME] e.g. 'take book'
+GO [DIRECTION] e.g. 'go north'
+USE [OBJECT NAME] e.g. 'use door'
+INV :: list inventory items
+HELP :: this help menu
+```
 
 ### Useful Tools
 * [ASCII Paint](http://www.asciipaint.com) - Makes creating ASCII art super easy.
