@@ -93,7 +93,7 @@ use functions accept a `game` object, which is a JavaScript object with the foll
 Use functions are just JavaScript functions, with the full power of the language. You can make an item do whatever you want when a player uses it. Knock yourself out.
 
 ### onEnter functions
-onEnter functions work just like use functions, but they trigger automatically when the user enters the room to which they are attached.
+onEnter functions work just like use functions, but they trigger automatically when the player enters the room to which they are attached.
 
 That's everything! If you've made a JSON object with all these properties -- that is, a disk -- you've got a playable game!
 
@@ -106,7 +106,7 @@ You can use the included `index.html` file in your own project, or you can creat
 ```
 <div id="output"></div>
 ```
-* An `input` with ID `input`. This is where the user will enter commands.
+* An `input` with ID `input`. This is where the player will enter commands.
 ```
 <input id="input" autofocus>
 ```
