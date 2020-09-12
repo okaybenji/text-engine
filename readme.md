@@ -34,61 +34,56 @@ You're right. Here are some more in-depth instructions...
 #### What's a disk?
 A disk is a JavaScript object which describes your game. It has three top-level properties:
 
-* `roomId` (String) - This is a reference to the room the player currently occupies. Set this to the ID of the `room` the player should start in.
-
-* `inventory` (Array) - List of `item`s in the player's inventory. `item`s will be discussed in more detail below.
-
-* `rooms` (Array) - List of `room`s in the game.
+| Property    | Type     | Description |
+| ----------- | -------- | ----------- | 
+| `roomId`    | String   | This is a reference to the room the player currently occupies. Set this to the ID of the `room` the player should start in. |
+| `inventory` | Array    | List of items in the player's inventory. items will be discussed in more detail below. |
+| `rooms`     | Array    | List of rooms in the game. |
 
 Note that you can also add any custom properties you want anywhere on this object. You will be able to access and modify them via the `use` functions on your items, which will be passed a reference to your disk. More on the `use` functions later...
 
 ### What's a room?
 A room is an object with the following properties:
 
-* `name` (String) - The name of the room will be displayed each time it is entered.
-
-* `id` (String) - Unique identifier for this room. Can be anything.
-
-* `img` (String) - Graphic to be displayed each time the room is entered. (This is intended to be ASCII art.)
-
-* `desc` (String) - Description of the room, displayed when it is first entered, and also when the player issues the `look` command.
-
-* `items` (Array) - List of `item`s in this room. `item`s can be interacted with by the player.
-
-* `exits` (Array) - List of paths from this room.
-
-* `onEnter` (Function) - Optional - Function to be called when the player enters this room.
+| Property  | Type     | Description |
+| --------- | -------- | ----------- | 
+| `name`    | String   | The name of the room will be displayed each time it is entered. |
+| `id`      | String   | Unique identifier for this room. Can be anything. |
+| `img`     | String   | Graphic to be displayed each time the room is entered. (This is intended to be ASCII art.) |
+| `desc`    | String   | Description of the room, displayed when it is first entered, and also when the player issues the `look` command. |
+| `items`   | Array    | List of items in this room. Items can be interacted with by the player. |
+| `exits`   | Array    | List of paths from this room. |
+| `onEnter` | Function | *Optional* - Function to be called when the player enters this room. |
 
 ### What's an exit?
 
 An exit is an object with the following properties:
 
-* `dir` (String) - The direction the player must go to leave via this exit.
-
-* `id` (String) - The ID of the room this exit leads to.
+| Property | Type   | Description |
+| -------- | ------ | ----------- | 
+| `dir`    | String | The direction the player must go to leave via this exit. |
+| `id`     | String | The ID of the room this exit leads to. |
 
 ### What's an item?
 
 An item is an object with the following properties:
 
-* `name` (String) - How the item is referred to by the game and the player.
-
-* `desc` (String) - Text displayed when the player `look`s at the item.
-
-* `isTakeable` (Boolean) - *Optional* - Whether the player can pick up this item (if it's in a room). Defaults to false.
-
-* `use` (Function) - *Optional* - Function to be called when the player uses the item.
+| Property     | Type     | Description |
+| ------------ | -------- | ----------- | 
+| `name`       | String   | How the item is referred to by the game and the player. |
+| `desc`       | String   | Text displayed when the player `look`s at the item. |
+| `isTakeable` | Boolean  | *Optional* - Whether the player can pick up this item (if it's in a room). Defaults to false. |
+| `use`        | Function | *Optional* - Function to be called when the player uses the item. |
 
 ### Use functions
 use functions accept a `game` object, which is a JavaScript object with the following properties:
 
-`disk` (Object) - A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable.
-
-`println` (Function) - The function which prints output for the player to see. Accepts a string.
-
-`getRoom` (Function) - Convenience function for retrieving a reference to a room on the disk. Accepts `roomId` as a String.
-
-`enterRoom` (Function) - The function which moves a player to a room. Accepts `roomId` as a String.
+| Property     | Type     | Description |
+| ------------ | -------- | ----------- | 
+| `disk`       | Object   | A reference to your game disk. Can be used to add or change properties. For instance, to make an item which previously could not be picked up takeable. |
+| `println`    | Function | The function which prints output for the player to see. Accepts a string. |
+| `getRoom`    | Function | Convenience function for retrieving a reference to a room on the disk. Accepts `roomId` as a String. |
+| `enterRoom`  | Function | The function which moves a player to a room. Accepts `roomId` as a String. |
 
 Use functions are just JavaScript functions, with the full power of the language. You can make an item do whatever you want when a player uses it. Knock yourself out.
 
