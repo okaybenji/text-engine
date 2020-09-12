@@ -131,5 +131,6 @@ HELP :: this help menu
 
 ### Updates
 
+* 1.3.0: Rooms can defined `onEnter` methods.
 * 1.2.0: New orange default theme.
 * 1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
