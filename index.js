@@ -15,6 +15,11 @@ const loadDisk = (disk, config = {}) => {
     },
     // render output
     println: (str, isImg = false) => {
+      // bail if string is null or undefined
+      if (!str) {
+        return;
+      }
+
       const output = document.querySelector('#output');
       const newLine = document.createElement('div');
 
