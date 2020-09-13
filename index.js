@@ -63,6 +63,10 @@ const loadDisk = (disk, config = {}) => {
       return room;
     });
 
+    if (!initializedDisk.inventory) {
+      initializedDisk.inventory = [];
+    }
+
     return initializedDisk;
   };
 
