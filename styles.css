@@ -4,16 +4,10 @@
 }
 
 body {
-  color: #ff8012;
-  font-size: 2.2vh;
+  color: #AAA;
+  font-size: 2vh;
   font-family: 'Apple II';
   line-height: 4vh;
-  /* screen glow */
-  background-image: radial-gradient(
-    #1f0b00, black 120%
-  );
-  /* text glow */
-  text-shadow: 0 0 5px rgba(255, 78, 0, 0.6);
 }
 
 /* scanlines */
@@ -24,7 +18,6 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: repeating-linear-gradient(rgba(255, 78, 0, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
 }
 
 /* scrollbar */
@@ -76,10 +69,15 @@ span {
   outline: none;
 }
 
+/* color the user's input */
+.user {
+  color: orange;
+}
+
 @keyframes blink {
-  0% {background: orange;}
-  49% {background: orange;}
+  0% {background: #AAA;}
+  49% {background: #AAA;}
   60% {background: transparent;}
   99% {background: transparent;}
-  100% {background: orange;}
+  100% {background: #AAA;}
 }
