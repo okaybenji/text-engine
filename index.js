@@ -121,7 +121,9 @@ const loadDisk = (disk, config = {}) => {
       }
     };
 
-    const args = val.split(' ');
+    const args = val.split(' ')
+      // remove articles
+      .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
     const cmd = args[0];
     const room = getRoom(disk.roomId);
 
