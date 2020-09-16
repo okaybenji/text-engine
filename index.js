@@ -4,7 +4,7 @@ const input = document.querySelector('#input');
 const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 
 // return the first name if it's an array, or the only name
-const getName = name => name[0] ? name[0] : name;
+const getName = name => typeof name === 'object' ? name[0] : name;
 
 document.onkeydown = () => {
   input.focus();
