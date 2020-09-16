@@ -26,6 +26,7 @@ const loadDisk = (disk, config = {}) => {
         return;
       }
 
+      // if this is an array of lines, pick one at random
       str = typeof line === 'object' ? pickOne(line) : line;
 
       const output = document.querySelector('#output');
@@ -33,6 +34,11 @@ const loadDisk = (disk, config = {}) => {
 
       if (isImg) {
         newLine.classList.add('img');
+      }
+
+      // add a class for styling prior user input
+      if (line[0] === '>') {
+        newLine.classList.add('user');
       }
 
       output.appendChild(newLine).innerText = str;
