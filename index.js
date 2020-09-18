@@ -283,7 +283,7 @@ const loadDisk = (disk, config = {}) => {
               println(item.desc);
 
               if (typeof(item.look) === 'function') {
-                item.look();
+                item.look({disk, println, getRoom, enterRoom});
               }
             }
           },
