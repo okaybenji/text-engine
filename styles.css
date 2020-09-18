@@ -41,6 +41,34 @@ body::after {
   transform: translateX(-50%);
 }
 
+.oscillateUp {
+  animation: MoveUpDown 1s linear infinite;
+  position: relative;
+}
+
+@keyframes MoveUpDown {
+  0%, 100% {
+    bottom: 5px;
+  }
+  50% {
+    bottom: -3px;
+  }
+}
+
+.oscillateDown {
+  animation: MoveDownUp 1s linear infinite;
+  position: relative;
+}
+
+@keyframes MoveDownUp {
+  0%, 100% {
+    bottom: -5px;
+  }
+  50% {
+    bottom: 5px;
+  }
+}
+
 #output {
   padding: 2vw 2vw 0 2vw;
 }

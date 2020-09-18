@@ -60,6 +60,14 @@ You dare not close your eyes, for you know that if you do, it will be staring ba
             };
             ['-', '.', '_'].forEach(colorElements);
             $$('.randomColor').forEach(e => e.style = `color: ${randomColor()}`);
+            // Oscillate the waves.
+            $$('.randomColor').forEach(e => {
+              if (e.innerText === '_') {
+                e.classList.add('oscillateUp');
+              } else if (e.innerText === '-') {
+                e.classList.add('oscillateDown');
+              }
+            });
           },
         },
       ],
