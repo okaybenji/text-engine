@@ -46,9 +46,11 @@ const screenCreatures = {
 The screen is filled with so many colors, swirling around in maddening patterns with no rhyme or reason. With each second you stare, it becomes harder and harder to look away. You swear you can see another pair of eyes looking back at you.`,
             `The colors begin to pour out of the screen until they envelop you like a cocoon. You feel the colors press against you, wrapping themselves around you like a second skin. The colors are suddenly seared away by a blinding white light. Yet still you see those eyes, wide and unblinking, seared on to the back of your eyelids. The light dissipates, and the world begins to come back into focus. 
 You dare not close your eyes, for you know that if you do, it will be staring back at you.`],
-          look() {
+          look({getRoom}) {
             // Get the TV ASCII art.
             const tv = $('.img');
+            // Reset the innerHTML so this will work each time the player looks at the TV.
+            tv.innerHTML = getRoom('start').img;
             // Add the scanline class to each line on the TV screen.
             tv.innerHTML = tv.innerHTML.replaceAll('--.__.--.__.--', `<span class="scanline">--.__.--.__.--</span>`);
             // Set each element of the screen to a random color.
