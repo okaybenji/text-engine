@@ -281,6 +281,10 @@ const loadDisk = (disk, config = {}) => {
               println('You don\'t see any such thing.');
             } else {
               println(item.desc);
+
+              if (typeof(item.look) === 'function') {
+                item.look();
+              }
             }
           },
           say() {
