@@ -41,6 +41,10 @@ body::after {
   transform: translateX(-50%);
 }
 
+.scanline {
+  color: lightskyblue;
+}
+
 #output {
   padding: 2vw 2vw 0 2vw;
 }
@@ -52,7 +56,7 @@ body::after {
 #input {
   height: 4vh;
   width: 98.5vh;
-  color: orange;
+  color: lightskyblue;
   background: transparent;
   font-size: 2vh;
   font-family: "Apple II";
@@ -61,7 +65,7 @@ body::after {
   bottom: 0.175vh;
 }
 
-span {
+.ml-2 {
   margin-left: 2vw;
 }
 
@@ -71,7 +75,7 @@ span {
 
 /* color the user's input */
 .user {
-  color: orange;
+  color: lightskyblue;
 }
 
 @keyframes blink {
