@@ -26,11 +26,11 @@ body::after {
 }
 
 ::-webkit-scrollbar-track {
-  background: #000;
+  background: lightgray;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000;
+  background: whitesmoke;
 }
 
 .img {
