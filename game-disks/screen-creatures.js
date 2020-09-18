@@ -1,3 +1,18 @@
+const $ = query => document.querySelector(query);
+const $$ = query => document.querySelectorAll(query);
+const randomIntBetween = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+const randomColor = () => {
+  const minBrightness = 33;
+  const maxBrightness = 67;
+  const minSaturation = 75;
+
+  let color = 'hsl(';
+  color += randomIntBetween(0, 360) + ',';
+  color += randomIntBetween(minSaturation, 100) + '%,';
+  color += randomIntBetween(minBrightness, maxBrightness) + '%)';
+  return color;
+};
+
 const screenCreatures = {
   roomId: 'start',
   rooms: [
@@ -32,8 +47,17 @@ The screen is filled with so many colors, swirling around in maddening patterns 
             `The colors begin to pour out of the screen until they envelop you like a cocoon. You feel the colors press against you, wrapping themselves around you like a second skin. The colors are suddenly seared away by a blinding white light. Yet still you see those eyes, wide and unblinking, seared on to the back of your eyelids. The light dissipates, and the world begins to come back into focus. 
 You dare not close your eyes, for you know that if you do, it will be staring back at you.`],
           look() {
-            const tv = document.querySelector('.img');
-            tv.innerHTML = tv.innerHTML.replaceAll('--.__.--.__.--', '<span class="scanline">--.__.--.__.--</span>');
+            // Get the TV ASCII art.
+            const tv = $('.img');
+            // Add the scanline class to each line on the TV screen.
+            tv.innerHTML = tv.innerHTML.replaceAll('--.__.--.__.--', `<span class="scanline">--.__.--.__.--</span>`);
+            // Set each element of the screen to a random color.
+            const scanlines = $$('.scanline')
+            const colorElements = char => {
+              scanlines.forEach(scanline => scanline.innerHTML = scanline.innerHTML.replaceAll(char, `<span class="randomColor">${char}</span>`));
+            };
+            ['-', '.', '_'].forEach(colorElements);
+            $$('.randomColor').forEach(e => e.style = `color: ${randomColor()}`);
           },
         },
       ],

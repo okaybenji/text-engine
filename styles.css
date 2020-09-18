@@ -41,10 +41,6 @@ body::after {
   transform: translateX(-50%);
 }
 
-.scanline {
-  color: lightskyblue;
-}
-
 #output {
   padding: 2vw 2vw 0 2vw;
 }
