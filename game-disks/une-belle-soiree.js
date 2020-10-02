@@ -32,7 +32,7 @@ const uneBelleSoiree = {
           room.desc = getNextDescription(room);
           item.desc = `In bold typeset and surrounded by Parisian filligree you read:
 
-          Mlle. Cassat is requested to attend the ball at Chateau de Francophilia on Tuesday the 1st of June at 8'00 PM.
+          Mlle. Cassat is requested to attend the ball at Chateau de Dauphin on Tuesday the 1st of June at 8'00 PM.
           `;
 
           item.onLook = () => {
