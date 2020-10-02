@@ -241,9 +241,6 @@ const loadDisk = (disk, config = {}) => {
                 if (typeof item.onTake === 'function') {
                   item.onTake({disk, println, getRoom, enterRoom, item});
                 }
-                if (typeof item.onLook === 'function') {
-                  item.onLook({disk, println, getRoom, enterRoom, item});
-                }
               } else {
                 println('You can\'t take that.');
               }
@@ -286,7 +283,7 @@ const loadDisk = (disk, config = {}) => {
               println(item.desc);
 
               if (typeof(item.look) === 'function') {
-                item.look({disk, println, getRoom, enterRoom});
+                item.look({disk, println, getRoom, enterRoom, item});
               }
             }
           },
