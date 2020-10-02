@@ -258,7 +258,7 @@ const loadDisk = (disk, config = {}) => {
             if (item) {
               if (item.use) {
                 const use = typeof item.use === 'string' ? eval(item.use) : item.use;
-                use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
+                use({disk, println, getRoom, enterRoom, item}); // use item and give it a reference to the game
               } else {
                 println('That item doesn\'t have a use.');
               }
