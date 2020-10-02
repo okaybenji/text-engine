@@ -4,10 +4,9 @@
 }
 
 body {
-  color: #AAA;
-  font-size: 2vh;
+  font-size: 4vh;
   font-family: 'Apple II';
-  line-height: 4vh;
+  line-height: 6vh;
 }
 
 /* scanlines */
@@ -80,9 +79,9 @@ body::after {
 #input {
   height: 4vh;
   width: 98.5vh;
-  color: lightskyblue;
+  color: red;
   background: transparent;
-  font-size: 2vh;
+  font-size: 4vh;
   font-family: "Apple II";
   border: none;
   position: relative;
