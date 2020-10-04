@@ -306,20 +306,20 @@ const ghostgirl = {
   currentRoute: 'crying',
   currentLocation: 'eastHedge',
   topics: function({println}) {
-    const findLineWithName = name => this.conversation.findIndex(step => step.name == name);
+    const findLineWithName = name => this.conversation.findIndex(line => line.name == name);
 
     while (this.lineIndex < this.conversation.length) {
-      const step = this.conversation[this.lineIndex];
-      if (step.m) {
-        println(step.m);
-        if (step.next) {
-          this.lineIndex = findLineWithName(step.next);
+      const line = this.conversation[this.lineIndex];
+      if (line.m) {
+        println(line.m);
+        if (line.next) {
+          this.lineIndex = findLineWithName(line.next);
         } else {
           this.lineIndex = this.lineIndex + 1;
         }
-      } else if (step.question) {
-        println(step.question);
-        return step.answers.reduce((acc, cur) => {
+      } else if (line.question) {
+        println(line.question);
+        return line.answers.reduce((acc, cur) => {
           acc[cur.next] = function() {
             this.lineIndex = findLineWithName(cur.next);
             println();
