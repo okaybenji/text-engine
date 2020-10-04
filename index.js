@@ -309,7 +309,7 @@ const loadDisk = (disk, config = {}) => {
               return;
             }
 
-            const character = disk.conversant || eval(args[2]);
+            const character = preposition === 'to' ? eval(args[2]) : disk.conversant;
             let topics;
 
             // get a character by name from a list of characters
