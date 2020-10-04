@@ -1,4 +1,8 @@
-const getNextDescription = (room) => room.descriptions.length ? room.descriptions.shift() : room.desc;
+const getNextDescription = ({room, println}) => { 
+  let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
+  println(roomDesc); 
+  return roomDesc;
+};
 
 const arrive = ({room, println, enterRoom}) => {
   const door = {
@@ -26,7 +30,7 @@ const uneBelleSoiree = {
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
     look: ({getRoom, println, enterRoom}) => {
       const room = getRoom('start');
-      room.desc = getNextDescription(room);
+      room.desc = getNextDescription({room,println});
       if (!room.descriptions.length) {
         arrive({room, println, enterRoom});
       }
@@ -34,7 +38,7 @@ const uneBelleSoiree = {
     use: ({getRoom, println, item, enterRoom}) => {
       println(item.desc);
       const room = getRoom('start');
-      room.desc = getNextDescription(room);
+      room.desc = getNextDescription({room,println});
       if (!room.descriptions.length) {
         arrive({room, println, enterRoom});
       }
@@ -44,14 +48,14 @@ const uneBelleSoiree = {
     desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
     look: ({getRoom, item, println, enterRoom}) => {
       const room = getRoom('start');
-      room.desc = getNextDescription(room);
+      room.desc = getNextDescription({room,println});
       if (!room.descriptions.length) {
         arrive({room, println, enterRoom});
       }
       item.desc = `It was a gift from your father to your mother.`;
     },
   }],
-  roomId: 'start',
+  roomId: 'gate',
   rooms: [
     {
       name: 'Carriage [1779]',
@@ -69,7 +73,7 @@ const uneBelleSoiree = {
         isTakeable: true,
         onTake: ({getRoom, item, println, enterRoom}) => {
           const room = getRoom('start');
-          room.desc = getNextDescription(room);
+          room.desc = getNextDescription({room,println});
           if (!room.descriptions.length) {
             arrive({room, println, enterRoom});
           }
@@ -79,7 +83,7 @@ const uneBelleSoiree = {
           `;
 
           item.look = () => {
-            room.desc = getNextDescription(room);
+            room.desc = getNextDescription({room,println});
             if (!room.descriptions.length) {
               arrive({room, println, enterRoom});
             }
@@ -101,7 +105,7 @@ const uneBelleSoiree = {
     {
       name: 'Gate', 
       id: 'gate', 
-      descriptions:[`A servant ushers you forward through the wrought iron gates that dissapear into the hedge at both ends. The fog that seemed to envelop the estate while riding from the carraig appears as a light mist here. Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carraige drives on.`],
+      desc:`A servant ushers you forward through the wrought iron gates that dissapear into the hedge at both ends. The fog that seemed to envelop the estate while riding from the carraige appears as a light mist here. Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carraige drives on.`,
       exits: [
         { dir: 'north', id: 'insideGate' }     
       ]
@@ -109,34 +113,69 @@ const uneBelleSoiree = {
     {
       name: 'Inside Gate', 
       id: 'insideGate', 
-      descriptions:[``],
       exits: [
         { dir: 'south', id: 'gate' },   
         { dir: 'north', id: 'fountain' }   
-      ]
+      ],
+      onEnter() {
+        this.desc = [`${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well kept hedges. Atop each heddge are improbably shaped silhouettes of well-manicured topiaries, you can't make out there height as there tops are obscured by the mist and the night`];
+      }
     },
     {
       name: 'Fountain',
       id: 'fountain', 
-      descriptions:[``],
+      desc:[`${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below`],
       exits: [
         { dir: 'south', id: 'insideGate' },
-        { dir: 'north', id: 'outerCourt' }     
+        { dir: 'north', id: 'outerCourt' },
+        { dir: 'east', id: 'eastHedge' }, 
+        { dir: 'west', id: 'westHedge' },
+        // { dir: 'fountain center', id: 'fountainCenter' },     
+      ],
+      items:[
+        {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches'},
+        {name: ['fountain','water'], 'desc':`The fountain is large enough that the center can not be reached except by wading through the waters.  It's too dark to see the bottom, but if it's like other fountains it is likely knee-deep at most.  The courtyard is filled with the thundering weight of the water falling from the statue's vase`},
+        {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
       ]
+      
     },
     {
       name: 'Outer Court',
       id: 'outerCourt', 
+      desc:[`To the north the windows of the house are well lit; each producing it's own faint halo in the mist, vines grow up the courtyard walls.`],
+      exits: [
+        { dir: 'north', id: 'innerCourt' }, 
+        { dir: 'south', id: 'fountain' }, 
+      ]
+    },
+    {
+      name: 'Inner Court',
+      id: 'innerCourt', 
+      desc:[``],
+      exits: [
+        { dir: 'south', id: 'outerCourt' }, 
+      ]
+    },
+    {
+      name: 'West Hedge',
+      id: 'westHedge', 
       descriptions:[``],
       exits: [
-        { dir: 'north', id: 'fountain' }, 
+        { dir: 'east', id: 'fountain' }, 
+      ]
+    },
+    {
+      name: 'East Hedge',
+      id: 'eastHedge', 
+      desc:[``],
+      exits: [
+        { dir: 'west', id: 'fountain' }, 
       ]
     },
   ],
 };
 
 let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
-console.log(adjMatrix);
 
 
 
@@ -177,48 +216,68 @@ function BFS(G,root,goal){
 
 }
 
-console.log(BFS(uneBelleSoiree.rooms,'gate','innerCourt'));
+// class Character {
+//   constructor({name, desc, routes, currentRoute, currentLocation, topics:[]}) {
+//     this.name = name;
+//     this.desc = desc;
+//     this.routes = routes;
+//     this.currentRoute = currentRoute;
+//     this.currentLocation = currentLocation;
+//     this.topics = topics;
+//   }
 
+//   updateLocation() {
+//     const route = this.routes[this.currentRoute];
+//     if (route.type == 'patrol'){
+//       if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
+//         route.path.reverse();
+//         this.currentLocation = route.path[1];
+//         return this;
+//       }else{
+//         this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
+//         return this;
+//       }
+//     }
+//     else if (route.type == 'loop'){
+//         this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+//         return this;
+//     }
+//   }
 
-class Character {
-  constructor({name, desc, routes, currentRoute, currentLocation}) {
-    this.name = name;
-    this.desc = desc;
-    this.routes = routes;
-    this.currentRoute = currentRoute;
-    this.currentLocation = currentLocation;
-  }
+//   updateRoute(route){
+//     this.currentRoute = route;
+//   }
 
-  updateLocation() {
-    const route = this.routes[this.currentRoute];
-    if (route.type == 'patrol'){
-      if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
-        route.path.reverse();
-        this.currentLocation = route.path[1];
-        return this;
-      }else{
-        this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
-        return this;
-      }
+//   get topics(){
+//     return this.topics();
+//   }
+
+//   get location(){
+//     return this.currentLocation;
+//   }
+// }
+
+let updateLocation = function() {
+  console.log('THIS',this); 
+  const route = this.routes[this.currentRoute];
+  if (route.type == 'patrol'){
+    if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
+      route.path.reverse();
+      this.currentLocation = route.path[1];
+      return this;
+    }else{
+      this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
+      return this;
     }
-    else if (route.type == 'loop'){
-        this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
-        return this;
-    }
   }
-
-  updateRoute(route){
-    this.currentRoute = route;
-  }
-
-  get location(){
-    return this.currentLocation;
+  else if (route.type == 'loop'){
+      this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+      return this;
   }
 }
 
 
-
-let gaspard = new Character({
+let gaspard = {
   name: 'Gaspard',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
@@ -231,11 +290,22 @@ let gaspard = new Character({
       type:'loop',
     }
   },
+  updateLocation,
   currentRoute:'helpingGuests',
   currentLocation:'gate',
-});
+  topics: function({room, hasFartedd}){
+    const topics = {};
+    if(hasFartedd){
+       topics['thatFart'] = 'sorry about that';
+    }
+    if(room.id == 'fountain'){
+      topics['apples'] = 'damn, I wish I was an apple';
+    }
+    return topics;
+  }
+};
 
-let ghostgirl =  new Character({
+let ghostgirl = {
   name: 'Ghost Girl',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
@@ -244,9 +314,16 @@ let ghostgirl =  new Character({
       type:'patrol',
       },
   },
+  updateLocation,
   currentRoute:'crying',
   currentLocation:'eastHedge',
-});
+  topics: function(){
+    
+    return {
+    'apples': 'Damn apples are good', 
+    'orgiastic glee': 'Damn apples are good'}
+  }
+};
 
 
 let characters = [gaspard,ghostgirl];
@@ -257,7 +334,7 @@ function getCharactersInRoom(roomId){
 
 
 document.onkeypress = function (e) {
-  characters.forEach(c => c.updateLocation());
+  
 };
 
 

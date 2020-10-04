@@ -290,6 +290,38 @@ const loadDisk = (disk, config = {}) => {
           say() {
             const str = args.splice(1).reduce((cur, acc) => cur + ' ' + acc, `You say `) + '.';
             println(str);
+          },
+          talk() {
+           let preposition = args[1];
+           if (preposition !== 'to' && preposition !== 'about'){
+             println('talk...what?')
+             return;
+           }
+           if (preposition == 'to'){
+             if(!Object.keys(characters).includes(args[2])){
+              println('There is no one here by that name');
+              return;
+             }
+            let character = eval(args[2]);
+            if (!getCharactersInRoom(room.id).map(c => c.name.toLowerCase()).includes(args[2].toLowerCase())){
+              println('There is no one here by that name');
+              return;
+            }
+            disk.conversant = character;
+            let topics = character.topics( {room,hasFartedd:true});
+            disk.conversation = topics;
+            println('What would you like to discuss?');
+            Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
+            println('Nothing');
+           }else{
+             if(getCharactersInRoom(room.id).includes(disk.conversant)){
+              
+            
+              return disk.conversation[args[2]];
+             }
+             disk.conversant = undefined;
+           }
+
           }
         };
         exec(cmds[cmd]);
