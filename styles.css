@@ -1,12 +1,9 @@
-@font-face{
-  font-family: 'Apple II';
-  src: url('fonts/font.ttf');
-}
-
 body {
-  font-size: 4vh;
-  font-family: 'Apple II';
-  line-height: 6vh;
+  font-size: 6vh;
+/*  letter-spacing: .3vh;*/
+  font-family: 'Peddana', serif;
+  line-height: 5vh;
+  color: #222;
 }
 
 /* scanlines */

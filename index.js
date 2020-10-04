@@ -357,7 +357,7 @@ const loadDisk = (disk, config = {}) => {
               listTopics(character);
             } else if (preposition === 'about'){
               if (!disk.conversant){
-                println('You need to be in a conversation before you talk about something');
+                println('You need to be in a conversation to talk about something');
                 return;
               }
               const character = eval(disk.conversant);
