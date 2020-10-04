@@ -367,10 +367,10 @@ const loadDisk = (disk, config = {}) => {
                   endConversation();
                   return;
                 } else if (response) {
-                  if(typeof response === 'function'){
-                    println(`${character.name}: ${response({room})}`);
+                  if (typeof response === 'function'){
+                    println(response({room}));
                   } else {
-                    println(`${character.name}: ${response}`);
+                    println(response);
                   }
                 } else {
                   println(`You talk about ${args[2]}.`);

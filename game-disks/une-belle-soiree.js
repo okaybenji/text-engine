@@ -255,7 +255,7 @@ const gaspard = {
       topics.thatfart = () => {
         this.hasFartedd = false;
         this.sorryAboutThat = true;
-        return 'sorry about that'
+        return `You remind Gaspard that it is impolite to break wind in the presence of a lady. “Sorry about that,” he moans.`;
       };
     }
     if (room.id == 'fountain') {
@@ -264,7 +264,7 @@ const gaspard = {
     if (this.sorryAboutThat) {
       topics.excuse = () => {
         this.sorryAboutThat = false;
-        return 'Thank ya kindly miss, for excusin\' ma fart';
+        return `“That’s quite all right,” you say. Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
       };
     }
     return topics;
