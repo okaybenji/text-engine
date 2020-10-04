@@ -249,13 +249,14 @@ const gaspard = {
   updateLocation,
   currentRoute: 'helpingGuests',
   currentLocation: 'gate',
-  topics: function({room}) {
+  topics: function({println, room}) {
     const topics = {};
     if (this.hasFartedd){
       topics.thatfart = () => {
         this.hasFartedd = false;
         this.sorryAboutThat = true;
-        return `You remind Gaspard that it is impolite to break wind in the presence of a lady. “Sorry about that,” he moans.`;
+        println(`You remind Gaspard that it is impolite to break wind in the presence of a lady.`);
+        println(`“Sorry about that,” he moans.`);
       };
     }
     if (room.id == 'fountain') {
@@ -264,7 +265,8 @@ const gaspard = {
     if (this.sorryAboutThat) {
       topics.excuse = () => {
         this.sorryAboutThat = false;
-        return `“That’s quite all right,” you say. Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
+        println(`“That’s quite all right,” you say.`);
+        println(`Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`);
       };
     }
     return topics;

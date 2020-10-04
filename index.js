@@ -313,7 +313,7 @@ const loadDisk = (disk, config = {}) => {
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
 
             // get topics of conversation for a character
-            const getTopics = (character) => character.topics({println,room});
+            const getTopics = (character) => character.topics({println, room});
 
             // give the player a list of topics to choose from for the character
             const listTopics = (character) => {
@@ -368,7 +368,7 @@ const loadDisk = (disk, config = {}) => {
                   return;
                 } else if (response) {
                   if (typeof response === 'function'){
-                    println(response({room}));
+                    response();
                   } else {
                     println(response);
                   }
