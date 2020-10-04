@@ -316,14 +316,16 @@ const loadDisk = (disk, config = {}) => {
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
 
             // give the player a list of topics to choose from for the character
+            // (if this is a branching conversation, list possible responses)
             const listTopics = (character) => {
-              console.log('topics:', topics);
               disk.conversation = topics;
 
               if (Object.keys(topics).length) {
-                println('What would you like to discuss?');
+                println(character.conversationType === 'branching' ? 'Select  a response:' : 'What would you like to discuss?');
                 Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
-                println('NOTHING');
+                if (character.conversationType !== 'branching') {
+                  println('NOTHING');
+                }
               } else {
                 endConversation();
               }

@@ -301,6 +301,7 @@ const ghostgirl = {
     {name: `end`},
     {line: `Okay, let's change the topic.`},
   ],
+  conversationType: 'branching',
   stepIndex: 0,
   updateLocation,
   currentRoute: 'crying',
