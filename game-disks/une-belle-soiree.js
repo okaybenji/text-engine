@@ -251,18 +251,21 @@ const gaspard = {
   currentLocation: 'gate',
   topics: function({room}) {
     const topics = {};
-    if(this.hasFartedd){
-      topics.thatfart = ({room}) => {
+    if (this.hasFartedd){
+      topics.thatfart = () => {
         this.hasFartedd = false;
         this.sorryAboutThat = true;
         return 'sorry about that'
       };
     }
-    if(room.id == 'fountain'){
+    if (room.id == 'fountain') {
       topics.apples = 'damn, I wish I was an apple';
     }
-    if(this.sorryAboutThat){
-      topics.excuse = 'Thank ya kindly miss, for excusin\' ma fart';
+    if (this.sorryAboutThat) {
+      topics.excuse = () => {
+        this.sorryAboutThat = false;
+        return 'Thank ya kindly miss, for excusin\' ma fart';
+      };
     }
     return topics;
   }
