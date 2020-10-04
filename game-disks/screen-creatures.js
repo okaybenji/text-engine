@@ -1,3 +1,6 @@
+// a game by okaybenji & 23dogsinatrenchcoat
+// inspired by the famicase of the same name: http://famicase.com/20/softs/080.html
+
 const $ = query => document.querySelector(query);
 const $$ = query => document.querySelectorAll(query);
 const randomIntBetween = (min, max) => Math.floor(Math.random() * (max - min)) + min;
