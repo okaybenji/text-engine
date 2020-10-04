@@ -292,38 +292,44 @@ const loadDisk = (disk, config = {}) => {
             println(str);
           },
           talk() {
-           let preposition = args[1];
-           if (preposition !== 'to' && preposition !== 'about'){
-             println('talk...what?')
-             return;
-           }
-           if (preposition == 'to'){
-             if(!Object.keys(characters).includes(args[2])){
-              println('There is no one here by that name');
-              return;
-             }
-            let character = eval(args[2]);
-            if (!getCharactersInRoom(room.id).map(c => c.name.toLowerCase()).includes(args[2].toLowerCase())){
-              println('There is no one here by that name');
+            let preposition = args[1];
+            if (preposition !== 'to' && preposition !== 'about') {
+              println('talk...what?')
               return;
             }
-            disk.conversant = character;
-            let topics = character.topics( {room,hasFartedd:true});
-            disk.conversation = topics;
-            println('What would you like to discuss?');
-            Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
-            println('Nothing');
-           }else{
-             if(getCharactersInRoom(room.id).includes(disk.conversant)){
-              
-            
-              return disk.conversation[args[2]];
-             }
-             disk.conversant = undefined;
-           }
+            const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
+            if (preposition == 'to') {
+              if (!findCharacter(characters, args[2])) {
+                println('There is no one here by that name.');
+                return;
+              }
 
+              const character = eval(args[2]);
+              if (!findCharacter(getCharactersInRoom(room.id), character.name)) {
+                println('There is no one here by that name.');
+                return;
+              }
+              disk.conversant = character;
+              const topics = character.topics({room, hasFartedd:true});
+              disk.conversation = topics;
+              println('What would you like to discuss?');
+              Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
+              println('Nothing');
+            } else {
+              if(getCharactersInRoom(room.id).includes(disk.conversant)){
+                const response = disk.conversation[args[2]];
+                if (response) {
+                  println(response);
+                } else {
+                  println(`You talk about ${args[2]}.`);
+                }
+              } else {
+                disk.conversant = undefined;
+              }
+            }
           }
         };
+
         exec(cmds[cmd]);
       }
     };

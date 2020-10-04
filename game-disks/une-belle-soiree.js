@@ -296,10 +296,10 @@ let gaspard = {
   topics: function({room, hasFartedd}){
     const topics = {};
     if(hasFartedd){
-       topics['thatFart'] = 'sorry about that';
+       topics.thatfart = 'sorry about that';
     }
     if(room.id == 'fountain'){
-      topics['apples'] = 'damn, I wish I was an apple';
+      topics.apples = 'damn, I wish I was an apple';
     }
     return topics;
   }
@@ -326,7 +326,7 @@ let ghostgirl = {
 };
 
 
-let characters = [gaspard,ghostgirl];
+const characters = [gaspard, ghostgirl];
 
 function getCharactersInRoom(roomId){
   return characters.filter(c => c.currentLocation === roomId);
