@@ -106,7 +106,11 @@ const uneBelleSoiree = {
     {
       name: 'Gate', 
       id: 'gate', 
-      desc:`A servant ushers you forward through the wrought iron gates that dissapear into the hedge at both ends. The fog that seemed to envelop the estate while riding from the carraige appears as a light mist here. Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carraige drives on.`,
+      desc:`A servant ushers you forward through the wrought iron gates that disappear into the hedge at both ends.
+
+      The fog that seemed to envelop the estate while riding from the carriage appears as a light mist here.
+
+      Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
       exits: [
         { dir: 'north', id: 'insideGate' }     
       ]
@@ -236,12 +240,12 @@ const gaspard = {
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
     helpingGuests: {
-      path:['gate','insideGate','fountain', 'outerCourt','innerCourt'],
-      type:'patrol',
+      path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
+      type: 'patrol',
       },
     investigatingSound: {
-      path:['fountain','eastHedge','fountain', 'westHedge','innerCourt',],
-      type:'loop',
+      path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
+      type: 'loop',
     }
   },
   hasFartedd: true,
@@ -255,8 +259,9 @@ const gaspard = {
       topics.thatfart = () => {
         this.hasFartedd = false;
         this.sorryAboutThat = true;
-        println(`You remind Gaspard that it is impolite to break wind in the presence of a lady.`);
-        println(`“Sorry about that,” he moans.`);
+        return `You remind Gaspard that it is impolite to break wind in the presence of a lady.
+
+        “Sorry about that,” he moans.`;
       };
     }
     if (room.id == 'fountain') {
@@ -265,8 +270,9 @@ const gaspard = {
     if (this.sorryAboutThat) {
       topics.excuse = () => {
         this.sorryAboutThat = false;
-        println(`“That’s quite all right,” you say.`);
-        println(`Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`);
+        return `“That’s quite all right,” you say.
+
+        Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
       };
     }
     return topics;
@@ -277,50 +283,47 @@ const ghostgirl = {
   name: 'GhostGirl',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
-    crying:{
-      path: ['eastHedge', 'fountain','westHedge'],
+    crying: {
+//      path: ['eastHedge', 'fountain','westHedge'],
+      path: ['gate'],
       type: 'patrol',
     },
   },
-  conversation:[
-    { m: "Hi!" },
-    { m: "This is my new game." },
-    { question: "Do you like it?", answers: [
-      { m: "yes", next: "like_yes" },
-      { m: "no", next: "like_no" },
-    ] },
-    { label: "like_yes", m: "I am happy you like my game!", next: "like_end" },
-    { label: "like_no", m: "You made me sad!", next: "like_end" },
-    { label: "like_end" },
-    { m: "OK, let's change the topic" }
+  conversation: [
+    {m: `Hi!`},
+    {m: `This is my new game.`},
+    {question: `Do you like it?`, answers: [
+      {m: `yes`, next: `like_yes`},
+      {m: `no`, next: `like_no`},
+    ]},
+    {label: `like_yes`, m: `I am happy you like my game!`, next: `like_end`},
+    {label: `like_no`, m: `You made me sad!`, next: `like_end`},
+    {label: `like_end`},
+    {m: `OK, let's change the topic`}
   ],
+  currentLine: 0,
   updateLocation,
   currentRoute:'crying',
   currentLocation:'eastHedge',
   topics: function({println}) {
-    function findLabel(label){
-      return this.conversation.findIndex(message => message.label == label);
-    }
+    const findLabel = label => this.conversation.findIndex(step => step.label == label);
 
-    let current_line = 0;
-    const story = this.conversation;
-    while (current_line < story.length) {
-      let current_step = story[current_line];
-      if (undefined !== current_step.m) {
-        println(current_step.m);
-        if (undefined !== current_step.next) {
-          current_line = findLabel(current_step.next);
+    while (this.currentLine < this.conversation.length) {
+      const step = this.conversation[this.currentLine];
+      if (step.m) {
+        println(step.m);
+        if (step.next) {
+          this.currentLine = findLabel(step.next);
         } else {
-          current_line = current_line + 1;
+          this.currentLine = this.currentLine + 1;
         }
-
-      } else if (undefined !== current_step.question) {
-        println(current_step.question);
-        current_step.answers.map(println);
-        return current_step.answers.reduce((acc,next) => {
+      } else if (step.question) {
+        println(step.question);
+        step.answers.map(println);
+        return step.answers.reduce((acc,next) => {
           acc[next.next] = function(){
-            current_line = findLabel(next.next);
-            println(current_line);
+            this.currentLine = findLabel(next.next);
+            println(this.currentLine);
           }
           return acc;
         }, {});

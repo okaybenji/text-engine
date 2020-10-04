@@ -368,7 +368,7 @@ const loadDisk = (disk, config = {}) => {
                   return;
                 } else if (response) {
                   if (typeof response === 'function'){
-                    response();
+                    println(response());
                   } else {
                     println(response);
                   }
