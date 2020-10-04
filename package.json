@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/okaybenji/text-engine/issues"
   },
-  "homepage": "https://github.com/okaybenji/text-engine#readme"
+  "homepage": "https://github.com/okaybenji/text-engine#readme",
+  "dependencies": {
+    "howler": "^2.2.0"
+  }
 }

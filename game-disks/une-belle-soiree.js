@@ -98,6 +98,167 @@ const uneBelleSoiree = {
         }
       },
     },
-    {name: 'Gate', id: 'gate'},
+    {
+      name: 'Gate', 
+      id: 'gate', 
+      descriptions:[`A servant ushers you forward through the wrought iron gates that dissapear into the hedge at both ends. The fog that seemed to envelop the estate while riding from the carraig appears as a light mist here. Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carraige drives on.`],
+      exits: [
+        { dir: 'north', id: 'insideGate' }     
+      ]
+    },
+    {
+      name: 'Inside Gate', 
+      id: 'insideGate', 
+      descriptions:[``],
+      exits: [
+        { dir: 'south', id: 'gate' },   
+        { dir: 'north', id: 'fountain' }   
+      ]
+    },
+    {
+      name: 'Fountain',
+      id: 'fountain', 
+      descriptions:[``],
+      exits: [
+        { dir: 'south', id: 'insideGate' },
+        { dir: 'north', id: 'outerCourt' }     
+      ]
+    },
+    {
+      name: 'Outer Court',
+      id: 'outerCourt', 
+      descriptions:[``],
+      exits: [
+        { dir: 'north', id: 'fountain' }, 
+      ]
+    },
   ],
 };
+
+let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
+console.log(adjMatrix);
+
+
+
+// 1 procedure BFS(G, root) is
+// 2      let Q be a queue
+// 3      label root as discovered
+// 4      Q.enqueue(root)
+// 5      while Q is not empty do
+// 6          v := Q.dequeue()
+// 7          if v is the goal then
+// 8              return v
+// 9          for all edges from v to w in G.adjacentEdges(v) do
+// 10             if w is not labeled as discovered then
+// 11                 label w as discovered
+// 13                 Q.enqueue(w)
+
+
+function BFS(G,root,goal){
+  let Q = [];
+  let discovered = [];
+  discovered.push(root.id);
+  Q.push( G.find(element => element.id == root));
+  while (Q.length > 0){
+    let v = Q.pop();
+    if (v.id === goal){
+      return v;
+    }
+    v.exits.forEach(exit => {
+      if (!discovered.find(elem => elem == v.id)){
+        console.log(G.find(element => element.id == exit.id), Q);
+        discovered.push(G.find(element => element.id == exit.id).id);
+        Q.push(G.find(element => element.id == exit.id));
+      }
+    });
+      
+    
+  }
+
+}
+
+console.log(BFS(uneBelleSoiree.rooms,'gate','innerCourt'));
+
+
+class Character {
+  constructor({name, desc, routes, currentRoute, currentLocation}) {
+    this.name = name;
+    this.desc = desc;
+    this.routes = routes;
+    this.currentRoute = currentRoute;
+    this.currentLocation = currentLocation;
+  }
+
+  updateLocation() {
+    const route = this.routes[this.currentRoute];
+    if (route.type == 'patrol'){
+      if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
+        route.path.reverse();
+        this.currentLocation = route.path[1];
+        return this;
+      }else{
+        this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
+        return this;
+      }
+    }
+    else if (route.type == 'loop'){
+        this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+        return this;
+    }
+  }
+
+  updateRoute(route){
+    this.currentRoute = route;
+  }
+
+  get location(){
+    return this.currentLocation;
+  }
+}
+
+
+
+let gaspard = new Character({
+  name: 'Gaspard',
+  desc: 'Servant of the Dauphin household, tasked with welcoming guests',
+  routes: { 
+    helpingGuests:{
+      path:['gate','insideGate','fountain', 'outerCourt','innerCourt'],
+      type:'patrol',
+      },
+    investigatingSound:{
+      path:['fountain','eastHedge','fountain', 'westHedge','innerCourt',],
+      type:'loop',
+    }
+  },
+  currentRoute:'helpingGuests',
+  currentLocation:'gate',
+});
+
+let ghostgirl =  new Character({
+  name: 'Ghost Girl',
+  desc: 'Servant of the Dauphin household, tasked with welcoming guests',
+  routes: { 
+    crying:{
+      path:['eastHedge', 'fountain','westHedge'],
+      type:'patrol',
+      },
+  },
+  currentRoute:'crying',
+  currentLocation:'eastHedge',
+});
+
+
+let characters = [gaspard,ghostgirl];
+
+function getCharactersInRoom(roomId){
+  return characters.filter(c => c.currentLocation === roomId);
+}
+
+
+document.onkeypress = function (e) {
+  characters.forEach(c => c.updateLocation());
+};
+
+
+
