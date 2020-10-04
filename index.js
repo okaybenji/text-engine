@@ -312,9 +312,12 @@ const loadDisk = (disk, config = {}) => {
             // get a character by name from a list of characters
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
 
+            // get topics of conversation for a character
+            const getTopics = (character) => character.topics({println,room});
+
             // give the player a list of topics to choose from for the character
             const listTopics = (character) => {
-              const topics = character.topics({println,room});
+              const topics = getTopics(character);
               disk.conversation = topics;
 
               if (Object.keys(topics).length) {
@@ -344,6 +347,12 @@ const loadDisk = (disk, config = {}) => {
                 println('There is no one here by that name.');
                 return;
               }
+
+              if (!Object.keys(getTopics(character)).length) {
+                println(`You have nothing to discuss with ${character.name} at this time.`);
+                return;
+              }
+
               disk.conversant = character;
               listTopics(character);
             } else if (preposition === 'about'){
