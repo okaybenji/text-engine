@@ -309,15 +309,14 @@ const loadDisk = (disk, config = {}) => {
               return;
             }
 
+            const character = disk.conversant || eval(args[2]);
+            let topics;
+
             // get a character by name from a list of characters
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
 
-            // get topics of conversation for a character
-            const getTopics = (character) => character.topics({println, room});
-
             // give the player a list of topics to choose from for the character
             const listTopics = (character) => {
-              const topics = getTopics(character);
               console.log('topics:', topics);
               disk.conversation = topics;
 
@@ -343,13 +342,14 @@ const loadDisk = (disk, config = {}) => {
                 return;
               }
 
-              const character = eval(args[2]);
               if (!findCharacter(getCharactersInRoom(room.id), character.name)) {
                 println('There is no one here by that name.');
                 return;
               }
 
-              if (!Object.keys(getTopics(character)).length) {
+              topics = character.topics({println, room});
+
+              if (!Object.keys(topics).length) {
                 println(`You have nothing to discuss with ${character.name} at this time.`);
                 return;
               }
@@ -378,6 +378,7 @@ const loadDisk = (disk, config = {}) => {
                 }
 
                 // continue the conversation.
+                topics = character.topics({println, room});
                 listTopics(character);
               } else {
                 println('That person is no longer available for conversation.')

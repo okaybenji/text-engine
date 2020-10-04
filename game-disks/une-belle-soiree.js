@@ -310,7 +310,6 @@ const ghostgirl = {
     const findStepWithName = name => this.conversation.findIndex(step => step.name == name);
 
     while (character.stepIndex < character.conversation.length) {
-      console.log('playing step', character.stepIndex);
       const step = character.conversation[character.stepIndex];
       if (step.line) {
         println(step.line);
