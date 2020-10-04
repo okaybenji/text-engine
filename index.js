@@ -316,9 +316,21 @@ const loadDisk = (disk, config = {}) => {
             const listTopics = (character) => {
               const topics = character.topics({println,room});
               disk.conversation = topics;
-              println('What would you like to discuss?');
-              Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
-              println('NOTHING');
+
+              if (Object.keys(topics).length) {
+                println('What would you like to discuss?');
+                Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
+                println('NOTHING');
+              } else {
+                endConversation();
+              }
+            };
+
+            // end the current conversation
+            const endConversation = () => {
+              disk.conversant = undefined;
+              disk.conversation = undefined;
+              println('You politely end the conversation.')
             };
 
             if (preposition === 'to') {
@@ -343,9 +355,7 @@ const loadDisk = (disk, config = {}) => {
               if(getCharactersInRoom(room.id).includes(disk.conversant)){
                 const response = disk.conversation[args[2]];
                 if (args[2].toLowerCase() === 'nothing'){
-                  disk.conversant = undefined;
-                  disk.conversation = undefined;
-                  println('You end the conversation.')
+                  endConversation();
                   return;
                 } else if (response) {
                   if(typeof response === 'function'){
