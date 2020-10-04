@@ -4,6 +4,7 @@ const getNextDescription = ({room, println}) => {
   return roomDesc;
 };
 
+// Handle the carriage arriving at its destination.
 const arrive = ({room, println, enterRoom}) => {
   const door = {
     name: 'door',
@@ -118,13 +119,12 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
-        this.desc = [`${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well kept hedges. Atop each heddge are improbably shaped silhouettes of well-manicured topiaries, you can't make out there height as there tops are obscured by the mist and the night`];
+        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well kept hedges. Atop each heddge are improbably shaped silhouettes of well-manicured topiaries, you can't make out there height as there tops are obscured by the mist and the night`;
       }
     },
     {
       name: 'Fountain',
       id: 'fountain', 
-      desc:[`${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below`],
       exits: [
         { dir: 'south', id: 'insideGate' },
         { dir: 'north', id: 'outerCourt' },
@@ -136,8 +136,10 @@ const uneBelleSoiree = {
         {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches'},
         {name: ['fountain','water'], 'desc':`The fountain is large enough that the center can not be reached except by wading through the waters.  It's too dark to see the bottom, but if it's like other fountains it is likely knee-deep at most.  The courtyard is filled with the thundering weight of the water falling from the statue's vase`},
         {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
-      ]
-      
+      ],
+      onEnter() {
+        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below`;
+      },
     },
     {
       name: 'Outer Court',
@@ -177,8 +179,6 @@ const uneBelleSoiree = {
 
 let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
 
-
-
 // 1 procedure BFS(G, root) is
 // 2      let Q be a queue
 // 3      label root as discovered
@@ -192,10 +192,9 @@ let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column
 // 11                 label w as discovered
 // 13                 Q.enqueue(w)
 
-
-function BFS(G,root,goal){
-  let Q = [];
-  let discovered = [];
+function BFS(G,root,goal) {
+  const Q = [];
+  const discovered = [];
   discovered.push(root.id);
   Q.push( G.find(element => element.id == root));
   while (Q.length > 0){
@@ -210,99 +209,54 @@ function BFS(G,root,goal){
         Q.push(G.find(element => element.id == exit.id));
       }
     });
-      
-    
   }
-
 }
 
-// class Character {
-//   constructor({name, desc, routes, currentRoute, currentLocation, topics:[]}) {
-//     this.name = name;
-//     this.desc = desc;
-//     this.routes = routes;
-//     this.currentRoute = currentRoute;
-//     this.currentLocation = currentLocation;
-//     this.topics = topics;
-//   }
-
-//   updateLocation() {
-//     const route = this.routes[this.currentRoute];
-//     if (route.type == 'patrol'){
-//       if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
-//         route.path.reverse();
-//         this.currentLocation = route.path[1];
-//         return this;
-//       }else{
-//         this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
-//         return this;
-//       }
-//     }
-//     else if (route.type == 'loop'){
-//         this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
-//         return this;
-//     }
-//   }
-
-//   updateRoute(route){
-//     this.currentRoute = route;
-//   }
-
-//   get topics(){
-//     return this.topics();
-//   }
-
-//   get location(){
-//     return this.currentLocation;
-//   }
-// }
-
-let updateLocation = function() {
-  console.log('THIS',this); 
+const updateLocation = function() {
+  console.log('updateLocation', this);
   const route = this.routes[this.currentRoute];
-  if (route.type == 'patrol'){
+  if (route.type == 'patrol') {
     if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
       route.path.reverse();
       this.currentLocation = route.path[1];
       return this;
-    }else{
+    } else {
       this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
       return this;
     }
   }
-  else if (route.type == 'loop'){
-      this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
-      return this;
+  else if (route.type == 'loop') {
+    this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+    return this;
   }
-}
+};
 
-
-let gaspard = {
+const gaspard = {
   name: 'Gaspard',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
-    helpingGuests:{
+    helpingGuests: {
       path:['gate','insideGate','fountain', 'outerCourt','innerCourt'],
       type:'patrol',
       },
-    investigatingSound:{
+    investigatingSound: {
       path:['fountain','eastHedge','fountain', 'westHedge','innerCourt',],
       type:'loop',
     }
   },
-  hasFartedd:true,
-  sorryAboutThat:false,
+  hasFartedd: true,
+  sorryAboutThat: false,
   updateLocation,
-  currentRoute:'helpingGuests',
-  currentLocation:'gate',
-  topics: function({room}){
+  currentRoute: 'helpingGuests',
+  currentLocation: 'gate',
+  topics: function({room}) {
     const topics = {};
     if(this.hasFartedd){
-       topics.thatfart = ({room}) => {
+      topics.thatfart = ({room}) => {
         this.hasFartedd = false;
         this.sorryAboutThat = true;
         return 'sorry about that'
-       };
+      };
     }
     if(room.id == 'fountain'){
       topics.apples = 'damn, I wish I was an apple';
@@ -314,14 +268,14 @@ let gaspard = {
   }
 };
 
-let ghostgirl = {
+const ghostgirl = {
   name: 'GhostGirl',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
     crying:{
-      path:['eastHedge', 'fountain','westHedge'],
-      type:'patrol',
-      },
+      path: ['eastHedge', 'fountain','westHedge'],
+      type: 'patrol',
+    },
   },
   conversation:[
     { m: "Hi!" },
@@ -338,57 +292,48 @@ let ghostgirl = {
   updateLocation,
   currentRoute:'crying',
   currentLocation:'eastHedge',
-  topics: function({println}){
+  topics: function({println}) {
     function findLabel(label){
       return this.conversation.findIndex(message => message.label == label);
     }
-      let current_line = 0;
-      let story = this.conversation;
-      while (current_line < story.length) {
-        let current_step = story[current_line];
-        if (undefined !== current_step.m) {
-          println(current_step.m);
-          if (undefined !== current_step.next) {
-            current_line = findLabel(current_step.next);
-          } else {
-            current_line = current_line + 1;
-          }
-    
-        } else if (undefined !== current_step.question) {
-          println(current_step.question);
-          current_step.answers.map(println);
-          return current_step.answers.reduce((acc,next) => {
-          acc[next.next] = function(){
-              current_line = findLabel(next.next);
-              println(current_line);
-            }
-            return acc;
-          },{}) 
-    
+
+    let current_line = 0;
+    const story = this.conversation;
+    while (current_line < story.length) {
+      let current_step = story[current_line];
+      if (undefined !== current_step.m) {
+        println(current_step.m);
+        if (undefined !== current_step.next) {
+          current_line = findLabel(current_step.next);
+        } else {
+          current_line = current_line + 1;
         }
+
+      } else if (undefined !== current_step.question) {
+        println(current_step.question);
+        current_step.answers.map(println);
+        return current_step.answers.reduce((acc,next) => {
+          acc[next.next] = function(){
+            current_line = findLabel(next.next);
+            println(current_line);
+          }
+          return acc;
+        }, {});
       }
     }
+  }
 };
-
 
 const characters = [gaspard, ghostgirl];
 
-function getCharactersInRoom(roomId){
+function getCharactersInRoom(roomId) {
   return characters.filter(c => c.currentLocation === roomId);
 }
 
-
+// Debugging: Allow pressing > to force characters to move to adjacent rooms.
 document.onkeypress = function (e) {
-  
   if(e.keyCode == 62){
-    
     characters.map(c=>c.updateLocation());
     console.log(characters.map(c => c.currentLocation))
   }
- 
 };
-
-
-
-
-
