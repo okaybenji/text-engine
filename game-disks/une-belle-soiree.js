@@ -290,16 +290,25 @@ let gaspard = {
       type:'loop',
     }
   },
+  hasFartedd:true,
+  sorryAboutThat:false,
   updateLocation,
   currentRoute:'helpingGuests',
   currentLocation:'gate',
-  topics: function({room, hasFartedd}){
+  topics: function({room}){
     const topics = {};
-    if(hasFartedd){
-       topics.thatfart = 'sorry about that';
+    if(this.hasFartedd){
+       topics.thatfart = ({room}) => {
+        this.hasFartedd = false;
+        this.sorryAboutThat = true;
+        return 'sorry about that'
+       };
     }
     if(room.id == 'fountain'){
       topics.apples = 'damn, I wish I was an apple';
+    }
+    if(this.sorryAboutThat){
+      topics.excuse = 'Thank ya kindly miss, for excusin\' ma fart';
     }
     return topics;
   }
@@ -335,6 +344,12 @@ function getCharactersInRoom(roomId){
 
 document.onkeypress = function (e) {
   
+  if(e.keyCode == 62){
+    
+    characters.map(c=>c.updateLocation());
+    console.log(characters.map(c => c.currentLocation))
+  }
+ 
 };
 
 

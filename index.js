@@ -310,21 +310,38 @@ const loadDisk = (disk, config = {}) => {
                 return;
               }
               disk.conversant = character;
-              const topics = character.topics({room, hasFartedd:true});
+              const topics = character.topics({room}); 
               disk.conversation = topics;
               println('What would you like to discuss?');
               Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
               println('Nothing');
-            } else {
+            } else if(preposition == "about"){
+              if (!disk.conversant){
+                println('You need to be in a conversation before you talk about something');
+                return;
+              }
               if(getCharactersInRoom(room.id).includes(disk.conversant)){
                 const response = disk.conversation[args[2]];
+                 if (args[2].toLowerCase() == 'nothing'){
+                  disk.conversant = undefined;
+                  disk.conversation = undefined;
+                  println('You end the conversation.')
+                  return;
+                 }
                 if (response) {
+                  console.log(typeof response)
+                  if(typeof response == 'function'){
+                    println(response({room}));
+                    return;
+                  }
                   println(response);
                 } else {
                   println(`You talk about ${args[2]}.`);
                 }
               } else {
+                println('That person is no longer available for conversation.')
                 disk.conversant = undefined;
+                disk.conversation = undefined;
               }
             }
           }
