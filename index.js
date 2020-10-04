@@ -318,6 +318,7 @@ const loadDisk = (disk, config = {}) => {
             // give the player a list of topics to choose from for the character
             const listTopics = (character) => {
               const topics = getTopics(character);
+              console.log('topics:', topics);
               disk.conversation = topics;
 
               if (Object.keys(topics).length) {

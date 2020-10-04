@@ -293,37 +293,36 @@ const ghostgirl = {
     {m: `Hi!`},
     {m: `This is my new game.`},
     {question: `Do you like it?`, answers: [
-      {m: `yes`, next: `like_yes`},
-      {m: `no`, next: `like_no`},
+      {m: `yes`, next: `yes`},
+      {m: `no`, next: `no`},
     ]},
-    {label: `like_yes`, m: `I am happy you like my game!`, next: `like_end`},
-    {label: `like_no`, m: `You made me sad!`, next: `like_end`},
-    {label: `like_end`},
+    {name: `yes`, m: `I am happy you like my game!`, next: `nd`},
+    {name: `no`, m: `You made me sad!`, next: `end`},
+    {name: `end`},
     {m: `OK, let's change the topic`}
   ],
-  currentLine: 0,
+  lineIndex: 0,
   updateLocation,
-  currentRoute:'crying',
-  currentLocation:'eastHedge',
+  currentRoute: 'crying',
+  currentLocation: 'eastHedge',
   topics: function({println}) {
-    const findLabel = label => this.conversation.findIndex(step => step.label == label);
+    const findLineWithName = name => this.conversation.findIndex(step => step.name == name);
 
-    while (this.currentLine < this.conversation.length) {
-      const step = this.conversation[this.currentLine];
+    while (this.lineIndex < this.conversation.length) {
+      const step = this.conversation[this.lineIndex];
       if (step.m) {
         println(step.m);
         if (step.next) {
-          this.currentLine = findLabel(step.next);
+          this.lineIndex = findLineWithName(step.next);
         } else {
-          this.currentLine = this.currentLine + 1;
+          this.lineIndex = this.lineIndex + 1;
         }
       } else if (step.question) {
         println(step.question);
-        step.answers.map(println);
-        return step.answers.reduce((acc,next) => {
-          acc[next.next] = function(){
-            this.currentLine = findLabel(next.next);
-            println(this.currentLine);
+        return step.answers.reduce((acc, cur) => {
+          acc[cur.next] = function() {
+            this.lineIndex = findLineWithName(cur.next);
+            println();
           }
           return acc;
         }, {});
