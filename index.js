@@ -110,6 +110,9 @@ const loadDisk = (disk, config = {}) => {
     if (typeof room.onEnter === 'function') {
       room.onEnter({disk, println, getRoom, enterRoom});
     }
+
+    // reset any active conversation
+    delete disk.conversant;
   };
 
   const startGame = (disk) => {
@@ -135,9 +138,15 @@ const loadDisk = (disk, config = {}) => {
       }
     };
 
-    const args = val.split(' ')
+    let args = val.split(' ')
       // remove articles
       .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
+
+    if (disk.conversant && args.length === 1) {
+      // if player is in a conversation, assume the argument is a topic
+      args = ['talk', 'about', args[0]];
+    }
+
     const cmd = args[0];
     const room = getRoom(disk.roomId);
 
@@ -197,6 +206,8 @@ const loadDisk = (disk, config = {}) => {
               TAKE [OBJECT NAME] e.g. 'take book'
               GO [DIRECTION] e.g. 'go north'
               USE [OBJECT NAME] e.g. 'use door'
+              TALK TO [CHARACTER NAME] e.g. 'talk to mary'
+              TALK ABOUT [SUBJECT] e.g. 'talk about horses'
               INV :: list inventory items
               HELP :: this help menu
             `;
@@ -294,11 +305,23 @@ const loadDisk = (disk, config = {}) => {
           talk() {
             let preposition = args[1];
             if (preposition !== 'to' && preposition !== 'about') {
-              println('talk...what?')
+              println(`You can talk TO someone or ABOUT some topic.`);
               return;
             }
+
+            // get a character by name from a list of characters
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
-            if (preposition == 'to') {
+
+            // give the player a list of topics to choose from for the character
+            const listTopics = (character) => {
+              const topics = character.topics({println,room});
+              disk.conversation = topics;
+              println('What would you like to discuss?');
+              Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
+              println('NOTHING');
+            };
+
+            if (preposition === 'to') {
               if (!findCharacter(characters, args[2])) {
                 println('There is no one here by that name.');
                 return;
@@ -310,34 +333,32 @@ const loadDisk = (disk, config = {}) => {
                 return;
               }
               disk.conversant = character;
-              const topics = character.topics({println,room}); 
-              disk.conversation = topics;
-              println('What would you like to discuss?');
-              Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
-              println('Nothing');
-            } else if(preposition == "about"){
+              listTopics(character);
+            } else if (preposition === 'about'){
               if (!disk.conversant){
                 println('You need to be in a conversation before you talk about something');
                 return;
               }
+              const character = eval(disk.conversant);
               if(getCharactersInRoom(room.id).includes(disk.conversant)){
                 const response = disk.conversation[args[2]];
-                 if (args[2].toLowerCase() == 'nothing'){
+                if (args[2].toLowerCase() === 'nothing'){
                   disk.conversant = undefined;
                   disk.conversation = undefined;
                   println('You end the conversation.')
                   return;
-                 }
-                if (response) {
-                  console.log(typeof response)
-                  if(typeof response == 'function'){
-                    println(response({room}));
-                    return
+                } else if (response) {
+                  if(typeof response === 'function'){
+                    println(`${character.name}: ${response({room})}`);
+                  } else {
+                    println(`${character.name}: ${response}`);
                   }
-                  println(response);
                 } else {
                   println(`You talk about ${args[2]}.`);
                 }
+
+                // continue the conversation.
+                listTopics(character);
               } else {
                 println('That person is no longer available for conversation.')
                 disk.conversant = undefined;
