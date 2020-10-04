@@ -315,7 +315,7 @@ let gaspard = {
 };
 
 let ghostgirl = {
-  name: 'Ghost Girl',
+  name: 'GhostGirl',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
     crying:{
@@ -323,15 +323,51 @@ let ghostgirl = {
       type:'patrol',
       },
   },
+  conversation:[
+    { m: "Hi!" },
+    { m: "This is my new game." },
+    { question: "Do you like it?", answers: [
+      { m: "yes", next: "like_yes" },
+      { m: "no", next: "like_no" },
+    ] },
+    { label: "like_yes", m: "I am happy you like my game!", next: "like_end" },
+    { label: "like_no", m: "You made me sad!", next: "like_end" },
+    { label: "like_end" },
+    { m: "OK, let's change the topic" }
+  ],
   updateLocation,
   currentRoute:'crying',
   currentLocation:'eastHedge',
-  topics: function(){
+  topics: function({println}){
+    function findLabel(label){
+      return this.conversation.findIndex(message => message.label == label);
+    }
+      let current_line = 0;
+      let story = this.conversation;
+      while (current_line < story.length) {
+        let current_step = story[current_line];
+        if (undefined !== current_step.m) {
+          println(current_step.m);
+          if (undefined !== current_step.next) {
+            current_line = findLabel(current_step.next);
+          } else {
+            current_line = current_line + 1;
+          }
     
-    return {
-    'apples': 'Damn apples are good', 
-    'orgiastic glee': 'Damn apples are good'}
-  }
+        } else if (undefined !== current_step.question) {
+          println(current_step.question);
+          current_step.answers.map(println);
+          return current_step.answers.reduce((acc,next) => {
+          acc[next.next] = function(){
+              current_line = findLabel(next.next);
+              println(current_line);
+            }
+            return acc;
+          },{}) 
+    
+        }
+      }
+    }
 };
 
 
@@ -351,6 +387,8 @@ document.onkeypress = function (e) {
   }
  
 };
+
+
 
 
 

@@ -310,7 +310,7 @@ const loadDisk = (disk, config = {}) => {
                 return;
               }
               disk.conversant = character;
-              const topics = character.topics({room}); 
+              const topics = character.topics({println,room}); 
               disk.conversation = topics;
               println('What would you like to discuss?');
               Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
@@ -332,7 +332,7 @@ const loadDisk = (disk, config = {}) => {
                   console.log(typeof response)
                   if(typeof response == 'function'){
                     println(response({room}));
-                    return;
+                    return
                   }
                   println(response);
                 } else {
