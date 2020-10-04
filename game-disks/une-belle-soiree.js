@@ -296,7 +296,7 @@ const ghostgirl = {
       {m: `yes`, next: `yes`},
       {m: `no`, next: `no`},
     ]},
-    {name: `yes`, m: `I am happy you like my game!`, next: `nd`},
+    {name: `yes`, m: `I am happy you like my game!`, next: `end`},
     {name: `no`, m: `You made me sad!`, next: `end`},
     {name: `end`},
     {m: `OK, let's change the topic`}
