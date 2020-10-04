@@ -63,7 +63,7 @@ const uneBelleSoiree = {
       id: 'start',
       img: ``,
       descriptions: [
-        `Underneath the beating of the hooves, you can hear the cicadas and bullfrogs of summer. There is a hand-mirror in your pocket.`,
+        `Underneath the beating of the hooves, you can hear the cicadas and bullfrogs of summer. The smell of cut hay drifts into the coach. There is a hand-mirror in your pocket.`,
         `The rhythms of the carriage over ruts in the country mud begin to turn to the hum of paved roads as in the distance the haze of harvest begins to be illuminated by the lights of a far off estate, which is just now becoming encircled with a light fog.`,
         `The light from the estate half-discloses the statuary that lines the entrance. From the roadside you hear the shouts of stablemen. Farther away, as quiet as a whisper, is a strange and exotic song.`,
         `The carriage comes to a stop. You can't make out the details, but the coachman is in some sort of conversation concerning the logistics of stabling the horses. Approaching the carriage is a servant of the House of Dauphin. You glance at the door.`,
@@ -290,44 +290,52 @@ const ghostgirl = {
     },
   },
   conversation: [
-    {m: `Hi!`},
-    {m: `This is my new game.`},
+    {line: `Hi!`},
+    {line: `This is my new game.`},
     {question: `Do you like it?`, answers: [
-      {m: `yes`, next: `yes`},
-      {m: `no`, next: `no`},
+      {response: `yes`, next: `yes`},
+      {response: `no`, next: `no`},
     ]},
-    {name: `yes`, m: `I am happy you like my game!`, next: `end`},
-    {name: `no`, m: `You made me sad!`, next: `end`},
+    {name: `yes`, line: `I am happy you like my game!`, next: `end`},
+    {name: `no`, line: `You made me sad!`, next: `end`},
     {name: `end`},
-    {m: `OK, let's change the topic`}
+    {line: `Okay, let's change the topic.`},
   ],
-  lineIndex: 0,
+  stepIndex: 0,
   updateLocation,
   currentRoute: 'crying',
   currentLocation: 'eastHedge',
   topics: function({println}) {
-    const findLineWithName = name => this.conversation.findIndex(line => line.name == name);
+    const character = this;
+    const findStepWithName = name => this.conversation.findIndex(step => step.name == name);
 
-    while (this.lineIndex < this.conversation.length) {
-      const line = this.conversation[this.lineIndex];
-      if (line.m) {
-        println(line.m);
-        if (line.next) {
-          this.lineIndex = findLineWithName(line.next);
-        } else {
-          this.lineIndex = this.lineIndex + 1;
+    while (character.stepIndex < character.conversation.length) {
+      console.log('playing step', character.stepIndex);
+      const step = character.conversation[character.stepIndex];
+      if (step.line) {
+        println(step.line);
+        if (step.next) {
+          character.stepIndex = findStepWithName(step.next);
         }
-      } else if (line.question) {
-        println(line.question);
-        return line.answers.reduce((acc, cur) => {
+      } else if (step.question) {
+        println(step.question);
+
+        // Return the reponses as topics.
+        return step.answers.reduce((acc, cur) => {
           acc[cur.next] = function() {
-            this.lineIndex = findLineWithName(cur.next);
-            println();
+            println(cur.line);
+            character.stepIndex = findStepWithName(cur.next);
           }
           return acc;
         }, {});
+        break;
       }
+
+      character.stepIndex++;
     }
+
+    // No topics remain.
+    return {};
   }
 };
 
