@@ -123,7 +123,7 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
-        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well kept hedges. Atop each heddge are improbably shaped silhouettes of well-manicured topiaries, you can't make out there height as there tops are obscured by the mist and the night`;
+        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
       }
     },
     {
