@@ -137,19 +137,19 @@ const uneBelleSoiree = {
         // { dir: 'center', id: 'fountainCenter' },     
       ],
       items:[
-        {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches'},
+        {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches.'},
         {name: ['fountain','water'], 'desc':`The fountain is large enough that the center can not be reached except by wading through the waters.  It's too dark to see the bottom, but if it's like other fountains it is likely knee-deep at most.  The courtyard is filled with the thundering weight of the water falling from the statue's vase`},
         {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
       ],
       onEnter() {
-        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below`;
+        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
       },
     },
     {
       name: 'Outer Court',
       id: 'outerCourt', 
-      desc:[`To the north the windows of the house are well lit; each producing it's own faint halo in the mist, vines grow up the courtyard walls.`],
-      items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous, it looks like they may have even compromised the walls structural integrity `}],
+      desc:[`Vines grow up the courtyard walls. To the north, the windows of the house are well lit, each producing its own faint halo in the mist.`],
+      items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous. It looks like they may even have compromised the wall's structural integrity.`}],
       exits: [
         { dir: 'north', id: 'innerCourt' }, 
         { dir: 'south', id: 'fountain' }, 
@@ -158,7 +158,7 @@ const uneBelleSoiree = {
     {
       name: 'Inner Court',
       id: 'innerCourt', 
-      desc:[`The courtyard is well illuminated. The marble stairs to the north look as if they were recently constructed, the lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somwhere else on the grounds`],
+      desc:[`The courtyard is well illuminated. The marble stairs to the north look as if they were recently constructed. The lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somwhere else on the grounds.`],
       exits: [
         { dir: 'south', id: 'outerCourt' }, 
       ]
@@ -168,7 +168,7 @@ const uneBelleSoiree = {
       id: 'westHedge', 
       desc:[`It's difficult to see, but there seems to be a small stone statue in the southwest corner of this opening`],
       items:[
-        {name: ['statue','farts', 'brigid'], desc:`Incense seems to have been recently burned here, a small cup of liquid, and a cross lay at the saints feet. ‘Brigid Of Kildare’ is engraved on to the statues base `},
+        {name: ['statue','farts', 'brigid'], desc: `Incense seems to have been recently burned here. A small cup of liquid and a cross lay at the saint’s feet. ‘Brigid Of Kildare’ is engraved on to the statue’s base. `},
         {
           name: ['cup','liquid','rum'], 
           desc: 'Some kind of alcohol, maybe?', 
@@ -180,9 +180,9 @@ const uneBelleSoiree = {
             this.items = this.items.splice(toBeRemovedIndex,1);
           }
         },
-        {name: ['cross'], desc: 'A cross carved from a dark wood, looks like ebony', isTakeable:true, onTake:function(){
-
-        }}
+        {name: ['cross'], desc: 'A cross carved from a dark wood. Looks like ebony.', isTakeable:true, onTake: () =>{
+          // TODO
+        }},
       ],
       
       exits: [
@@ -200,8 +200,8 @@ const uneBelleSoiree = {
     {
       name: 'Arcade',
       id: 'arcade', 
-      desc:[`The front of the Dauphin home is encircled by a large arcade`],
-      items:[{name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl but it was constructed several centuries ago, and has changed ownership several times`}],
+      desc:[`The front of the Dauphin home is encircled by a large arcade.`],
+      items:[{name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`}],
       exits: [
         { dir: 'west', id: 'fountain' }, 
       ]
@@ -288,7 +288,7 @@ const updateLocation = function({println,disk}) {
 
 const gaspard = {
   name: 'Gaspard',
-  desc: 'Servant of the Dauphin household, tasked with welcoming guests',
+  desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
   routes: { 
     helpingGuests: {
       path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
@@ -332,7 +332,7 @@ const gaspard = {
 
 const ghostgirl = {
   name: 'GhostGirl',
-  desc: 'Servant of the Dauphin household, tasked with welcoming guests',
+  desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
   routes: { 
     crying: {
     path: ['eastHedge', 'fountain','westHedge'],
@@ -394,9 +394,5 @@ const characters = [gaspard, ghostgirl];
 function getCharactersInRoom(roomId) {
   return characters.filter(c => c.currentLocation === roomId);
 }
-
-
-
-
 
 // Take off dress; go into pool; offer statue rum; gate opens behind you; THE END;
