@@ -10,6 +10,8 @@ document.onkeydown = () => {
   input.focus();
 };
 
+
+
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
   const defaults = {
@@ -75,6 +77,13 @@ console.log(line, isImg, isName, isDesc);
     }
   };
 
+  // Debugging: Allow pressing > to force characters to move to adjacent rooms.
+  document.onkeypress = function (e) {
+    if(e.keyCode == 62){
+      characters.map(c=>c.updateLocation({println,disk}));
+    }
+  };
+
   const {getInput, setInput, println, setup} = Object.assign(defaults, config);
 
   // Disk -> Disk
@@ -110,7 +119,9 @@ console.log(line, isImg, isName, isDesc);
     if (room.visits === 0) {
       println(room.desc,false,false,true);
     }
-
+    let characters = getCharactersInRoom(room.id);
+    characters.map(c => println(`${c.name} is here.`,false,false,true))   
+    console.log('entering room');
     room.visits++;
 
     disk.roomId = id;
@@ -204,7 +215,7 @@ console.log(line, isImg, isName, isDesc);
             }
             println('You see the following:');
             items
-              .forEach(item => println(item.name));
+              .forEach(item => println(getName(item.name)));
           },
           help() {
             const instructions = `
@@ -400,7 +411,7 @@ console.log(line, isImg, isName, isDesc);
             }
           }
         };
-
+ 
         exec(cmds[cmd]);
       }
     };

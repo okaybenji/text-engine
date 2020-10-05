@@ -3,8 +3,8 @@ body {
 /*  letter-spacing: .3vh;*/
   font-family: 'Alegreya SC', serif;
   line-height: 3.3vh;
-  color: #222;
-  background: ivory;
+  color: #ddd;
+  background:black;
 }
 
 .desc {
@@ -13,7 +13,7 @@ body {
 
 .desc:first-letter {
   float: left;
-  color: #903;
+  color: rgb(199, 15, 15);
   font-size: 5vh;
   font-family: 'Alegreya';
   padding-right:.2vh;
@@ -89,7 +89,7 @@ body::after {
 #input {
   height: 3vh;
   width: 98.5vh;
-  color: black;
+  color: rgb(199, 15, 15);
   background: transparent;
   font-size: 4vh;
   font-family: 'Alegreya SC', serif;
@@ -108,7 +108,7 @@ body::after {
 
 /* color the user's input */
 .user {
-  color: #903;
+  color: rgb(199, 15, 15);
   font-family: 'Alegreya SC', serif;
   height: 3vh;
 }

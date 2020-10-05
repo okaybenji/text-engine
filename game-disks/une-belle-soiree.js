@@ -19,13 +19,15 @@ const arrive = ({room, println, enterRoom}) => {
   room.openTimeout = setTimeout(() => {
     println(`The servant opens the door.`),
     door.use = ({enterRoom}) => {
-      enterRoom('gate');
+      console.log('tf?');
+      //nterRoom('gate');
     };
   }, 10000);
   room.items.push(door);
 };
 
 const uneBelleSoiree = {
+  guilt:2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
@@ -132,7 +134,7 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'outerCourt' },
         { dir: 'east', id: 'eastHedge' }, 
         { dir: 'west', id: 'westHedge' },
-        // { dir: 'fountain center', id: 'fountainCenter' },     
+        // { dir: 'center', id: 'fountainCenter' },     
       ],
       items:[
         {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches'},
@@ -147,6 +149,7 @@ const uneBelleSoiree = {
       name: 'Outer Court',
       id: 'outerCourt', 
       desc:[`To the north the windows of the house are well lit; each producing it's own faint halo in the mist, vines grow up the courtyard walls.`],
+      items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous, it looks like they may have even compromised the walls structural integrity `}],
       exits: [
         { dir: 'north', id: 'innerCourt' }, 
         { dir: 'south', id: 'fountain' }, 
@@ -155,7 +158,7 @@ const uneBelleSoiree = {
     {
       name: 'Inner Court',
       id: 'innerCourt', 
-      desc:[``],
+      desc:[`The courtyard is well illuminated. The marble stairs to the north look as if they were recently constructed, the lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somwhere else on the grounds`],
       exits: [
         { dir: 'south', id: 'outerCourt' }, 
       ]
@@ -163,7 +166,25 @@ const uneBelleSoiree = {
     {
       name: 'West Hedge',
       id: 'westHedge', 
-      descriptions:[``],
+      desc:[`It's difficult to see, but there seems to be a small stone statue in the southwest corner of this opening`],
+      items:[
+        {name: ['statue','farts', 'brigid'], desc:`Incense seems to have been recently burned here, a small cup of liquid, and a cross lay at the saints feet. ‘Brigid Of Kildare’ is engraved on to the statues base `},
+        {
+          name: ['cup','liquid','rum'], 
+          desc: 'Some kind of alcohol, maybe?', 
+          isTakeable:true, 
+          use:function({println,disk}){
+            println('Rum. That was definitely some kind of strong rum.');
+            disk.guilt++;
+            let toBeRemovedIndex = this.items.findIndex(item => item.name[0] == 'cup');
+            this.items = this.items.splice(toBeRemovedIndex,1);
+          }
+        },
+        {name: ['cross'], desc: 'A cross carved from a dark wood, looks like ebony', isTakeable:true, onTake:function(){
+
+        }}
+      ],
+      
       exits: [
         { dir: 'east', id: 'fountain' }, 
       ]
@@ -171,7 +192,16 @@ const uneBelleSoiree = {
     {
       name: 'East Hedge',
       id: 'eastHedge', 
-      desc:[``],
+      desc:[`Too dark to see. The very top of the hedge is illuminated by a wedge of light coming from the house.`],
+      exits: [
+        { dir: 'west', id: 'fountain' }, 
+      ]
+    },
+    {
+      name: 'Arcade',
+      id: 'arcade', 
+      desc:[`The front of the Dauphin home is encircled by a large arcade`],
+      items:[{name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl but it was constructed several centuries ago, and has changed ownership several times`}],
       exits: [
         { dir: 'west', id: 'fountain' }, 
       ]
@@ -215,9 +245,16 @@ function BFS(G,root,goal) {
 }
 
 // move the character to an adjacent room along their route
-const updateLocation = function() {
-  console.log('updateLocation', this);
-
+const updateLocation = function({println,disk}) {
+  let reportEntrances = () => {
+    let inRoom = getCharactersInRoom(disk.roomId);
+    console.log('test',disk.roomId, inRoom, this.name);
+    
+    if(inRoom.map(r => r.name).includes(this.name)){
+      println(`${this.name} is here.`, false, false, true);
+    }
+  }
+  
   const route = this.routes[this.currentRoute];
 
   if (!route.path.length) {
@@ -226,6 +263,7 @@ const updateLocation = function() {
 
   if (route.path.length === 1) {
     this.currentLocation = route.path[0];
+    reportEntrances();
     return this;
   }
 
@@ -233,14 +271,17 @@ const updateLocation = function() {
     if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
       route.path.reverse();
       this.currentLocation = route.path[1];
+      reportEntrances();
       return this;
     } else {
       this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
+      reportEntrances();
       return this;
     }
   }
   else if (route.type == 'loop') {
     this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+    reportEntrances();
     return this;
   }
 };
@@ -294,8 +335,7 @@ const ghostgirl = {
   desc: 'Servant of the Dauphin household, tasked with welcoming guests',
   routes: { 
     crying: {
-//      path: ['eastHedge', 'fountain','westHedge'],
-      path: ['gate'],
+    path: ['eastHedge', 'fountain','westHedge'],
       type: 'patrol',
     },
   },
@@ -355,10 +395,8 @@ function getCharactersInRoom(roomId) {
   return characters.filter(c => c.currentLocation === roomId);
 }
 
-// Debugging: Allow pressing > to force characters to move to adjacent rooms.
-document.onkeypress = function (e) {
-  if(e.keyCode == 62){
-    characters.map(c=>c.updateLocation());
-    console.log(characters.map(c => c.currentLocation))
-  }
-};
+
+
+
+
+// Take off dress; go into pool; offer statue rum; gate opens behind you; THE END;
