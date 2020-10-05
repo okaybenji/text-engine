@@ -1,9 +1,22 @@
 body {
-  font-size: 6vh;
+  font-size: 3vh;
 /*  letter-spacing: .3vh;*/
-  font-family: 'Peddana', serif;
-  line-height: 5vh;
+  font-family: 'Alegreya SC', serif;
+  line-height: 3.3vh;
   color: #222;
+  background: ivory;
+}
+
+.desc {
+  margin-left:1vh;
+}
+
+.desc:first-letter {
+  float: left;
+  color: #903;
+  font-size: 5vh;
+  font-family: 'Alegreya';
+  padding-right:.2vh;
 }
 
 /* scanlines */
@@ -74,12 +87,12 @@ body::after {
 }
 
 #input {
-  height: 4vh;
+  height: 3vh;
   width: 98.5vh;
-  color: red;
+  color: black;
   background: transparent;
   font-size: 4vh;
-  font-family: "Apple II";
+  font-family: 'Alegreya SC', serif;
   border: none;
   position: relative;
   bottom: 0.175vh;
@@ -95,7 +108,9 @@ body::after {
 
 /* color the user's input */
 .user {
-  color: lightskyblue;
+  color: #903;
+  font-family: 'Alegreya SC', serif;
+  height: 3vh;
 }
 
 @keyframes blink {
@@ -105,3 +120,14 @@ body::after {
   99% {background: transparent;}
   100% {background: #AAA;}
 }
+
+.roomname {
+  font-family: 'Alegreya SC', serif;
+  text-decoration:underline;
+  font-size: 6vh;
+  line-height: 4vh;
+  margin-bottom:3vh !important;
+}
+
+
+

@@ -107,9 +107,7 @@ const uneBelleSoiree = {
       name: 'Gate', 
       id: 'gate', 
       desc:`A servant ushers you forward through the wrought iron gates that disappear into the hedge at both ends.
-
       The fog that seemed to envelop the estate while riding from the carriage appears as a light mist here.
-
       Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
       exits: [
         { dir: 'north', id: 'insideGate' }     
@@ -290,14 +288,14 @@ const ghostgirl = {
     },
   },
   conversation: [
-    {line: `Hi!`},
-    {line: `This is my new game.`},
-    {question: `Do you like it?`, answers: [
+    {line: `"Hi!"`},
+    {line: `"This is my new game."`},
+    {question: `"Do you like it?"`, answers: [
       {response: `yes`, next: `yes`},
       {response: `no`, next: `no`},
     ]},
-    {name: `yes`, line: `I am happy you like my game!`, next: `end`},
-    {name: `no`, line: `You made me sad!`, next: `end`},
+    {name: `yes`, line: `"I am happy you like my game!"`, next: `end`},
+    {name: `no`, line: `"You made me sad!"`, next: `end`},
     {name: `end`},
     {line: `Okay, let's change the topic.`},
   ],

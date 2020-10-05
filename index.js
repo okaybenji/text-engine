@@ -20,7 +20,7 @@ const loadDisk = (disk, config = {}) => {
       input.value = str;
     },
     // render output
-    println: (line, isImg = false) => {
+    println: (line, isImg = false, isName = false, isDesc = false) => {
       // bail if string is null or undefined
       if (!line) {
         return;
@@ -34,6 +34,14 @@ const loadDisk = (disk, config = {}) => {
 
       if (isImg) {
         newLine.classList.add('img');
+      }
+
+      if (isName) {
+        newLine.classList.add('roomname');
+      }
+console.log(line, isImg, isName, isDesc);
+      if (isDesc) {
+        newLine.classList.add('desc');
       }
 
       // add a class for styling prior user input
@@ -97,10 +105,10 @@ const loadDisk = (disk, config = {}) => {
 
     println(room.img, true);
 
-    println(`---${getName(room.name)}---`);
+    println(`${getName(room.name)}`,false,true);
 
     if (room.visits === 0) {
-      println(room.desc);
+      println(room.desc,false,false,true);
     }
 
     room.visits++;
@@ -167,7 +175,7 @@ const loadDisk = (disk, config = {}) => {
             });
           },
           look() {
-            println(room.desc);
+            println(room.desc,false,false,true);
           },
           go() {
             const exits = room.exits;
