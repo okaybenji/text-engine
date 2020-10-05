@@ -121,7 +121,7 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
-        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well kept hedges. Atop each heddge are improbably shaped silhouettes of well-manicured topiaries, you can't make out there height as there tops are obscured by the mist and the night`;
+        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
       }
     },
     {
@@ -214,9 +214,21 @@ function BFS(G,root,goal) {
   }
 }
 
+// move the character to an adjacent room along their route
 const updateLocation = function() {
   console.log('updateLocation', this);
+
   const route = this.routes[this.currentRoute];
+
+  if (!route.path.length) {
+    return;
+  }
+
+  if (route.path.length === 1) {
+    this.currentLocation = route.path[0];
+    return this;
+  }
+
   if (route.type == 'patrol') {
     if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
       route.path.reverse();

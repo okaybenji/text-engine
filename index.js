@@ -317,11 +317,13 @@ console.log(line, isImg, isName, isDesc);
               return;
             }
 
-            const character = preposition === 'to' ? eval(args[2]) : disk.conversant;
-            let topics;
-
             // get a character by name from a list of characters
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
+
+            const character =
+              preposition === 'to' && findCharacter(characters, args[2]) ? eval(args[2])
+              : disk.conversant;
+            let topics;
 
             // give the player a list of topics to choose from for the character
             // (if this is a branching conversation, list possible responses)
