@@ -394,5 +394,3 @@ const characters = [gaspard, ghostgirl];
 function getCharactersInRoom(roomId) {
   return characters.filter(c => c.currentLocation === roomId);
 }
-
-// Take off dress; go into pool; offer statue rum; gate opens behind you; THE END;
