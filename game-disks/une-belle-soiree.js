@@ -225,20 +225,35 @@ let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column
 // 13                 Q.enqueue(w)
 
 function BFS(G,root,goal) {
+  console.log(G,root,goal);
   const Q = [];
   const discovered = [];
-  discovered.push(root.id);
+  discovered.push(root);
   Q.push( G.find(element => element.id == root));
+  console.log('Q',Q);
   while (Q.length > 0){
-    let v = Q.pop();
+    let v = Object.assign({},Q.pop());
+    console.log('v',v);
     if (v.id === goal){
-      return v;
+      let path = [];
+      function getPath(node){
+        path.push(node);
+        if(node.id == root){
+          return;
+        }
+        getPath(node.previous)
+      }
+      getPath(v)
+      return path.reverse();
     }
     v.exits.forEach(exit => {
-      if (!discovered.find(elem => elem == v.id)){
-        console.log(G.find(element => element.id == exit.id), Q);
-        discovered.push(G.find(element => element.id == exit.id).id);
-        Q.push(G.find(element => element.id == exit.id));
+      console.log(2,exit,discovered);
+      if (!discovered.find(elem => elem == exit.id)){
+        let nextRoom = Object.assign({},G.find(element => element.id == exit.id));
+        nextRoom.previous = v;
+        console.log(nextRoom);
+        discovered.push(nextRoom.id);
+        Q.push(nextRoom);
       }
     });
   }
@@ -283,6 +298,17 @@ const updateLocation = function({println,disk}) {
     this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
     reportEntrances();
     return this;
+  }
+  else if (route.type == 'follow') {
+    console.log(this.currentLocation,'CURRRRENT')
+    let path = BFS(disk.rooms,this.currentLocation,disk.roomId)
+    console.log('PAAAAATHHHH', path)
+    if(path.length > 1){
+      this.currentLocation = path[1].id;
+      reportEntrances();
+    }
+ 
+ 
   }
 };
 
@@ -336,7 +362,7 @@ const ghostgirl = {
   routes: { 
     crying: {
     path: ['eastHedge', 'fountain','westHedge'],
-      type: 'patrol',
+      type: 'follow',
     },
   },
   conversation: [
