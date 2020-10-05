@@ -216,9 +216,21 @@ function BFS(G,root,goal) {
   }
 }
 
+// move the character to an adjacent room along their route
 const updateLocation = function() {
   console.log('updateLocation', this);
+
   const route = this.routes[this.currentRoute];
+
+  if (!route.path.length) {
+    return;
+  }
+
+  if (route.path.length === 1) {
+    this.currentLocation = route.path[0];
+    return this;
+  }
+
   if (route.type == 'patrol') {
     if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
       route.path.reverse();
