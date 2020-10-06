@@ -85,7 +85,7 @@ console.log(line, isImg, isName, isDesc);
       
       output.appendChild(choiceBlock).innerHtml = newLines;
       
-    window.scrollTo(choiceBlock.getBoundingClientRect().top, document.body.scrollHeight);
+    window.scrollTo(0, document.body.scrollHeight);
     },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
@@ -94,14 +94,16 @@ console.log(line, isImg, isName, isDesc);
         console.log(inputMode);
         if (e.keyCode === ENTER) {
           if(inputMode == 'selection'){
-
-          collection = document.getElementsByClassName('choice');
-          for (let i = 0; i < collection.length; i++) { 
-            collection[i].classList.remove('choice')
+          collection = document.getElementsByClassName('choices');
+          console.log('!!!!!!', {collection});  
+          let collLength = collection.length;
+          for (let i = 0; i < collLength; i++) {          
             collection[i].classList.remove('selected'); 
-            choices = [];
-            collection[i].parentNode.removeChild( collection[i]);
+            collection[i].classList.remove('choice');  
           } 
+          choices = [];  
+          
+          
         }
         applyInput();
         }

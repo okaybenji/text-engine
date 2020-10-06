@@ -133,5 +133,8 @@ body::after {
   color:red;
 }
 
+.choices {
+  border:1px solid red;
+}
 
 
