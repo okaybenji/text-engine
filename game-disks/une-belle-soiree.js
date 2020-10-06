@@ -1,9 +1,16 @@
+
 const getNextDescription = ({room, println}) => { 
   let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
   println(roomDesc); 
   return roomDesc;
 };
 
+
+var albinoni = new Howl({
+  src: ['http://bestclassicaltunes.com/MP3Records/Albinoni/AlbinoniAdagio.mp3']
+});
+
+albinoni.play();
 // Handle the carriage arriving at its destination.
 const arrive = ({room, println, enterRoom}) => {
   const door = {
@@ -225,15 +232,12 @@ let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column
 // 13                 Q.enqueue(w)
 
 function BFS(G,root,goal) {
-  console.log(G,root,goal);
   const Q = [];
   const discovered = [];
   discovered.push(root);
   Q.push( G.find(element => element.id == root));
-  console.log('Q',Q);
   while (Q.length > 0){
     let v = Object.assign({},Q.pop());
-    console.log('v',v);
     if (v.id === goal){
       let path = [];
       function getPath(node){
@@ -247,11 +251,9 @@ function BFS(G,root,goal) {
       return path.reverse();
     }
     v.exits.forEach(exit => {
-      console.log(2,exit,discovered);
       if (!discovered.find(elem => elem == exit.id)){
         let nextRoom = Object.assign({},G.find(element => element.id == exit.id));
         nextRoom.previous = v;
-        console.log(nextRoom);
         discovered.push(nextRoom.id);
         Q.push(nextRoom);
       }
@@ -263,8 +265,6 @@ function BFS(G,root,goal) {
 const updateLocation = function({println,disk}) {
   let reportEntrances = () => {
     let inRoom = getCharactersInRoom(disk.roomId);
-    console.log('test',disk.roomId, inRoom, this.name);
-    
     if(inRoom.map(r => r.name).includes(this.name)){
       println(`${this.name} is here.`, false, false, true);
     }
@@ -300,15 +300,11 @@ const updateLocation = function({println,disk}) {
     return this;
   }
   else if (route.type == 'follow') {
-    console.log(this.currentLocation,'CURRRRENT')
     let path = BFS(disk.rooms,this.currentLocation,disk.roomId)
-    console.log('PAAAAATHHHH', path)
     if(path.length > 1){
       this.currentLocation = path[1].id;
       reportEntrances();
     }
- 
- 
   }
 };
 
@@ -415,7 +411,72 @@ const ghostgirl = {
   }
 };
 
-const characters = [gaspard, ghostgirl];
+const richard = {
+  name: 'Richard',
+  desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood',
+  routes: { 
+    ariving: {
+    path: ['innerCourt'],
+      type: 'patrol',
+    },
+  },
+  conversation: [
+    {line: `"I'm sorry have we met?"`},
+    {line: `"You must be from the Cassat family?  Please send your father my warmest regards."`},
+    {question: `"I trust Your mother and father are in good health?"`, answers: [
+      {response: `Yes.`, next: `yes`},
+      {response: `Yes, and yours?`, next: `and yours`},
+    ]},
+    {name: `yes`, line: `"Excellent"`, next: `end`},
+    {name: `and yours`, line: `"My mother yes, but unfortunately my father Edoard is quite sick"`},
+    {question: `"Ask about father's illness?"`, answers: [
+      {response: `Yes`, next: `illness`},
+      {response: `No`, next: `end`},
+    ]},
+    {name: `illness`, line: `(He seems uncomfortable discussing it) "Malaria,they say..."`},
+    {name: `end`},
+    {line: `Well I shoul join Miss Blackwood on her walk around the grounds; I'm sure we'll speaking more; [Bows] a pleasure mlle.`},
+  ],
+  conversationType: 'branching',
+  stepIndex: 0,
+  updateLocation,
+  currentRoute: 'arriving',
+  currentLocation: 'innerCourt',
+  topics: function({println}) {
+    const character = this;
+    const findStepWithName = name => this.conversation.findIndex(step => step.name == name);
+
+    while (character.stepIndex < character.conversation.length) {
+      const step = character.conversation[character.stepIndex];
+      if (step.line) {
+        println(step.line);
+        if (step.next) {
+          character.stepIndex = findStepWithName(step.next);
+        }
+      } else if (step.question) {
+        println(step.question);
+
+        // Return the reponses as topics.
+        return step.answers.reduce((acc, cur) => {
+          acc[cur.response] = function() {
+            println(cur.line);
+            character.stepIndex = findStepWithName(cur.next);
+          }
+          console.log(acc);
+          return acc;
+        }, {});
+        break;
+      }
+
+      character.stepIndex++;
+    }
+
+    // No topics remain.
+    return {};
+  }
+};
+
+const characters = [gaspard, ghostgirl, richard];
 
 function getCharactersInRoom(roomId) {
   return characters.filter(c => c.currentLocation === roomId);

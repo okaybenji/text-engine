@@ -129,5 +129,9 @@ body::after {
   margin-bottom:3vh !important;
 }
 
+.selected {
+  color:red;
+}
+
 
 
