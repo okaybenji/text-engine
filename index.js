@@ -84,7 +84,8 @@ console.log(line, isImg, isName, isDesc);
       
       
       output.appendChild(choiceBlock).innerHtml = newLines;
-      window.scrollTo(0, document.body.scrollHeight);
+      
+    window.scrollTo(choiceBlock.getBoundingClientRect().top, document.body.scrollHeight);
     },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
@@ -440,6 +441,8 @@ console.log(line, isImg, isName, isDesc);
                   console.log('set selection',topics);
                   inputMode = "selection";
                   setChoices(Object.keys(topics));
+                } else {
+                  endConversation();
                 }
                 return;
               }

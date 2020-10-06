@@ -429,13 +429,13 @@ const richard = {
     ]},
     {name: `yes`, line: `"Excellent"`, next: `end`},
     {name: `and yours`, line: `"My mother yes, but unfortunately my father Edoard is quite sick"`},
-    {question: `"Ask about father's illness?"`, answers: [
+    {question: `Ask about father's illness?`, answers: [
       {response: `Yes`, next: `illness`},
       {response: `No`, next: `end`},
     ]},
     {name: `illness`, line: `(He seems uncomfortable discussing it) "Malaria,they say..."`},
     {name: `end`},
-    {line: `Well I shoul join Miss Blackwood on her walk around the grounds; I'm sure we'll speaking more; [Bows] a pleasure mlle.`},
+    {line: `Well I should join Miss Blackwood on her walk around the grounds; I'm sure we'll speaking more; [Bows] a pleasure.`},
   ],
   conversationType: 'branching',
   stepIndex: 0,
