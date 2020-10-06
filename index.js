@@ -54,73 +54,19 @@ console.log(line, isImg, isName, isDesc);
       output.appendChild(newLine).innerText = str;
       window.scrollTo(0, document.body.scrollHeight);
     },
-
-    printChoices: (choices) => {
-      console.log('ccoming into print choices',choices)
-      // bail if string is null or undefined
-      if (!choices || ! choices.length) {
-        return;
-      }
-
-      const output = document.querySelector('#output');
-      const choiceBlock = document.createElement('div');
-      choiceBlock.classList.add('choices');
-      const newLines = choices.map(
-      choice => {
-         let elem = document.createElement('div');
-         elem.classList.add('choice');
-          if(choice == currentChoice){
-           elem.classList.add('selected');
-         }else {
-            elem.classList.remove('selected')
-          }
-          elem.innerHTML = choice;
-          return elem;
-        }
-      );
-  
-      
-      newLines.forEach((line) => {choiceBlock.append(line)});
-      
-      
-      output.appendChild(choiceBlock).innerHtml = newLines;
-      
-    window.scrollTo(0, document.body.scrollHeight);
-    },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
       input.onkeypress = (e) => {
         const ENTER = 13;
-        console.log(inputMode);
+
         if (e.keyCode === ENTER) {
-          if(inputMode == 'selection'){
-          collection = document.getElementsByClassName('choices');
-          console.log('!!!!!!', {collection});  
-          let collLength = collection.length;
-          for (let i = 0; i < collLength; i++) {          
-            collection[i].classList.remove('selected'); 
-            collection[i].classList.remove('choice');  
-          } 
-          choices = [];  
-          
-          
-        }
-        applyInput();
+          applyInput();
         }
       };
+
       input.onkeydown = (e) => {
         const UP = 38;
         const DOWN = 40;
-
-        if(inputMode == 'selection'){
-          if (e.keyCode === UP) {
-            console.log(println, inputMode,disk)
-            selectUp();
-          } else if (e.keyCode === DOWN) {
-            selectDown();
-          }
-          return;
-        }
 
         if (e.keyCode === UP) {
           navigateHistory('prev');
@@ -138,7 +84,7 @@ console.log(line, isImg, isName, isDesc);
     }
   };
 
-  const {getInput, setInput, println, printChoices, setup} = Object.assign(defaults, config);
+  const {getInput, setInput, println, setup} = Object.assign(defaults, config);
 
   // Disk -> Disk
   const init = (disk) => {
@@ -162,46 +108,6 @@ console.log(line, isImg, isName, isDesc);
 
   // String -> Room
   const getRoom = (id) => disk.rooms.find(room => room.id === id);
-
-  let choices = [];
-  let currentChoice = '';
-  let inputMode = '';
-  const setChoices = (c) => {
-    choices = c;
-    currentChoice = choices[0];
-    printChoices(choices);
-  }
-
-  selectUp = () => {
-    console.log(currentChoice, choices)
-    let currentChoiceIndex = choices.findIndex(c => c === currentChoice);
-    currentChoice = choices[(currentChoiceIndex + 1) % choices.length];
-    let collection = document.getElementsByClassName('choice');
-
-    for (let i = 0; i < collection.length; i++) { 
-      collection[i].classList.remove('selected')
-      if(collection[i].innerText == currentChoice){
-        collection[i].classList.add('selected')
-      }
-    } 
-  }
-
-  selectDown = () => {
-    function mod(n, m) {
-      return ((n % m) + m) % m;
-    }
-    let currentChoiceIndex = choices.findIndex(c => c === currentChoice);
-    currentChoice = choices[mod(currentChoiceIndex - 1, choices.length)];
-    let collection = document.getElementsByClassName('choice');
-
-    for (let i = 0; i < collection.length; i++) { 
-      collection[i].classList.remove('selected')
-      if(collection[i].innerText == currentChoice){
-        collection[i].classList.add('selected')
-      }
-    } 
-  }
-
 
   const enterRoom = (id) => {
     const room = getRoom(id);
@@ -235,8 +141,7 @@ console.log(line, isImg, isName, isDesc);
   startGame(disk);
 
   const applyInput = () => {
-    const input = inputMode == 'selection' ?  currentChoice : getInput();
-
+    const input = getInput();
     inputs.push(input);
     inputsPos = inputs.length;
     println('> ' + input);
@@ -256,11 +161,9 @@ console.log(line, isImg, isName, isDesc);
       // remove articles
       .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
 
-    if (disk.conversant && (args.length === 1 || inputMode == 'selection')) {
+    if (disk.conversant && args.length === 1) {
       // if player is in a conversation, assume the argument is a topic
-      let input = inputMode == 'selection' ? currentChoice.trim(): args[0]
-      args = ['talk', 'about', input];
-      inputMode='';
+      args = ['talk', 'about', args[0]];
     }
 
     const cmd = args[0];
@@ -419,7 +322,6 @@ console.log(line, isImg, isName, isDesc);
             println(str);
           },
           talk() {
-            console.log('talk talk');
             let preposition = args[1];
             if (preposition !== 'to' && preposition !== 'about') {
               println(`You can talk TO someone or ABOUT some topic.`);
@@ -438,17 +340,6 @@ console.log(line, isImg, isName, isDesc);
             // (if this is a branching conversation, list possible responses)
             const listTopics = (character) => {
               disk.conversation = topics;
-              if(character.conversationType === 'branching' ){       
-                if (Object.keys(topics).length) {
-                  console.log('set selection',topics);
-                  inputMode = "selection";
-                  setChoices(Object.keys(topics));
-                } else {
-                  endConversation();
-                }
-                return;
-              }
-            
 
               if (Object.keys(topics).length) {
                 println(character.conversationType === 'branching' ? 'Select  a response:' : 'What would you like to discuss?');
