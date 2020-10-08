@@ -342,9 +342,12 @@ console.log(line, isImg, isName, isDesc);
               disk.conversation = topics;
 
               if (Object.keys(topics).length) {
-                println(character.conversationType === 'branching' ? 'Select  a response:' : 'What would you like to discuss?');
-                Object.keys(topics).forEach(topic => println(topic.toUpperCase()));
-                if (character.conversationType !== 'branching') {
+                if (character.conversationType === 'branching') {
+                  println('Select a response:');
+                  Object.keys(topics).forEach(topic => println(topics[topic].response));
+                } else {
+                  println('What would you like to discuss?');
+                  Object.keys(topics).forEach(topic => println(topic));
                   println('NOTHING');
                 }
               } else {
@@ -391,10 +394,15 @@ console.log(line, isImg, isName, isDesc);
                   endConversation();
                   return;
                 } else if (response) {
-                  if (typeof response === 'function'){
-                    println(response());
+                  if (character.conversationType === 'branching') {
+                    const topics = disk.conversation;
+                    topics[args[2]].onSelected();
                   } else {
-                    println(response);
+                    if (typeof response === 'function'){
+                      println(response());
+                    } else {
+                      println(response);
+                    }
                   }
                 } else {
                   println(`You talk about ${args[2]}.`);
