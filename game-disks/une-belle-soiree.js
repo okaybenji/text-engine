@@ -168,6 +168,7 @@ const uneBelleSoiree = {
       desc:[`The courtyard is well illuminated. The marble stairs to the north look as if they were recently constructed. The lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somwhere else on the grounds.`],
       exits: [
         { dir: 'south', id: 'outerCourt' }, 
+        { dir: 'north', id: 'grandPorch' }, 
       ]
     },
     {
@@ -205,14 +206,38 @@ const uneBelleSoiree = {
       ]
     },
     {
-      name: 'Arcade',
-      id: 'arcade', 
-      desc:[`The front of the Dauphin home is encircled by a large arcade.`],
-      items:[{name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`}],
+      name: 'Grand Porch',
+      id: 'grandPorch', 
+      desc:[`The front of the Dauphin home is encircled by a large marble porch, with ornate railing. In the moonlight, and from the relative height of the porch you can see the entirety of the large moonlit lawn.`],
+      items:[
+      {name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`},
+      {name:'lawn', desc:`It seems to have many small spaces partitioned by hedges, and networked with long pathway.`}
+    ],
       exits: [
-        { dir: 'west', id: 'fountain' }, 
+        { dir: 'south', id: 'innerCourt' }, 
+        { dir: 'north', id: 'entry' },
+        { dir: 'east', id: 'eastPorch' }, 
+        { dir: 'west', id: 'westPorch' },  
       ]
     },
+    {
+      name: 'East Porch',
+      id: 'eastPorch', 
+      desc:[`From high on the porch, but near the east railing you can see, tucked behind the home and a row of columnar trees, is the practical workbuildings of the estate: sheds, coops, and a conspicuous greenhouse.`],
+      items:[{'name':['coop','coops'], desc: `Very faintly from the coops you can hear an unusuaally loud clamor of a rooster. It's calls are muffled here, but it must be loud to be carrying this far`}],
+      exits: [
+        { dir: 'west', id: 'grandPorch' },  
+      ]
+    },
+    {
+      name: 'West Porch',
+      id: 'westPorch', 
+      desc:[`More of the same moonlit lawn heavily decorated with large patterns in the Hedges, in the distance you can see the lanterns of the stable hands as they tend to the riding equipment`],
+      exits: [
+        { dir: 'east', id: 'grandPorch' },  
+      ]
+    },
+
   ],
 };
 
@@ -456,13 +481,12 @@ const richard = {
       } else if (step.question) {
         println(step.question);
 
-        // Return the reponses as topics.
+        // Retun the reponses as topics.
         return step.answers.reduce((acc, cur) => {
           acc[cur.response] = function() {
             println(cur.line);
             character.stepIndex = findStepWithName(cur.next);
           }
-          console.log(acc);
           return acc;
         }, {});
         break;
