@@ -377,6 +377,43 @@ const gaspard = {
   }
 };
 
+// Determine the topics to return for a branching conversation.
+const branchingConversationTopics = function({println}) {
+  const character = this;
+  const findStepWithName = name => this.conversation.findIndex((step, i) =>
+    step.name == name && i > character.stepIndex);
+
+  while (character.stepIndex < character.conversation.length) {
+    const step = character.conversation[character.stepIndex];
+    if (step.line) {
+      println(step.line);
+      if (step.next) {
+        character.stepIndex = findStepWithName(step.next);
+      }
+    } else if (step.question) {
+      println(step.question);
+
+      // Return the reponses as topics.
+      return step.answers.reduce((acc, cur) => {
+        acc[cur.next] = {
+          response: cur.response,
+          onSelected: function() {
+            println(cur.line);
+            character.stepIndex = findStepWithName(cur.next);
+          },
+        };
+        return acc;
+      }, {});
+      break;
+    }
+
+    character.stepIndex++;
+  }
+
+  // No topics remain.
+  return {};
+};
+
 const ghostgirl = {
   name: 'GhostGirl',
   desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
@@ -387,11 +424,9 @@ const ghostgirl = {
     },
   },
   conversation: [
-    {line: `"Hi!"`},
-    {line: `"This is my new game."`},
-    {question: `"Do you like it?"`, answers: [
-      {response: `yes`, next: `yes`},
-      {response: `no`, next: `no`},
+    {question: `"Hi. This is my new game. Do you like it?"`, answers: [
+      {response: `YES, I like it.`, next: `yes`},
+      {response: `NO, I do not like it.`, next: `no`},
     ]},
     {name: `yes`, line: `"I am happy you like my game!"`, next: `end`},
     {name: `no`, line: `"You made me sad!"`, next: `end`},
@@ -403,37 +438,7 @@ const ghostgirl = {
   updateLocation,
   currentRoute: 'crying',
   currentLocation: 'eastHedge',
-  topics: function({println}) {
-    const character = this;
-    const findStepWithName = name => this.conversation.findIndex(step => step.name == name);
-
-    while (character.stepIndex < character.conversation.length) {
-      const step = character.conversation[character.stepIndex];
-      if (step.line) {
-        println(step.line);
-        if (step.next) {
-          character.stepIndex = findStepWithName(step.next);
-        }
-      } else if (step.question) {
-        println(step.question);
-
-        // Return the reponses as topics.
-        return step.answers.reduce((acc, cur) => {
-          acc[cur.next] = function() {
-            println(cur.line);
-            character.stepIndex = findStepWithName(cur.next);
-          }
-          return acc;
-        }, {});
-        break;
-      }
-
-      character.stepIndex++;
-    }
-
-    // No topics remain.
-    return {};
-  }
+  topics: branchingConversationTopics,
 };
 
 const richard = {
@@ -446,58 +451,27 @@ const richard = {
     },
   },
   conversation: [
-    {line: `"I'm sorry have we met?"`},
-    {line: `"You must be from the Cassat family?  Please send your father my warmest regards."`},
-    {question: `"I trust Your mother and father are in good health?"`, answers: [
-      {response: `Yes.`, next: `yes`},
-      {response: `Yes, and yours?`, next: `and yours`},
+    {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
+      {response: `Say YES`, next: `yes`},
+      {response: `ASK about Richard’s family`, next: `ask`},
     ]},
-    {name: `yes`, line: `"Excellent"`, next: `end`},
-    {name: `and yours`, line: `"My mother yes, but unfortunately my father Edoard is quite sick"`},
-    {question: `Ask about father's illness?`, answers: [
-      {response: `Yes`, next: `illness`},
-      {response: `No`, next: `end`},
+    {name: `yes`, line: `“They are both of excellent health, thank you,” you reply.`, next: `end`},
+    {name: `ask`, question: `“They are,” you reply, “And yours as well I trust?”
+    “My mother yes,” Richard says, “But unfortunately my father Edoard is quite sick.”`,
+    answers: [
+      {response: `ASK about father’s illness`, next: `ask`},
+      {response: `END the conversation`, next: `end`},
     ]},
-    {name: `illness`, line: `(He seems uncomfortable discussing it) "Malaria,they say..."`},
+    {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria,they say...”`},
     {name: `end`},
-    {line: `Well I should join Miss Blackwood on her walk around the grounds; I'm sure we'll speaking more; [Bows] a pleasure.`},
+    {line: `“Well I should join Miss Blackwood on her walk around the grounds,” you tell him with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
   ],
   conversationType: 'branching',
   stepIndex: 0,
   updateLocation,
   currentRoute: 'arriving',
   currentLocation: 'innerCourt',
-  topics: function({println}) {
-    const character = this;
-    const findStepWithName = name => this.conversation.findIndex(step => step.name == name);
-
-    while (character.stepIndex < character.conversation.length) {
-      const step = character.conversation[character.stepIndex];
-      if (step.line) {
-        println(step.line);
-        if (step.next) {
-          character.stepIndex = findStepWithName(step.next);
-        }
-      } else if (step.question) {
-        println(step.question);
-
-        // Retun the reponses as topics.
-        return step.answers.reduce((acc, cur) => {
-          acc[cur.response] = function() {
-            println(cur.line);
-            character.stepIndex = findStepWithName(cur.next);
-          }
-          return acc;
-        }, {});
-        break;
-      }
-
-      character.stepIndex++;
-    }
-
-    // No topics remain.
-    return {};
-  }
+  topics: branchingConversationTopics,
 };
 
 const characters = [gaspard, ghostgirl, richard];
