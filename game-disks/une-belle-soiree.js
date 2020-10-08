@@ -462,7 +462,7 @@ const richard = {
       {response: `ASK about father’s illness`, next: `ask`},
       {response: `END the conversation`, next: `end`},
     ]},
-    {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria,they say...”`},
+    {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
     {name: `end`},
     {line: `“Well I should join Miss Blackwood on her walk around the grounds,” you tell him with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
   ],
