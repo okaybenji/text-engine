@@ -6,11 +6,11 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
+const getCharactersInRoom = (roomId) => characters.filter(c => c.currentLocation === roomId);
+
 document.onkeydown = () => {
   input.focus();
 };
-
-
 
 const loadDisk = (disk, config = {}) => {
   // build default (DOM) configuration
@@ -307,13 +307,28 @@ console.log(line, isImg, isName, isDesc);
           look() {
             const findItem = item => item.name === args[2] || item.name.includes(args[2]);
             const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
-            if (!item) {
-              println('You don\'t see any such thing.');
-            } else {
-              println(item.desc);
+            if (item) {
+              // Look at an item.
+              if (item.desc) {
+                println(item.desc);
+              } else {
+                println('You don\'t notice anythign remarkable about it.');
+              }
 
               if (typeof(item.look) === 'function') {
                 item.look({disk, println, getRoom, enterRoom, item});
+              }
+            } else {
+              const character = getCharactersInRoom(room.id).find(c => c.name.toLowerCase() === args[2]);
+              if (character) {
+                // Look at a character.
+                if (character.desc) {
+                  println(character.desc);
+                } else {
+                  println('You don\'t notice anything remarkable about them.');
+                }
+              } else {
+                println('You don\'t see any such thing.');
               }
             }
           },

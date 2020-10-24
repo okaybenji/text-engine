@@ -11,6 +11,7 @@ var albinoni = new Howl({
 });
 
 albinoni.play();
+
 // Handle the carriage arriving at its destination.
 const arrive = ({room, println, enterRoom}) => {
   const door = {
@@ -34,7 +35,7 @@ const arrive = ({room, println, enterRoom}) => {
 };
 
 const uneBelleSoiree = {
-  guilt:2,
+  guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
@@ -475,7 +476,3 @@ const richard = {
 };
 
 const characters = [gaspard, ghostgirl, richard];
-
-function getCharactersInRoom(roomId) {
-  return characters.filter(c => c.currentLocation === roomId);
-}
