@@ -41,7 +41,7 @@ const loadDisk = (disk, config = {}) => {
       if (isName) {
         newLine.classList.add('roomname');
       }
-console.log(line, isImg, isName, isDesc);
+
       if (isDesc) {
         newLine.classList.add('desc');
       }
@@ -121,7 +121,7 @@ console.log(line, isImg, isName, isDesc);
     }
     let characters = getCharactersInRoom(room.id);
     characters.map(c => println(`${c.name} is here.`,false,false,true))   
-    console.log('entering room');
+
     room.visits++;
 
     disk.roomId = id;
