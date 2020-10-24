@@ -303,32 +303,32 @@ const updateLocation = function({println,disk}) {
   }
 
   if (route.path.length === 1) {
-    this.currentLocation = route.path[0];
+    this.roomId = route.path[0];
     reportEntrances();
     return this;
   }
 
   if (route.type == 'patrol') {
-    if (route.path.findIndex(p => p === this.currentLocation) == route.path.length - 1){
+    if (route.path.findIndex(p => p === this.roomId) == route.path.length - 1){
       route.path.reverse();
-      this.currentLocation = route.path[1];
+      this.roomId = route.path[1];
       reportEntrances();
       return this;
     } else {
-      this.currentLocation = route.path[route.path.findIndex(p => p === this.currentLocation) + 1];
+      this.roomId = route.path[route.path.findIndex(p => p === this.roomId) + 1];
       reportEntrances();
       return this;
     }
   }
   else if (route.type == 'loop') {
-    this.currentLocation = route.path[(route.path.findIndex(p => p === this.currentLocation) + 1) % route.path.length];
+    this.roomId = route.path[(route.path.findIndex(p => p === this.roomId) + 1) % route.path.length];
     reportEntrances();
     return this;
   }
   else if (route.type == 'follow') {
-    let path = BFS(disk.rooms,this.currentLocation,disk.roomId)
+    let path = BFS(disk.rooms, this.roomId, disk.roomId)
     if(path.length > 1){
-      this.currentLocation = path[1].id;
+      this.roomId = path[1].id;
       reportEntrances();
     }
   }
@@ -351,7 +351,7 @@ const gaspard = {
   sorryAboutThat: false,
   updateLocation,
   currentRoute: 'helpingGuests',
-  currentLocation: 'gate',
+  roomId: 'gate',
   topics: function({println, room}) {
     const topics = {};
     if (this.hasFartedd){
@@ -438,7 +438,7 @@ const ghostgirl = {
   stepIndex: 0,
   updateLocation,
   currentRoute: 'crying',
-  currentLocation: 'eastHedge',
+  roomId: 'eastHedge',
   topics: branchingConversationTopics,
 };
 
@@ -471,7 +471,7 @@ const richard = {
   stepIndex: 0,
   updateLocation,
   currentRoute: 'arriving',
-  currentLocation: 'innerCourt',
+  roomId: 'innerCourt',
   topics: branchingConversationTopics,
 };
 

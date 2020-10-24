@@ -6,7 +6,7 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
-const getCharactersInRoom = (roomId) => characters.filter(c => c.currentLocation === roomId);
+const getCharactersInRoom = (roomId) => characters.filter(c => c.roomId === roomId);
 
 document.onkeydown = () => {
   input.focus();
