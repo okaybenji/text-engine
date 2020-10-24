@@ -6,6 +6,8 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
+// global properties that need to be assigned in loadDisk
+let getCharactersInRoom;
 
 document.onkeydown = () => {
   input.focus();
@@ -13,7 +15,7 @@ document.onkeydown = () => {
 
 const loadDisk = (disk, config = {}) => {
   // get a list of all characters in the passed room
-  const getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
+  getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
 
   // build default (DOM) configuration
   const defaults = {
@@ -82,7 +84,7 @@ const loadDisk = (disk, config = {}) => {
   // Debugging: Allow pressing > to force characters to move to adjacent rooms.
   document.onkeypress = function (e) {
     if(e.keyCode == 62){
-      characters.map(c=>c.updateLocation({println,disk}));
+      disk.characters.map(c => c.updateLocation({println, disk}));
     }
   };
 

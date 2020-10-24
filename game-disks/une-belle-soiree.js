@@ -16,7 +16,7 @@ const updateLocation = function({println, disk}) {
 
   const route = this.routes[this.currentRoute];
 
-  if (!route.path.length) {
+  if (!route || !route.path.length) {
     return;
   }
 
@@ -461,7 +461,7 @@ const BFS = (G, root, goal) => {
 
       return path.reverse();
     }
-    v.exits.forEach(exit => {
+    (v.exits || []).forEach(exit => {
       if (!discovered.find(elem => elem == exit.id)){
         const nextRoom = Object.assign({}, G.find(element => element.id == exit.id));
         nextRoom.previous = v;
