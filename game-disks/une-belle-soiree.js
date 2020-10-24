@@ -241,7 +241,7 @@ const uneBelleSoiree = {
   ],
 };
 
-let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
+const adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
 
 // 1 procedure BFS(G, root) is
 // 2      let Q be a queue
@@ -256,28 +256,29 @@ let adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column
 // 11                 label w as discovered
 // 13                 Q.enqueue(w)
 
-function BFS(G,root,goal) {
+const BFS = (G, root, goal) => {
   const Q = [];
   const discovered = [];
   discovered.push(root);
-  Q.push( G.find(element => element.id == root));
+  Q.push(G.find(element => element.id == root));
   while (Q.length > 0){
-    let v = Object.assign({},Q.pop());
+    const v = Object.assign({}, Q.pop());
     if (v.id === goal){
-      let path = [];
-      function getPath(node){
+      const path = [];
+      const getPath = (node) => {
         path.push(node);
-        if(node.id == root){
+        if (node.id == root) {
           return;
         }
-        getPath(node.previous)
+        getPath(node.previous);
       }
-      getPath(v)
+      getPath(v);
+
       return path.reverse();
     }
     v.exits.forEach(exit => {
       if (!discovered.find(elem => elem == exit.id)){
-        let nextRoom = Object.assign({},G.find(element => element.id == exit.id));
+        const nextRoom = Object.assign({}, G.find(element => element.id == exit.id));
         nextRoom.previous = v;
         discovered.push(nextRoom.id);
         Q.push(nextRoom);
@@ -287,14 +288,14 @@ function BFS(G,root,goal) {
 }
 
 // move the character to an adjacent room along their route
-const updateLocation = function({println,disk}) {
-  let reportEntrances = () => {
-    let inRoom = getCharactersInRoom(disk.roomId);
-    if(inRoom.map(r => r.name).includes(this.name)){
+const updateLocation = function({println, disk}) {
+  const reportEntrances = () => {
+    const inRoom = getCharactersInRoom(disk.roomId);
+    if(inRoom.map(r => r.name).includes(this.name)) {
       println(`${this.name} is here.`, false, false, true);
     }
   }
-  
+
   const route = this.routes[this.currentRoute];
 
   if (!route.path.length) {
