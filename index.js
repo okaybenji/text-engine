@@ -6,13 +6,15 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
-const getCharactersInRoom = (roomId) => characters.filter(c => c.roomId === roomId);
 
 document.onkeydown = () => {
   input.focus();
 };
 
 const loadDisk = (disk, config = {}) => {
+  // get a list of all characters in the passed room
+  const getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
+
   // build default (DOM) configuration
   const defaults = {
     // retrieve user input (remove whitespace at beginning or end)
@@ -96,6 +98,10 @@ const loadDisk = (disk, config = {}) => {
 
     if (!initializedDisk.inventory) {
       initializedDisk.inventory = [];
+    }
+    
+    if (!initializedDisk.characters) {
+      initializedDisk.characters = [];
     }
 
     return initializedDisk;

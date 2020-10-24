@@ -1,16 +1,98 @@
-
+// Prints room descriptions in order until they are exhausted (then repeats final description).
 const getNextDescription = ({room, println}) => { 
   let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
   println(roomDesc); 
   return roomDesc;
 };
 
+// Moves THIS (character) to an adjacent room along their route.
+const updateLocation = function({println, disk}) {
+  const reportEntrances = () => {
+    const inRoom = getCharactersInRoom(disk.roomId);
+    if (inRoom.map(r => r.name).includes(this.name)) {
+      println(`${this.name} is here.`, false, false, true);
+    }
+  }
 
-var albinoni = new Howl({
+  const route = this.routes[this.currentRoute];
+
+  if (!route.path.length) {
+    return;
+  }
+
+  if (route.path.length === 1) {
+    this.roomId = route.path[0];
+    reportEntrances();
+    return this;
+  }
+
+  if (route.type == 'patrol') {
+    if (route.path.findIndex(p => p === this.roomId) == route.path.length - 1){
+      route.path.reverse();
+      this.roomId = route.path[1];
+      reportEntrances();
+      return this;
+    } else {
+      this.roomId = route.path[route.path.findIndex(p => p === this.roomId) + 1];
+      reportEntrances();
+      return this;
+    }
+  }
+  else if (route.type == 'loop') {
+    this.roomId = route.path[(route.path.findIndex(p => p === this.roomId) + 1) % route.path.length];
+    reportEntrances();
+    return this;
+  }
+  else if (route.type == 'follow') {
+    let path = BFS(disk.rooms, this.roomId, disk.roomId)
+    if(path.length > 1){
+      this.roomId = path[1].id;
+      reportEntrances();
+    }
+  }
+};
+
+// Determine the topics to return for a branching conversation.
+const branchingConversationTopics = function({println}) {
+  const character = this;
+  const findStepWithName = name => this.conversation.findIndex((step, i) =>
+    step.name == name && i > character.stepIndex);
+
+  while (character.stepIndex < character.conversation.length) {
+    const step = character.conversation[character.stepIndex];
+    if (step.line) {
+      println(step.line);
+      if (step.next) {
+        character.stepIndex = findStepWithName(step.next);
+      }
+    } else if (step.question) {
+      println(step.question);
+
+      // Return the reponses as topics.
+      return step.answers.reduce((acc, cur) => {
+        acc[cur.next] = {
+          response: cur.response,
+          onSelected: function() {
+            println(cur.line);
+            character.stepIndex = findStepWithName(cur.next);
+          },
+        };
+        return acc;
+      }, {});
+      break;
+    }
+
+    character.stepIndex++;
+  }
+
+  // No topics remain.
+  return {};
+};
+
+// Play music.
+new Howl({
   src: ['http://bestclassicaltunes.com/MP3Records/Albinoni/AlbinoniAdagio.mp3']
-});
-
-albinoni.play();
+}).play();
 
 // Handle the carriage arriving at its destination.
 const arrive = ({room, println, enterRoom}) => {
@@ -239,6 +321,109 @@ const uneBelleSoiree = {
     },
 
   ],
+  characters: [
+    {
+      name: 'Gaspard',
+      desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
+      routes: {
+        helpingGuests: {
+          path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
+          type: 'patrol',
+          },
+        investigatingSound: {
+          path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
+          type: 'loop',
+        }
+      },
+      hasFartedd: true,
+      sorryAboutThat: false,
+      updateLocation,
+      currentRoute: 'helpingGuests',
+      roomId: 'gate',
+      topics: function({println, room}) {
+        const topics = {};
+        if (this.hasFartedd){
+          topics.thatfart = () => {
+            this.hasFartedd = false;
+            this.sorryAboutThat = true;
+            return `You remind Gaspard that it is impolite to break wind in the presence of a lady.
+
+            “Sorry about that,” he moans.`;
+          };
+        }
+        if (room.id == 'fountain') {
+          topics.apples = 'damn, I wish I was an apple';
+        }
+        if (this.sorryAboutThat) {
+          topics.excuse = () => {
+            this.sorryAboutThat = false;
+            return `“That’s quite all right,” you say.
+
+            Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
+          };
+        }
+        return topics;
+      }
+    },
+    {
+      name: 'GhostGirl',
+      desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
+      routes: {
+        crying: {
+        path: ['eastHedge', 'fountain','westHedge'],
+          type: 'follow',
+        },
+      },
+      conversation: [
+        {question: `"Hi. This is my new game. Do you like it?"`, answers: [
+          {response: `YES, I like it.`, next: `yes`},
+          {response: `NO, I do not like it.`, next: `no`},
+        ]},
+        {name: `yes`, line: `"I am happy you like my game!"`, next: `end`},
+        {name: `no`, line: `"You made me sad!"`, next: `end`},
+        {name: `end`},
+        {line: `Okay, let's change the topic.`},
+      ],
+      conversationType: 'branching',
+      stepIndex: 0,
+      updateLocation,
+      currentRoute: 'crying',
+      roomId: 'eastHedge',
+      topics: branchingConversationTopics,
+    },
+    {
+      name: 'Richard',
+      desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood',
+      routes: {
+        ariving: {
+        path: ['innerCourt'],
+          type: 'patrol',
+        },
+      },
+      conversation: [
+        {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
+          {response: `Say YES`, next: `yes`},
+          {response: `ASK about Richard’s family`, next: `ask`},
+        ]},
+        {name: `yes`, line: `“They are both of excellent health, thank you,” you reply.`, next: `end`},
+        {name: `ask`, question: `“They are,” you reply, “And yours as well I trust?”
+        “My mother yes,” Richard says, “But unfortunately my father Edoard is quite sick.”`,
+        answers: [
+          {response: `ASK about father’s illness`, next: `ask`},
+          {response: `END the conversation`, next: `end`},
+        ]},
+        {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
+        {name: `end`},
+        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” you tell him with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
+      ],
+      conversationType: 'branching',
+      stepIndex: 0,
+      updateLocation,
+      currentRoute: 'arriving',
+      roomId: 'innerCourt',
+      topics: branchingConversationTopics,
+    },
+  ],
 };
 
 const adjMatrix = uneBelleSoiree.rooms.map( row => uneBelleSoiree.rooms.map(column => (row && row.exits && row.exits.map(r => r.id ).includes(column.id)) ? column.id : 0));
@@ -285,194 +470,4 @@ const BFS = (G, root, goal) => {
       }
     });
   }
-}
-
-// move the character to an adjacent room along their route
-const updateLocation = function({println, disk}) {
-  const reportEntrances = () => {
-    const inRoom = getCharactersInRoom(disk.roomId);
-    if(inRoom.map(r => r.name).includes(this.name)) {
-      println(`${this.name} is here.`, false, false, true);
-    }
-  }
-
-  const route = this.routes[this.currentRoute];
-
-  if (!route.path.length) {
-    return;
-  }
-
-  if (route.path.length === 1) {
-    this.roomId = route.path[0];
-    reportEntrances();
-    return this;
-  }
-
-  if (route.type == 'patrol') {
-    if (route.path.findIndex(p => p === this.roomId) == route.path.length - 1){
-      route.path.reverse();
-      this.roomId = route.path[1];
-      reportEntrances();
-      return this;
-    } else {
-      this.roomId = route.path[route.path.findIndex(p => p === this.roomId) + 1];
-      reportEntrances();
-      return this;
-    }
-  }
-  else if (route.type == 'loop') {
-    this.roomId = route.path[(route.path.findIndex(p => p === this.roomId) + 1) % route.path.length];
-    reportEntrances();
-    return this;
-  }
-  else if (route.type == 'follow') {
-    let path = BFS(disk.rooms, this.roomId, disk.roomId)
-    if(path.length > 1){
-      this.roomId = path[1].id;
-      reportEntrances();
-    }
-  }
 };
-
-const gaspard = {
-  name: 'Gaspard',
-  desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
-  routes: { 
-    helpingGuests: {
-      path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
-      type: 'patrol',
-      },
-    investigatingSound: {
-      path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
-      type: 'loop',
-    }
-  },
-  hasFartedd: true,
-  sorryAboutThat: false,
-  updateLocation,
-  currentRoute: 'helpingGuests',
-  roomId: 'gate',
-  topics: function({println, room}) {
-    const topics = {};
-    if (this.hasFartedd){
-      topics.thatfart = () => {
-        this.hasFartedd = false;
-        this.sorryAboutThat = true;
-        return `You remind Gaspard that it is impolite to break wind in the presence of a lady.
-
-        “Sorry about that,” he moans.`;
-      };
-    }
-    if (room.id == 'fountain') {
-      topics.apples = 'damn, I wish I was an apple';
-    }
-    if (this.sorryAboutThat) {
-      topics.excuse = () => {
-        this.sorryAboutThat = false;
-        return `“That’s quite all right,” you say.
-
-        Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
-      };
-    }
-    return topics;
-  }
-};
-
-// Determine the topics to return for a branching conversation.
-const branchingConversationTopics = function({println}) {
-  const character = this;
-  const findStepWithName = name => this.conversation.findIndex((step, i) =>
-    step.name == name && i > character.stepIndex);
-
-  while (character.stepIndex < character.conversation.length) {
-    const step = character.conversation[character.stepIndex];
-    if (step.line) {
-      println(step.line);
-      if (step.next) {
-        character.stepIndex = findStepWithName(step.next);
-      }
-    } else if (step.question) {
-      println(step.question);
-
-      // Return the reponses as topics.
-      return step.answers.reduce((acc, cur) => {
-        acc[cur.next] = {
-          response: cur.response,
-          onSelected: function() {
-            println(cur.line);
-            character.stepIndex = findStepWithName(cur.next);
-          },
-        };
-        return acc;
-      }, {});
-      break;
-    }
-
-    character.stepIndex++;
-  }
-
-  // No topics remain.
-  return {};
-};
-
-const ghostgirl = {
-  name: 'GhostGirl',
-  desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
-  routes: { 
-    crying: {
-    path: ['eastHedge', 'fountain','westHedge'],
-      type: 'follow',
-    },
-  },
-  conversation: [
-    {question: `"Hi. This is my new game. Do you like it?"`, answers: [
-      {response: `YES, I like it.`, next: `yes`},
-      {response: `NO, I do not like it.`, next: `no`},
-    ]},
-    {name: `yes`, line: `"I am happy you like my game!"`, next: `end`},
-    {name: `no`, line: `"You made me sad!"`, next: `end`},
-    {name: `end`},
-    {line: `Okay, let's change the topic.`},
-  ],
-  conversationType: 'branching',
-  stepIndex: 0,
-  updateLocation,
-  currentRoute: 'crying',
-  roomId: 'eastHedge',
-  topics: branchingConversationTopics,
-};
-
-const richard = {
-  name: 'Richard',
-  desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood',
-  routes: { 
-    ariving: {
-    path: ['innerCourt'],
-      type: 'patrol',
-    },
-  },
-  conversation: [
-    {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
-      {response: `Say YES`, next: `yes`},
-      {response: `ASK about Richard’s family`, next: `ask`},
-    ]},
-    {name: `yes`, line: `“They are both of excellent health, thank you,” you reply.`, next: `end`},
-    {name: `ask`, question: `“They are,” you reply, “And yours as well I trust?”
-    “My mother yes,” Richard says, “But unfortunately my father Edoard is quite sick.”`,
-    answers: [
-      {response: `ASK about father’s illness`, next: `ask`},
-      {response: `END the conversation`, next: `end`},
-    ]},
-    {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
-    {name: `end`},
-    {line: `“Well I should join Miss Blackwood on her walk around the grounds,” you tell him with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
-  ],
-  conversationType: 'branching',
-  stepIndex: 0,
-  updateLocation,
-  currentRoute: 'arriving',
-  roomId: 'innerCourt',
-  topics: branchingConversationTopics,
-};
-
-const characters = [gaspard, ghostgirl, richard];
