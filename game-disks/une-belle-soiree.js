@@ -1,12 +1,12 @@
 // Prints room descriptions in order until they are exhausted (then repeats final description).
-const getNextDescription = ({room, println}) => { 
+const getNextDescription = ({room}) => {
   let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
   println(roomDesc); 
   return roomDesc;
 };
 
 // Moves THIS (character) to an adjacent room along their route.
-const updateLocation = function({println, disk}) {
+const updateLocation = function() {
   const reportEntrances = () => {
     const inRoom = getCharactersInRoom(disk.roomId);
     if (inRoom.map(r => r.name).includes(this.name)) {
@@ -53,7 +53,7 @@ const updateLocation = function({println, disk}) {
 };
 
 // Determine the topics to return for a branching conversation.
-const branchingConversationTopics = function({println}) {
+const branchingConversationTopics = function() {
   const character = this;
   const findStepWithName = name => this.conversation.findIndex((step, i) =>
     step.name == name && i > character.stepIndex);
@@ -95,7 +95,7 @@ new Howl({
 }).play();
 
 // Handle the carriage arriving at its destination.
-const arrive = ({room, println}) => {
+const arrive = ({room}) => {
   const door = {
     name: 'door',
     desc: `It's a door.`,
@@ -120,29 +120,29 @@ const uneBelleSoiree = {
   inventory: [{
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
-    look: ({println}) => {
+    look: () => {
       const room = getRoom('start');
-      room.desc = getNextDescription({room,println});
+      room.desc = getNextDescription({room});
       if (!room.descriptions.length) {
-        arrive({room, println});
+        arrive({room});
       }
     },
-    use: ({println, item}) => {
+    use: ({item}) => {
       println(item.desc);
       const room = getRoom('start');
-      room.desc = getNextDescription({room, println});
+      room.desc = getNextDescription({room});
       if (!room.descriptions.length) {
-        arrive({room, println});
+        arrive({room});
       }
     },
   }, {
     name: 'ring',
     desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
-    look: ({item, println}) => {
+    look: ({item}) => {
       const room = getRoom('start');
-      room.desc = getNextDescription({room,println});
+      room.desc = getNextDescription({room});
       if (!room.descriptions.length) {
-        arrive({room, println});
+        arrive({room});
       }
       item.desc = `It was a gift from your father to your mother.`;
     },
@@ -163,11 +163,11 @@ const uneBelleSoiree = {
         name: ['invitation', 'letter'],
         desc: `You'll have to pick it up. Try: TAKE INVITATION`,
         isTakeable: true,
-        onTake: ({item, println}) => {
+        onTake: ({item}) => {
           const room = getRoom('start');
-          room.desc = getNextDescription({room, println});
+          room.desc = getNextDescription({room});
           if (!room.descriptions.length) {
-            arrive({room, println});
+            arrive({room});
           }
           item.desc = `In bold typeset and surrounded by Parisian filligree you read:
 
@@ -175,15 +175,15 @@ const uneBelleSoiree = {
           `;
 
           item.look = () => {
-            room.desc = getNextDescription({room,println});
+            room.desc = getNextDescription({room});
             if (!room.descriptions.length) {
-              arrive({room, println});
+              arrive({room});
             }
           };
         },
       },
       ],
-      onEnter: ({println}) => {
+      onEnter: () => {
         const room = getRoom('start');
 
         if (room.visits === 1) {
@@ -263,7 +263,7 @@ const uneBelleSoiree = {
           name: ['cup','liquid','rum'], 
           desc: 'Some kind of alcohol, maybe?', 
           isTakeable:true, 
-          use:function({println,disk}){
+          use: function(){
             println('Rum. That was definitely some kind of strong rum.');
             disk.guilt++;
             let toBeRemovedIndex = this.items.findIndex(item => item.name[0] == 'cup');
@@ -340,7 +340,7 @@ const uneBelleSoiree = {
       updateLocation,
       currentRoute: 'helpingGuests',
       roomId: 'gate',
-      topics: function({println, room}) {
+      topics: function({room}) {
         const topics = {};
         if (this.hasFartedd){
           topics.thatfart = () => {

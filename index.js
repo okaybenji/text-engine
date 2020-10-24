@@ -7,13 +7,13 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 const getName = name => typeof name === 'object' ? name[0] : name;
 
 // global properties that need to be assigned in loadDisk
-let getCharactersInRoom, getRoom, enterRoom;
+let disk, println, getCharactersInRoom, getRoom, enterRoom;
 
 document.onkeydown = () => {
   input.focus();
 };
 
-const loadDisk = (disk, config = {}) => {
+const loadDisk = (uninitializedDisk, config = {}) => {
   // get a list of all characters in the passed room
   getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
 
@@ -88,7 +88,9 @@ const loadDisk = (disk, config = {}) => {
     }
   };
 
-  const {getInput, setInput, println, setup} = Object.assign(defaults, config);
+  const configuration = Object.assign(defaults, config);
+  const {getInput, setInput, setup} = configuration;
+  println = configuration.println;
 
   // Disk -> Disk
   const init = (disk) => {
@@ -109,7 +111,7 @@ const loadDisk = (disk, config = {}) => {
     return initializedDisk;
   };
 
-  disk = init(disk);
+  disk = init(uninitializedDisk);
 
   const inputs = ['']; // store all user commands
   let inputsPos = 0;
@@ -127,7 +129,7 @@ const loadDisk = (disk, config = {}) => {
     if (room.visits === 0) {
       println(room.desc,false,false,true);
     }
-    let characters = getCharactersInRoom(room.id);
+    const characters = getCharactersInRoom(room.id);
     characters.map(c => println(`${c.name} is here.`,false,false,true))   
 
     room.visits++;
@@ -355,8 +357,9 @@ const loadDisk = (disk, config = {}) => {
             const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
 
             const character =
-              preposition === 'to' && findCharacter(characters, args[2]) ? eval(args[2])
-              : disk.conversant;
+              preposition === 'to' && findCharacter(disk.characters, args[2])
+                ? findCharacter(disk.characters, args[2])
+                : disk.conversant;
             let topics;
 
             // give the player a list of topics to choose from for the character
@@ -386,7 +389,7 @@ const loadDisk = (disk, config = {}) => {
             };
 
             if (preposition === 'to') {
-              if (!findCharacter(characters, args[2])) {
+              if (!findCharacter(disk.characters, args[2])) {
                 println('There is no one here by that name.');
                 return;
               }
