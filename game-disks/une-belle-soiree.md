@@ -9,3 +9,13 @@
 * When pressing UP to get to last command, move cursor to the end of the line
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
+* Fix bug with TALK TO. After using carriage door, talking to Gapsard logs:
+```
+Uncaught TypeError: Cannot read property 'toLowerCase' of undefined
+    at findCharacter (index.js:357)
+    at talk (index.js:397)
+    at exec (index.js:164)
+    at Object.3 (index.js:449)
+    at applyInput (index.js:454)
+    at HTMLInputElement.input.onkeypress (index.js:67)
+```
