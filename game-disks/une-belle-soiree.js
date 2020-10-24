@@ -27,8 +27,7 @@ const arrive = ({room, println, enterRoom}) => {
   room.openTimeout = setTimeout(() => {
     println(`The servant opens the door.`),
     door.use = ({enterRoom}) => {
-      console.log('tf?');
-      //nterRoom('gate');
+      // enterRoom('gate');
     };
   }, 10000);
   room.items.push(door);
