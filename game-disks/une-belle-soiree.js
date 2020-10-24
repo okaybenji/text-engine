@@ -95,7 +95,7 @@ new Howl({
 }).play();
 
 // Handle the carriage arriving at its destination.
-const arrive = ({room, println, enterRoom}) => {
+const arrive = ({room, println}) => {
   const door = {
     name: 'door',
     desc: `It's a door.`,
@@ -108,8 +108,8 @@ const arrive = ({room, println, enterRoom}) => {
 
   room.openTimeout = setTimeout(() => {
     println(`The servant opens the door.`),
-    door.use = ({enterRoom}) => {
-      // enterRoom('gate');
+    door.use = () => {
+      enterRoom('gate');
     };
   }, 10000);
   room.items.push(door);
@@ -120,54 +120,54 @@ const uneBelleSoiree = {
   inventory: [{
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
-    look: ({getRoom, println, enterRoom}) => {
+    look: ({println}) => {
       const room = getRoom('start');
       room.desc = getNextDescription({room,println});
       if (!room.descriptions.length) {
-        arrive({room, println, enterRoom});
+        arrive({room, println});
       }
     },
-    use: ({getRoom, println, item, enterRoom}) => {
+    use: ({println, item}) => {
       println(item.desc);
       const room = getRoom('start');
-      room.desc = getNextDescription({room,println});
+      room.desc = getNextDescription({room, println});
       if (!room.descriptions.length) {
-        arrive({room, println, enterRoom});
+        arrive({room, println});
       }
     },
   }, {
     name: 'ring',
     desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
-    look: ({getRoom, item, println, enterRoom}) => {
+    look: ({item, println}) => {
       const room = getRoom('start');
       room.desc = getNextDescription({room,println});
       if (!room.descriptions.length) {
-        arrive({room, println, enterRoom});
+        arrive({room, println});
       }
       item.desc = `It was a gift from your father to your mother.`;
     },
   }],
-  roomId: 'gate',
+  roomId: 'start',
   rooms: [
     {
-      name: 'Carriage [1779]',
+      name: 'Carriage',
       id: 'start',
       img: ``,
       descriptions: [
         `Underneath the beating of the hooves, you can hear the cicadas and bullfrogs of summer. The smell of cut hay drifts into the coach. There is a hand-mirror in your pocket.`,
-        `The rhythms of the carriage over ruts in the country mud begin to turn to the hum of paved roads as in the distance the haze of harvest begins to be illuminated by the lights of a far off estate, which is just now becoming encircled with a light fog.`,
+        `The irregular rhythms of the carriage over ruts in the country mud begin to turn to the even humming of paved roads. In the distance, the haze of harvest begins to be illuminated by the lights of a far off estate, which is just now becoming encircled with a light fog.`,
         `The light from the estate half-discloses the statuary that lines the entrance. From the roadside you hear the shouts of stablemen. Farther away, as quiet as a whisper, is a strange and exotic song.`,
         `The carriage comes to a stop. You can't make out the details, but the coachman is in some sort of conversation concerning the logistics of stabling the horses. Approaching the carriage is a servant of the House of Dauphin. You glance at the door.`,
       ],
       items: [{
         name: ['invitation', 'letter'],
-        desc: `You'll have to pick it up.`,
+        desc: `You'll have to pick it up. Try: TAKE INVITATION`,
         isTakeable: true,
-        onTake: ({getRoom, item, println, enterRoom}) => {
+        onTake: ({item, println}) => {
           const room = getRoom('start');
-          room.desc = getNextDescription({room,println});
+          room.desc = getNextDescription({room, println});
           if (!room.descriptions.length) {
-            arrive({room, println, enterRoom});
+            arrive({room, println});
           }
           item.desc = `In bold typeset and surrounded by Parisian filligree you read:
 
@@ -177,13 +177,13 @@ const uneBelleSoiree = {
           item.look = () => {
             room.desc = getNextDescription({room,println});
             if (!room.descriptions.length) {
-              arrive({room, println, enterRoom});
+              arrive({room, println});
             }
           };
         },
       },
       ],
-      onEnter: ({getRoom, println}) => {
+      onEnter: ({println}) => {
         const room = getRoom('start');
 
         if (room.visits === 1) {

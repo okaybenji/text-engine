@@ -7,7 +7,7 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 const getName = name => typeof name === 'object' ? name[0] : name;
 
 // global properties that need to be assigned in loadDisk
-let getCharactersInRoom;
+let getCharactersInRoom, getRoom, enterRoom;
 
 document.onkeydown = () => {
   input.focus();
@@ -115,9 +115,9 @@ const loadDisk = (disk, config = {}) => {
   let inputsPos = 0;
 
   // String -> Room
-  const getRoom = (id) => disk.rooms.find(room => room.id === id);
+  getRoom = (id) => disk.rooms.find(room => room.id === id);
 
-  const enterRoom = (id) => {
+  enterRoom = (id) => {
     const room = getRoom(id);
 
     println(room.img, true);
