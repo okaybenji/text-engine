@@ -413,6 +413,11 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 return;
               }
 
+              if (typeof(character.topics) === 'string') {
+                println(character.topics);
+                return;
+              }
+
               topics = character.topics({println, room});
 
               if (!Object.keys(topics).length) {
