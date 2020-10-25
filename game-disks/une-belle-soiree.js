@@ -55,8 +55,6 @@ const updateLocation = function() {
 
 var adagio = document.getElementById("adagio");
 
-
-
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = function() {
   const character = this;
