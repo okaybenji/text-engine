@@ -57,6 +57,11 @@ const urDead = {
     }
   ],
   characters: [
-    {name: ['the skeletons', 'skeletons'], desc: [`They look competitive.`, `They're still on 'H'.`], roomId: 'start'},
+    {
+      name: ['the skeletons', 'skeletons'],
+      desc: [`They look competitive.`, `They're still on 'H'.`],
+      roomId: 'start',
+      topics: `They look pretty busy.`,
+    },
   ],
 };
