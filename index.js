@@ -83,7 +83,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
   // Debugging: Allow pressing > to force characters to move to adjacent rooms.
   document.onkeypress = function (e) {
-    if(e.keyCode == 62){
+    if (e.keyCode == 62) {
       disk.characters.map(c => c.updateLocation({println, disk}));
     }
   };
@@ -130,7 +130,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       println(room.desc,false,false,true);
     }
     const characters = getCharactersInRoom(room.id);
-    characters.map(c => println(`${c.name} is here.`,false,false,true))   
+    characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
 
     room.visits++;
 
@@ -354,11 +354,21 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             }
 
             // get a character by name from a list of characters
-            const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
+            const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
+              const hasName = n => {
+                return n.toLowerCase().includes(name.toLowerCase());
+              };
+              // search through each variation of the name in an array
+              if (typeof c.name === 'object') {
+                return c.name.find(hasName);
+              }
+
+              return hasName(c.name);
+            });
 
             const character =
-              preposition === 'to' && findCharacter(disk.characters, args[2])
-                ? findCharacter(disk.characters, args[2])
+              preposition === 'to' && findCharacter(args[2])
+                ? findCharacter(args[2])
                 : disk.conversant;
             let topics;
 
@@ -389,13 +399,18 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             };
 
             if (preposition === 'to') {
-              if (!findCharacter(disk.characters, args[2])) {
+              if (!findCharacter(args[2])) {
                 println('There is no one here by that name.');
                 return;
               }
 
-              if (!findCharacter(getCharactersInRoom(room.id), character.name)) {
+              if (!findCharacter(getName(character.name), getCharactersInRoom(room.id))) {
                 println('There is no one here by that name.');
+                return;
+              }
+
+              if (!character.topics) {
+                println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
 
