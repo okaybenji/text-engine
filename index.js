@@ -399,6 +399,11 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 return;
               }
 
+              if (!character.topics) {
+                println(`You have nothing to discuss with ${character.name} at this time.`);
+                return;
+              }
+
               topics = character.topics({println, room});
 
               if (!Object.keys(topics).length) {
