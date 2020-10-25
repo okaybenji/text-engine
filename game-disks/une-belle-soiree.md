@@ -19,3 +19,4 @@ Uncaught TypeError: Cannot read property 'toLowerCase' of undefined
     at applyInput (index.js:454)
     at HTMLInputElement.input.onkeypress (index.js:67)
 ```
+* Add a feature to clear screen and print at top

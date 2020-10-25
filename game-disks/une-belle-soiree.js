@@ -5,6 +5,7 @@ const getNextDescription = (room) => {
   return roomDesc;
 };
 
+
 // Moves THIS (character) to an adjacent room along their route.
 const updateLocation = function() {
   const reportEntrances = () => {
@@ -52,6 +53,10 @@ const updateLocation = function() {
   }
 };
 
+var adagio = document.getElementById("adgio");
+
+
+
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = function() {
   const character = this;
@@ -89,27 +94,36 @@ const branchingConversationTopics = function() {
   return {};
 };
 
-// Play music.
-new Howl({
-  src: ['http://bestclassicaltunes.com/MP3Records/Albinoni/AlbinoniAdagio.mp3']
-}).play();
 
 // Handle the carriage arriving at its destination.
 const arrive = ({room}) => {
+ let fadeAudio = setInterval(function () {
+        console.log('set');
+        adagio.volume -= 0.1;
+    if (adagio.volume <= 0.1) {
+       console.log('cleared');
+        clearInterval(fadeAudio);
+    }
+}, 400);
+  
   const door = {
     name: 'door',
     desc: `It's a door.`,
     use: () => {
       clearTimeout(room.openTimeout);
       println(`Uncharacteristically, you open the door rather than wait for assistance. As you exit the carriage, the servant, preoccupied with some tasks, looks to you with panic. "Pardon mademoiselle! I was coming just now to accomodate you. Please forgive my lateness. I was briefly kept by the coachman and had every intention of assisting you myself."`);
-      enterRoom('gate');
+      adagio.volume = 1;
+      adagio.currentTime = (6 * 60) + 25;
+      setTimeout(() =>  enterRoom('gate'),4000);
     },
   };
 
   room.openTimeout = setTimeout(() => {
     println(`The servant opens the door.`),
     door.use = () => {
-      enterRoom('gate');
+      adagio.volume = 1;
+      adagio.currentTime = (6 * 60) + 25;
+      setTimeout(() =>  enterRoom('gate'),4000);
     };
   }, 10000);
   room.items.push(door);
@@ -121,6 +135,7 @@ const uneBelleSoiree = {
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
     look: () => {
+       
       const room = getRoom('start');
       room.desc = getNextDescription(room);
       if (!room.descriptions.length) {
@@ -128,6 +143,7 @@ const uneBelleSoiree = {
       }
     },
     use: ({item}) => {
+      
       println(item.desc);
       const room = getRoom('start');
       room.desc = getNextDescription(room);
@@ -164,6 +180,7 @@ const uneBelleSoiree = {
         desc: `You'll have to pick it up. Try: TAKE INVITATION`,
         isTakeable: true,
         onTake: ({item}) => {
+          adagio.play();
           const room = getRoom('start');
           room.desc = getNextDescription(room);
           if (!room.descriptions.length) {
@@ -185,6 +202,8 @@ const uneBelleSoiree = {
       ],
       onEnter: () => {
         const room = getRoom('start');
+        
+      
 
         if (room.visits === 1) {
           println(`WARNING: This game deals with very dark themes and includes graphic descriptions of violence.`);
@@ -202,7 +221,16 @@ const uneBelleSoiree = {
       Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
       exits: [
         { dir: 'north', id: 'insideGate' }     
-      ]
+      ],
+      img:`
+      ##::::'##:'##::: ##:'########::::'########::'########:'##:::::::'##:::::::'########:::::'######:::'#######::'####:'########::'########:'########:
+      ##:::: ##: ###:: ##: ##.....::::: ##.... ##: ##.....:: ##::::::: ##::::::: ##.....:::::'##... ##:'##.... ##:. ##:: ##.... ##: ##.....:: ##.....::
+      ##:::: ##: ####: ##: ##:::::::::: ##:::: ##: ##::::::: ##::::::: ##::::::: ##:::::::::: ##:::..:: ##:::: ##:: ##:: ##:::: ##: ##::::::: ##:::::::
+      ##:::: ##: ## ## ##: ######:::::: ########:: ######::: ##::::::: ##::::::: ######::::::. ######:: ##:::: ##:: ##:: ########:: ######::: ######:::
+      ##:::: ##: ##. ####: ##...::::::: ##.... ##: ##...:::: ##::::::: ##::::::: ##...::::::::..... ##: ##:::: ##:: ##:: ##.. ##::: ##...:::: ##...::::
+      ##:::: ##: ##:. ###: ##:::::::::: ##:::: ##: ##::::::: ##::::::: ##::::::: ##::::::::::'##::: ##: ##:::: ##:: ##:: ##::. ##:: ##::::::: ##:::::::
+     . #######:: ##::. ##: ########:::: ########:: ########: ########: ########: ########::::. ######::. #######::'####: ##:::. ##: ########: ########:
+     :.......:::..::::..::........:::::........:::........::........::........::........::::::......::::.......:::....::..:::::..::........::........::`
     },
     {
       name: 'Inside Gate', 
