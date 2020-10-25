@@ -130,7 +130,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       println(room.desc,false,false,true);
     }
     const characters = getCharactersInRoom(room.id);
-    characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
 
     room.visits++;
 
