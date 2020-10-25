@@ -6,11 +6,17 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
+// global properties that need to be assigned in loadDisk
+let disk, println, getCharactersInRoom, getRoom, enterRoom;
+
 document.onkeydown = () => {
   input.focus();
 };
 
-const loadDisk = (disk, config = {}) => {
+const loadDisk = (uninitializedDisk, config = {}) => {
+  // get a list of all characters in the passed room
+  getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
+
   // build default (DOM) configuration
   const defaults = {
     // retrieve user input (remove whitespace at beginning or end)
@@ -20,7 +26,7 @@ const loadDisk = (disk, config = {}) => {
       input.value = str;
     },
     // render output
-    println: (line, isImg = false) => {
+    println: (line, isImg = false, isName = false, isDesc = false) => {
       // bail if string is null or undefined
       if (!line) {
         return;
@@ -34,6 +40,14 @@ const loadDisk = (disk, config = {}) => {
 
       if (isImg) {
         newLine.classList.add('img');
+      }
+
+      if (isName) {
+        newLine.classList.add('roomname');
+      }
+
+      if (isDesc) {
+        newLine.classList.add('desc');
       }
 
       // add a class for styling prior user input
@@ -67,7 +81,16 @@ const loadDisk = (disk, config = {}) => {
     }
   };
 
-  const {getInput, setInput, println, setup} = Object.assign(defaults, config);
+  // Debugging: Allow pressing > to force characters to move to adjacent rooms.
+  document.onkeypress = function (e) {
+    if(e.keyCode == 62){
+      disk.characters.map(c => c.updateLocation({println, disk}));
+    }
+  };
+
+  const configuration = Object.assign(defaults, config);
+  const {getInput, setInput, setup} = configuration;
+  println = configuration.println;
 
   // Disk -> Disk
   const init = (disk) => {
@@ -80,28 +103,34 @@ const loadDisk = (disk, config = {}) => {
     if (!initializedDisk.inventory) {
       initializedDisk.inventory = [];
     }
+    
+    if (!initializedDisk.characters) {
+      initializedDisk.characters = [];
+    }
 
     return initializedDisk;
   };
 
-  disk = init(disk);
+  disk = init(uninitializedDisk);
 
   const inputs = ['']; // store all user commands
   let inputsPos = 0;
 
   // String -> Room
-  const getRoom = (id) => disk.rooms.find(room => room.id === id);
+  getRoom = (id) => disk.rooms.find(room => room.id === id);
 
-  const enterRoom = (id) => {
+  enterRoom = (id) => {
     const room = getRoom(id);
 
     println(room.img, true);
 
-    println(`---${getName(room.name)}---`);
+    println(`${getName(room.name)}`,false,true);
 
     if (room.visits === 0) {
-      println(room.desc);
+      println(room.desc,false,false,true);
     }
+    const characters = getCharactersInRoom(room.id);
+    characters.map(c => println(`${c.name} is here.`,false,false,true))   
 
     room.visits++;
 
@@ -110,6 +139,9 @@ const loadDisk = (disk, config = {}) => {
     if (typeof room.onEnter === 'function') {
       room.onEnter({disk, println, getRoom, enterRoom});
     }
+
+    // reset any active conversation
+    delete disk.conversant;
   };
 
   const startGame = (disk) => {
@@ -135,9 +167,15 @@ const loadDisk = (disk, config = {}) => {
       }
     };
 
-    const args = val.split(' ')
+    let args = val.split(' ')
       // remove articles
       .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
+
+    if (disk.conversant && args.length === 1) {
+      // if player is in a conversation, assume the argument is a topic
+      args = ['talk', 'about', args[0]];
+    }
+
     const cmd = args[0];
     const room = getRoom(disk.roomId);
 
@@ -158,7 +196,7 @@ const loadDisk = (disk, config = {}) => {
             });
           },
           look() {
-            println(room.desc);
+            println(room.desc,false,false,true);
           },
           go() {
             const exits = room.exits;
@@ -187,7 +225,7 @@ const loadDisk = (disk, config = {}) => {
             }
             println('You see the following:');
             items
-              .forEach(item => println(item.name));
+              .forEach(item => println(getName(item.name)));
           },
           help() {
             const instructions = `
@@ -197,6 +235,8 @@ const loadDisk = (disk, config = {}) => {
               TAKE [OBJECT NAME] e.g. 'take book'
               GO [DIRECTION] e.g. 'go north'
               USE [OBJECT NAME] e.g. 'use door'
+              TALK TO [CHARACTER NAME] e.g. 'talk to mary'
+              TALK ABOUT [SUBJECT] e.g. 'talk about horses'
               INV :: list inventory items
               HELP :: this help menu
             `;
@@ -255,7 +295,7 @@ const loadDisk = (disk, config = {}) => {
             if (item) {
               if (item.use) {
                 const use = typeof item.use === 'string' ? eval(item.use) : item.use;
-                use({disk, println, getRoom, enterRoom}); // use item and give it a reference to the game
+                use({disk, println, getRoom, enterRoom, item}); // use item and give it a reference to the game
               } else {
                 println('That item doesn\'t have a use.');
               }
@@ -277,21 +317,135 @@ const loadDisk = (disk, config = {}) => {
           look() {
             const findItem = item => item.name === args[2] || item.name.includes(args[2]);
             const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
-            if (!item) {
-              println('You don\'t see any such thing.');
-            } else {
-              println(item.desc);
+            if (item) {
+              // Look at an item.
+              if (item.desc) {
+                println(item.desc);
+              } else {
+                println('You don\'t notice anythign remarkable about it.');
+              }
 
               if (typeof(item.look) === 'function') {
-                item.look({disk, println, getRoom, enterRoom});
+                item.look({disk, println, getRoom, enterRoom, item});
+              }
+            } else {
+              const character = getCharactersInRoom(room.id).find(c => c.name.toLowerCase() === args[2]);
+              if (character) {
+                // Look at a character.
+                if (character.desc) {
+                  println(character.desc);
+                } else {
+                  println('You don\'t notice anything remarkable about them.');
+                }
+              } else {
+                println('You don\'t see any such thing.');
               }
             }
           },
           say() {
             const str = args.splice(1).reduce((cur, acc) => cur + ' ' + acc, `You say `) + '.';
             println(str);
+          },
+          talk() {
+            let preposition = args[1];
+            if (preposition !== 'to' && preposition !== 'about') {
+              println(`You can talk TO someone or ABOUT some topic.`);
+              return;
+            }
+
+            // get a character by name from a list of characters
+            const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
+
+            const character =
+              preposition === 'to' && findCharacter(disk.characters, args[2])
+                ? findCharacter(disk.characters, args[2])
+                : disk.conversant;
+            let topics;
+
+            // give the player a list of topics to choose from for the character
+            // (if this is a branching conversation, list possible responses)
+            const listTopics = (character) => {
+              disk.conversation = topics;
+
+              if (Object.keys(topics).length) {
+                if (character.conversationType === 'branching') {
+                  println('Select a response:');
+                  Object.keys(topics).forEach(topic => println(topics[topic].response));
+                } else {
+                  println('What would you like to discuss?');
+                  Object.keys(topics).forEach(topic => println(topic));
+                  println('NOTHING');
+                }
+              } else {
+                endConversation();
+              }
+            };
+
+            // end the current conversation
+            const endConversation = () => {
+              disk.conversant = undefined;
+              disk.conversation = undefined;
+              println('You politely end the conversation.')
+            };
+
+            if (preposition === 'to') {
+              if (!findCharacter(disk.characters, args[2])) {
+                println('There is no one here by that name.');
+                return;
+              }
+
+              if (!findCharacter(getCharactersInRoom(room.id), character.name)) {
+                println('There is no one here by that name.');
+                return;
+              }
+
+              topics = character.topics({println, room});
+
+              if (!Object.keys(topics).length) {
+                println(`You have nothing to discuss with ${character.name} at this time.`);
+                return;
+              }
+
+              disk.conversant = character;
+              listTopics(character);
+            } else if (preposition === 'about'){
+              if (!disk.conversant) {
+                println('You need to be in a conversation to talk about something');
+                return;
+              }
+              const character = eval(disk.conversant);
+              if(getCharactersInRoom(room.id).includes(disk.conversant)){
+                const response = disk.conversation[args[2]];
+                if (args[2].toLowerCase() === 'nothing'){
+                  endConversation();
+                  return;
+                } else if (response) {
+                  if (character.conversationType === 'branching') {
+                    const topics = disk.conversation;
+                    topics[args[2]].onSelected();
+                  } else {
+                    if (typeof response === 'function'){
+                      println(response());
+                    } else {
+                      println(response);
+                    }
+                  }
+                } else {
+                  println(`You talk about ${args[2]}.`);
+                }
+
+                // continue the conversation.
+                topics = character.topics({println, room});
+                listTopics(character);
+              } else {
+                println('That person is no longer available for conversation.')
+                disk.conversant = undefined;
+                disk.conversation = undefined;
+              }
+            }
           }
         };
+ 
         exec(cmds[cmd]);
       }
     };
