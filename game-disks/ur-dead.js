@@ -31,10 +31,6 @@ const urDead = {
       },
       items: [
         {
-          name: 'skeletons',
-          desc: [`They look competitive.`, `They're still on 'H'.`]
-        },
-        {
           name: 'hoop',
           desc: [`It's a hoot. [Not a typo. --ED]`],
         },
@@ -59,5 +55,8 @@ const urDead = {
       id: 'purg',
       exits: [{dir: 'up', id: 'start'}],
     }
+  ],
+  characters: [
+    {name: 'skeletons', desc: [`They look competitive.`, `They're still on 'H'.`], roomId: 'start'},
   ],
 };
