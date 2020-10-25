@@ -351,7 +351,7 @@ const uneBelleSoiree = {
   ],
   characters: [
     {
-      name: 'Gaspard',
+      name: ['Gaspard', 'servant'],
       desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
       routes: {
         helpingGuests: {
