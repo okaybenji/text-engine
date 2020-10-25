@@ -6,6 +6,19 @@ const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
 // return the first name if it's an array, or the only name
 const getName = name => typeof name === 'object' ? name[0] : name;
 
+// get a character by name from a list of characters
+const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
+  const hasName = n => {
+    return n.toLowerCase().includes(name.toLowerCase());
+  };
+  // search through each variation of the name in an array
+  if (typeof c.name === 'object') {
+    return c.name.find(hasName);
+  }
+
+  return hasName(c.name);
+});
+
 // global properties that need to be assigned in loadDisk
 let disk, println, getCharactersInRoom, getRoom, enterRoom;
 
@@ -329,7 +342,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 item.look({disk, println, getRoom, enterRoom, item});
               }
             } else {
-              const character = getCharactersInRoom(room.id).find(c => c.name.toLowerCase() === args[2]);
+              const character = findCharacter(args[2], getCharactersInRoom(room.id));
               if (character) {
                 // Look at a character.
                 if (character.desc) {
@@ -352,19 +365,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               println(`You can talk TO someone or ABOUT some topic.`);
               return;
             }
-
-            // get a character by name from a list of characters
-            const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
-              const hasName = n => {
-                return n.toLowerCase().includes(name.toLowerCase());
-              };
-              // search through each variation of the name in an array
-              if (typeof c.name === 'object') {
-                return c.name.find(hasName);
-              }
-
-              return hasName(c.name);
-            });
 
             const character =
               preposition === 'to' && findCharacter(args[2])
