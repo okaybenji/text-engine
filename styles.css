@@ -45,6 +45,7 @@ body::after {
 .img {
   white-space: pre;
   display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
