@@ -354,7 +354,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             }
 
             // get a character by name from a list of characters
-            const findCharacter = (chars, name) => chars.map(c => c.name.toLowerCase()).includes(name.toLowerCase());
+            const findCharacter = (chars, name) => chars.find(c => c.name.toLowerCase().includes(name.toLowerCase()));
 
             const character =
               preposition === 'to' && findCharacter(disk.characters, args[2])
