@@ -53,7 +53,7 @@ const updateLocation = function() {
   }
 };
 
-var adagio = document.getElementById("adgio");
+var adagio = document.getElementById("adagio");
 
 
 
