@@ -234,8 +234,8 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
-        console.log(this.visits); 
-        this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
+        this.desc = `${this.visits == 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
+        println(this.desc);
       }
     },
     {
@@ -254,7 +254,8 @@ const uneBelleSoiree = {
         {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
       ],
       onEnter() {
-        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here, the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
+        this.desc = `${this.visits == 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here, the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
+        println(this.desc);
       },
     },
     {
