@@ -7,9 +7,11 @@
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
 * Add a character to the game who the player can ask for directions. The player gives the name of a room they want to get to and the character responds with a list of directions from BFS.
 * BUGFIX: If you issue another command (say LOOK AT MIRROR) after you've already reached the threshold to arrive at the gate, you'll trigger two timeouts. This can lead to, for instance, Gaspard apologizing for not opening the door, and also Gaspard opening the door.
+* BUGFIX: Issuing the same command more than once should not move the carriage forward.
+* In `enterRoom`, fade out any ambient loop. If the new room has the name of an ambient loop sound defined, fade in that loop.
 
 ## text-engine
-* When pressing UP to get to last command, move cursor to the end of the line
-* Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION
+* When pressing UP to get to last command, move cursor to the end of the line.
+* Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION.
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
-* Add a feature to clear screen and print at top
+* Add a feature to clear screen and print at top.
