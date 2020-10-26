@@ -200,8 +200,6 @@ const uneBelleSoiree = {
       ],
       onEnter: () => {
         const room = getRoom('start');
-        
-      
 
         if (room.visits === 1) {
           println(`WARNING: This game deals with very dark themes and includes graphic descriptions of violence.`);
@@ -218,7 +216,7 @@ const uneBelleSoiree = {
       The fog that seemed to envelop the estate while riding from the carriage appears as a light mist here.
       Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
       exits: [
-        { dir: 'north', id: 'insideGate' }     
+        { dir: ['north', 'in'], id: 'insideGate' }
       ],
       img:`
       ##::::'##:'##::: ##:'########::::'########::'########:'##:::::::'##:::::::'########:::::'######:::'#######::'####:'########::'########:'########:
@@ -234,7 +232,7 @@ const uneBelleSoiree = {
       name: 'Inside Gate', 
       id: 'insideGate', 
       exits: [
-        { dir: 'south', id: 'gate' },   
+        { dir: ['south', 'out'], id: 'gate' },
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
