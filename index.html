@@ -16,5 +16,33 @@
 <script src="game-disks/une-belle-soiree.js"></script>
 <!-- Include game engine -->
 <script src="index.js"></script>
+<script>
+  const config = {
+    enterRoom: (id) => {
+        const room = getRoom(id);
+
+        println(room.img, true);
+
+        println(`${getName(room.name)}`,false,true);
+
+        if (room.visits === 0) {
+          println(room.desc,false,false,true);
+        }
+        const characters = getCharactersInRoom(room.id);
+        characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
+
+        room.visits++;
+
+        disk.roomId = id;
+
+        if (typeof room.onEnter === 'function') {
+          room.onEnter({disk, println, getRoom, enterRoom});
+        }
+
+        // reset any active conversation
+        delete disk.conversant;
+      },
+  };
+</script>
 <!-- Load disk into engine -->
-<script>loadDisk(uneBelleSoiree);</script>
+<script>loadDisk(uneBelleSoiree, config);</script>

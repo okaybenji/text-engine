@@ -71,6 +71,28 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       output.appendChild(newLine).innerText = str;
       window.scrollTo(0, document.body.scrollHeight);
     },
+    enterRoom: (id) => {
+      const room = getRoom(id);
+
+      println(room.img, true);
+
+      println(`${getName(room.name)}`,false,true);
+
+      if (room.visits === 0) {
+        println(room.desc,false,false,true);
+      }
+
+      room.visits++;
+
+      disk.roomId = id;
+
+      if (typeof room.onEnter === 'function') {
+        room.onEnter({disk, println, getRoom, enterRoom});
+      }
+
+      // reset any active conversation
+      delete disk.conversant;
+    },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
       input.onkeypress = (e) => {
@@ -104,6 +126,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
   const configuration = Object.assign(defaults, config);
   const {getInput, setInput, setup} = configuration;
   println = configuration.println;
+  enterRoom = configuration.enterRoom;
 
   // Disk -> Disk
   const init = (disk) => {
@@ -131,31 +154,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
   // String -> Room
   getRoom = (id) => disk.rooms.find(room => room.id === id);
-
-  enterRoom = (id) => {
-    const room = getRoom(id);
-
-    println(room.img, true);
-
-    println(`${getName(room.name)}`,false,true);
-
-    if (room.visits === 0) {
-      println(room.desc,false,false,true);
-    }
-    const characters = getCharactersInRoom(room.id);
-    characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
-
-    room.visits++;
-
-    disk.roomId = id;
-
-    if (typeof room.onEnter === 'function') {
-      room.onEnter({disk, println, getRoom, enterRoom});
-    }
-
-    // reset any active conversation
-    delete disk.conversant;
-  };
 
   const startGame = (disk) => {
     enterRoom(disk.roomId);
@@ -218,7 +216,15 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               return;
             }
             println('Where would you like to go? Available directions are:');
-            exits.forEach(exit => println(exit.dir));
+            exits.forEach((exit) => {
+              const rm = getRoom(exit.id);
+
+              println(
+                rm.visits > 0
+                  ? `${getName(exit.dir)} - ${rm.name}`
+                  : getName(exit.dir)
+              );
+            });
           },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
@@ -275,7 +281,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               println('There\'s nowhere to go.');
               return;
             }
-            const nextRoom = exits.find(exit => exit.dir === args[1]);
+            const nextRoom = exits.find(exit =>
+              typeof exit.dir === 'object'
+                ? exit.dir.includes(args[1])
+                : exit.dir === args[1]
+            );
+
             if (!nextRoom) {
               println('There is no exit in that direction.');
             } else {
@@ -284,7 +295,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           },
           take() {
             const findItem = item => item.name === args[1] || item.name.includes(args[1]);
-            const itemIndex = room.items && room.items.findIndex(findItem);
+            let itemIndex = room.items && room.items.findIndex(findItem);
             if (typeof itemIndex === 'number' && itemIndex > -1) {
               const item = room.items[itemIndex];
               if (item.isTakeable) {
@@ -298,7 +309,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 println('You can\'t take that.');
               }
             } else {
-              println('You don\'t see any such thing.');
+              itemIndex = disk.inventory.findIndex(findItem);
+              if (typeof itemIndex === 'number' && itemIndex > -1) {
+                println('You already have that.');
+              } else {
+                println('You don\'t see any such thing.');
+              }
             }
           },
           use() {

@@ -131,7 +131,7 @@ const uneBelleSoiree = {
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
-    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
+    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with. And strangely, in your excitement you also feel homesick and sad.`,
     look: () => {
        
       const room = getRoom('start');
@@ -200,8 +200,6 @@ const uneBelleSoiree = {
       ],
       onEnter: () => {
         const room = getRoom('start');
-        
-      
 
         if (room.visits === 1) {
           println(`WARNING: This game deals with very dark themes and includes graphic descriptions of violence.`);
@@ -218,7 +216,7 @@ const uneBelleSoiree = {
       The fog that seemed to envelop the estate while riding from the carriage appears as a light mist here.
       Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
       exits: [
-        { dir: 'north', id: 'insideGate' }     
+        { dir: ['north', 'in'], id: 'insideGate' }
       ],
       img:`
       ##::::'##:'##::: ##:'########::::'########::'########:'##:::::::'##:::::::'########:::::'######:::'#######::'####:'########::'########:'########:
@@ -234,7 +232,7 @@ const uneBelleSoiree = {
       name: 'Inside Gate', 
       id: 'insideGate', 
       exits: [
-        { dir: 'south', id: 'gate' },   
+        { dir: ['south', 'out'], id: 'gate' },
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
@@ -257,13 +255,13 @@ const uneBelleSoiree = {
         {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
       ],
       onEnter() {
-        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
+        this.desc = `${this.visits < 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here, the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
       },
     },
     {
       name: 'Outer Court',
       id: 'outerCourt', 
-      desc:[`Vines grow up the courtyard walls. To the north, the windows of the house are well lit, each producing its own faint halo in the mist.`],
+      desc:[`Vines grow up the courtyard walls. To the NORTH, the windows of the house are well lit, each producing its own faint halo in the mist.`],
       items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous. It looks like they may even have compromised the wall's structural integrity.`}],
       exits: [
         { dir: 'north', id: 'innerCourt' }, 
@@ -273,7 +271,7 @@ const uneBelleSoiree = {
     {
       name: 'Inner Court',
       id: 'innerCourt', 
-      desc:[`The courtyard is well illuminated. The marble stairs to the north look as if they were recently constructed. The lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somwhere else on the grounds.`],
+      desc:[`The courtyard is well illuminated. The marble stairs to the NORTH look as if they were recently constructed. The lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somewhere else on the grounds.`],
       exits: [
         { dir: 'south', id: 'outerCourt' }, 
         { dir: 'north', id: 'grandPorch' }, 
@@ -316,7 +314,7 @@ const uneBelleSoiree = {
     {
       name: 'Grand Porch',
       id: 'grandPorch', 
-      desc:[`The front of the Dauphin home is encircled by a large marble porch, with ornate railing. In the moonlight, and from the relative height of the porch you can see the entirety of the large moonlit lawn.`],
+      desc:[`The front of the Dauphin home is encircled by a large marble porch with ornate railing. In the moonlight, and from the relative height of the porch, you can see the entirety of the large moonlit lawn.`],
       items:[
       {name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`},
       {name:'lawn', desc:`It seems to have many small spaces partitioned by hedges, and networked with long pathway.`}
@@ -483,7 +481,7 @@ const uneBelleSoiree = {
     },
     {
       name: 'Richard',
-      desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood',
+      desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood.',
       routes: {
         ariving: {
         path: ['innerCourt'],

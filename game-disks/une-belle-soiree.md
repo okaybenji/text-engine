@@ -1,9 +1,12 @@
 # TODO:
 
+* Why are some of the room descriptions not printing when entering for the first time?
+
 ## Une Belle Soiree
 * Ending: Take off dress; go into pool; offer statue rum; gate opens behind you; THE END.
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
 * Add a character to the game who the player can ask for directions. The player gives the name of a room they want to get to and the character responds with a list of directions from BFS.
+* BUGFIX: If you issue another command (say LOOK AT MIRROR) after you've already reached the threshold to arrive at the gate, you'll trigger two timeouts. This can lead to, for instance, Gaspard apologizing for not opening the door, and also Gaspard opening the door.
 
 ## text-engine
 * When pressing UP to get to last command, move cursor to the end of the line
