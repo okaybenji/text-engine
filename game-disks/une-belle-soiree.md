@@ -13,4 +13,3 @@
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
 * Add a feature to clear screen and print at top
-* Once a player has been to a room, typing GO should display the room name next to the direction.

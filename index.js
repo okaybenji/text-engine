@@ -218,7 +218,15 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               return;
             }
             println('Where would you like to go? Available directions are:');
-            exits.forEach(exit => println(getName(exit.dir)));
+            exits.forEach((exit) => {
+              const rm = getRoom(exit.id);
+
+              println(
+                rm.visits > 0
+                  ? `${getName(exit.dir)} - ${rm.name}`
+                  : getName(exit.dir)
+              );
+            });
           },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
