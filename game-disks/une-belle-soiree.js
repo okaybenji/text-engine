@@ -400,7 +400,7 @@ const uneBelleSoiree = {
     {
       name: 'West Hall',
       id: 'westhall', 
-      desc:[`A hall extending from the Grand Salon to the study, a door to the north lead to a vestibulary `],
+      desc:[`A hall extending from the Grand Salon to the study, a door to the NORTH lead to a vestibulary `],
       exits: [
         { dir: 'south', id: 'library' },  
         { dir: 'east', id: 'grandSalon'}, 
