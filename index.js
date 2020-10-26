@@ -218,7 +218,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               return;
             }
             println('Where would you like to go? Available directions are:');
-            exits.forEach(exit => println(exit.dir));
+            exits.forEach(exit => println(getName(exit.dir)));
           },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
@@ -275,7 +275,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               println('There\'s nowhere to go.');
               return;
             }
-            const nextRoom = exits.find(exit => exit.dir === args[1]);
+            const nextRoom = exits.find(exit =>
+              typeof exit.dir === 'object'
+                ? exit.dir.includes(args[1])
+                : exit.dir === args[1]
+            );
+
             if (!nextRoom) {
               println('There is no exit in that direction.');
             } else {
