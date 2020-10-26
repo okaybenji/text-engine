@@ -461,34 +461,19 @@ const uneBelleSoiree = {
           type: 'loop',
         }
       },
-      hasFartedd: true,
-      sorryAboutThat: false,
       updateLocation,
       currentRoute: 'helpingGuests',
       roomId: 'gate',
       topics: function({room}) {
-        const topics = {};
-        if (this.hasFartedd){
-          topics.thatfart = () => {
-            this.hasFartedd = false;
-            this.sorryAboutThat = true;
-            return `You remind Gaspard that it is impolite to break wind in the presence of a lady.
+        if(this.roomId === 'fountain'){
+          return {fountain: 'This fountain was installed by Count Dauhphin, it is a recent addition.'};
+        }
 
-            “Sorry about that,” he moans.`;
-          };
+        if(this.currentRoute === 'helpingGuests'){
+          return {escort: 'Right this way madam'};
         }
-        if (room.id == 'fountain') {
-          topics.apples = 'damn, I wish I was an apple';
-        }
-        if (this.sorryAboutThat) {
-          topics.excuse = () => {
-            this.sorryAboutThat = false;
-            return `“That’s quite all right,” you say.
-
-            Gaspard is visibly relieved. “Thank ya kindly miss, for excusin' ma fart.”`;
-          };
-        }
-        return topics;
+      
+        
       }
     },
     {
@@ -499,6 +484,10 @@ const uneBelleSoiree = {
         path: ['innerCourt'],
           type: 'patrol',
         },
+        walkingTheGrounds: {
+          path: ['eastPorch', 'grandPorch', 'westPorch', 'innerCourt', 'outerCourt', 'fountain'],
+            type: 'patrol',
+          },
       },
       conversation: [
         {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
