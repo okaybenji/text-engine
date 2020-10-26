@@ -427,6 +427,9 @@ const uneBelleSoiree = {
       name: 'Kitchen',
       id: 'kitchen', 
       desc:[`The room is hot, and very uncomfortable, you worry that the floor will dirty your gown, everyone stops and looks up from their task. You feel very out of place.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`],
+      onEnter: function() {
+        this.desc = `The room is hot, and very uncomfortable.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`;
+      },
       exits: [
         { dir: 'south', id: 'sittingRoom' },
         { dir: 'west', id: 'grandSalon' },
