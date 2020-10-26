@@ -71,6 +71,28 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       output.appendChild(newLine).innerText = str;
       window.scrollTo(0, document.body.scrollHeight);
     },
+    enterRoom: (id) => {
+      const room = getRoom(id);
+
+      println(room.img, true);
+
+      println(`${getName(room.name)}`,false,true);
+
+      if (room.visits === 0) {
+        println(room.desc,false,false,true);
+      }
+
+      room.visits++;
+
+      disk.roomId = id;
+
+      if (typeof room.onEnter === 'function') {
+        room.onEnter({disk, println, getRoom, enterRoom});
+      }
+
+      // reset any active conversation
+      delete disk.conversant;
+    },
     // prepare the environment
     setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
       input.onkeypress = (e) => {
@@ -104,6 +126,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
   const configuration = Object.assign(defaults, config);
   const {getInput, setInput, setup} = configuration;
   println = configuration.println;
+  enterRoom = configuration.enterRoom;
 
   // Disk -> Disk
   const init = (disk) => {
@@ -131,31 +154,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
   // String -> Room
   getRoom = (id) => disk.rooms.find(room => room.id === id);
-
-  enterRoom = (id) => {
-    const room = getRoom(id);
-
-    println(room.img, true);
-
-    println(`${getName(room.name)}`,false,true);
-
-    if (room.visits === 0) {
-      println(room.desc,false,false,true);
-    }
-    const characters = getCharactersInRoom(room.id);
-    characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
-
-    room.visits++;
-
-    disk.roomId = id;
-
-    if (typeof room.onEnter === 'function') {
-      room.onEnter({disk, println, getRoom, enterRoom});
-    }
-
-    // reset any active conversation
-    delete disk.conversant;
-  };
 
   const startGame = (disk) => {
     enterRoom(disk.roomId);
