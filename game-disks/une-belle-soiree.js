@@ -131,7 +131,7 @@ const uneBelleSoiree = {
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
-    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak to. And strangely, in your excitement you also feel homesick and sad.`,
+    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with. And strangely, in your excitement you also feel homesick and sad.`,
     look: () => {
        
       const room = getRoom('start');
