@@ -387,10 +387,10 @@ const uneBelleSoiree = {
       id: 'library', 
       desc:[`Bookshelves line the entirety of the room. The look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of the locked doors in the cabinetry that they house shelves of private information `],
       items:[
-        {name:['Law'], desc:`One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
-        {name:['Reference'], desc:`Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
-        {name:['Atlas'], desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
-        {name:['Economy'], desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
+        {name:['law'], desc:`One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
+        {name:['reference'], desc:`Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
+        {name:['atlas'], desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
+        {name:['economy'], desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
       ],
       exits: [
         { dir: 'east', id: 'entry' }, 
