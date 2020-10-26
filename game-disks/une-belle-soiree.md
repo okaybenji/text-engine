@@ -15,3 +15,4 @@
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION.
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
 * Add a feature to clear screen and print at top.
+* Use N,E,S,and W as shorthand for Go North, East, South and West commands.
