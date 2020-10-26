@@ -96,10 +96,8 @@ const branchingConversationTopics = function() {
 // Handle the carriage arriving at its destination.
 const arrive = ({room}) => {
  let fadeAudio = setInterval(function () {
-        console.log('set');
-        adagio.volume -= 0.1;
-    if (adagio.volume <= 0.1) {
-       console.log('cleared');
+        adagio.volume -= 0.05;
+    if (adagio.volume <= 0.05) {
         clearInterval(fadeAudio);
     }
 }, 400);
@@ -236,6 +234,7 @@ const uneBelleSoiree = {
         { dir: 'north', id: 'fountain' }   
       ],
       onEnter() {
+        console.log(this.visits); 
         this.desc = `${this.visits < 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
       }
     },
