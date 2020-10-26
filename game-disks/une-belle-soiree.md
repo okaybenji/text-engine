@@ -1,5 +1,7 @@
 # TODO:
 
+* Why are some of the room descriptions not printing when entering for the first time?
+
 ## Une Belle Soiree
 * Ending: Take off dress; go into pool; offer statue rum; gate opens behind you; THE END.
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
@@ -10,3 +12,4 @@
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
 * Add a feature to clear screen and print at top
+* Once a player has been to a room, typing GO should display the room name next to the direction.
