@@ -373,7 +373,10 @@ const uneBelleSoiree = {
     {
       name: 'Sitting Room',
       id: 'sittingRoom', 
-      desc:[`It's a sitting room ok?`],
+      desc:[`Sofas are arrange to absorb heat from the sun during winter. `],
+      items:[
+        {name:['sofa'], desc:`Profusely decorated acanthus floral wood frames plush upholstery, somewhat faded from years in the sun`},
+      ],
       exits: [
         { dir: 'west', id: 'entry'},
         { dir: 'north', id: 'kitchen'},
@@ -382,7 +385,10 @@ const uneBelleSoiree = {
     {
       name: 'Library',
       id: 'library', 
-      desc:[`Bookshelves line the entirety of the room.  The look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding.`],
+      desc:[`Bookshelves line the entirety of the room. The look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of the locked doors in the cabinetry that they house shelves of private information `],
+      items:[
+        {name:['volumes'], desc:`On closer inspection these seem to be land surveys, a cupboard door with a key `},
+      ],
       exits: [
         { dir: 'east', id: 'entry' }, 
         { dir: 'west', id: 'chapel'},
@@ -390,7 +396,7 @@ const uneBelleSoiree = {
       ]
     },
     {
-      name: 'chapel',
+      name: 'Chapel',
       id: 'chapel', 
       desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in lit votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
       exits: [
