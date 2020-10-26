@@ -284,7 +284,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           },
           take() {
             const findItem = item => item.name === args[1] || item.name.includes(args[1]);
-            const itemIndex = room.items && room.items.findIndex(findItem);
+            let itemIndex = room.items && room.items.findIndex(findItem);
             if (typeof itemIndex === 'number' && itemIndex > -1) {
               const item = room.items[itemIndex];
               if (item.isTakeable) {
@@ -298,7 +298,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 println('You can\'t take that.');
               }
             } else {
-              println('You don\'t see any such thing.');
+              itemIndex = disk.inventory.findIndex(findItem);
+              if (typeof itemIndex === 'number' && itemIndex > -1) {
+                println('You already have that.');
+              } else {
+                println('You don\'t see any such thing.');
+              }
             }
           },
           use() {
