@@ -345,6 +345,96 @@ const uneBelleSoiree = {
         { dir: 'east', id: 'grandPorch' },  
       ]
     },
+    {
+      name: 'Entry',
+      id: 'entry', 
+      desc:[`Ornate mahogany panels surround the entrance to the home, the room seems impossibly tall. A large staircase leads up to a landing overlooking the entry room, and the grand salon.  Oil paintings adorn the walls in the room.`],
+      items:[
+        {name:['gallery','portraits','paintings'], desc:`Portraits of the Dauphins, some look to be more than a hundred years old. Broken occasionally by romaniticizations of provincial french landscape`},
+        {name:['panels'], desc:`The panels seem to be made of the same wood as the similarly ornate moulding around the room. Father would have remarked unhappily at such a frivilous expense, were he here`},
+      ],
+      exits: [
+        { dir: 'south', id: 'grandPorch' },  
+        { dir: 'north', id: 'grandSalon' },  
+        { dir: 'east', id: 'sittingRoom'},
+        { dir: 'west', id: 'library'},
+        { dir: 'up', id: 'landing'},  
+      ]
+    },
+    {
+      name: 'Grand Salon',
+      id: 'grandSalon', 
+      desc:[`A large circular room, the old salle de garde, now a salon. Elaborate embellishments on the ceiling border on onstentataious. The room is alive with chatter. A truly impressive spread of fruits, and game is available on the west side of the room.  A harpsichord is playing a minuet in the southwest corner.`],
+      exits: [
+        { dir: 'south', id: 'entry' },
+        { dir: 'north', id: 'backLawn'},
+        { dir: 'east', id: 'kitchen'},
+        { dir: 'west', id: 'westhall'},
+      ]
+    },
+    {
+      name: 'Sitting Room',
+      id: 'sittingRoom', 
+      desc:[`It's a sitting room ok?`],
+      exits: [
+        { dir: 'west', id: 'entry'},
+        { dir: 'north', id: 'kitchen'},
+      ]
+    },
+    {
+      name: 'Library',
+      id: 'library', 
+      desc:[`Bookshelves line the entirety of the room.  The look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding.`],
+      exits: [
+        { dir: 'east', id: 'entry' }, 
+        { dir: 'west', id: 'chapel'},
+        { dir: 'north', id: 'westhall'},  
+      ]
+    },
+    {
+      name: 'chapel',
+      id: 'chapel', 
+      desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in lit votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
+      exits: [
+        { dir: 'east', id: 'library' },  
+      ]
+    },
+    {
+      name: 'West Hall',
+      id: 'westhall', 
+      desc:[`A hall extending from the Grand Salon to the study, a door to the north lead to a vestibulary `],
+      exits: [
+        { dir: 'south', id: 'library' },  
+        { dir: 'east', id: 'grandSalon'}, 
+        { dir: 'west', id: 'study' }, 
+      ]
+    },
+    {
+      name: 'Landing',
+      id: 'landing', 
+      desc:[`You get the feeling you aren't meant to be up here, but no one seems to notice you, from here you can see the guests in the grand salon conversing.`],
+      exits: [
+        { dir: 'down', id: 'Entry' }
+      ]
+    },
+    {
+      name: 'Study',
+      id: 'study', 
+      desc:[`A private study, it smell so strongly of tobacco it clearly doubles as a smoking room, a large wooden desk, is surrounded by exotic artifacts. `],
+      exits: [
+        { dir: 'east', id: 'westhall' }
+      ]
+    },
+    {
+      name: 'Kitchen',
+      id: 'kitchen', 
+      desc:[`The room is hot, and very uncomfortable, you worry that the floor will dirty your gown, everyone stops and looks up from their task. You feel very out of place.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`],
+      exits: [
+        { dir: 'south', id: 'sittingRoom' },
+        { dir: 'west', id: 'grandSalon' },
+        { dir: 'east', id: 'garden'},
+      ]
+    },
 
   ],
   characters: [
@@ -392,32 +482,6 @@ const uneBelleSoiree = {
       }
     },
     {
-      name: 'GhostGirl',
-      desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
-      routes: {
-        crying: {
-        path: ['eastHedge', 'fountain','westHedge'],
-          type: 'follow',
-        },
-      },
-      conversation: [
-        {question: `"Hi. This is my new game. Do you like it?"`, answers: [
-          {response: `YES, I like it.`, next: `yes`},
-          {response: `NO, I do not like it.`, next: `no`},
-        ]},
-        {name: `yes`, line: `"I am happy you like my game!"`, next: `end`},
-        {name: `no`, line: `"You made me sad!"`, next: `end`},
-        {name: `end`},
-        {line: `Okay, let's change the topic.`},
-      ],
-      conversationType: 'branching',
-      stepIndex: 0,
-      updateLocation,
-      currentRoute: 'crying',
-      roomId: 'eastHedge',
-      topics: branchingConversationTopics,
-    },
-    {
       name: 'Richard',
       desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood',
       routes: {
@@ -440,7 +504,7 @@ const uneBelleSoiree = {
         ]},
         {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
         {name: `end`},
-        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” you tell him with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
+        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
       ],
       conversationType: 'branching',
       stepIndex: 0,
