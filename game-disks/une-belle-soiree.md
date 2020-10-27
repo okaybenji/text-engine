@@ -6,7 +6,6 @@
 * Ending: Take off dress; go into pool; offer statue rum; gate opens behind you; THE END.
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
 * Add a character to the game who the player can ask for directions. The player gives the name of a room they want to get to and the character responds with a list of directions from BFS.
-* BUGFIX: Issuing the same command more than once should not move the carriage forward.
 * In `enterRoom`, fade out any ambient loop. If the new room has the name of an ambient loop sound defined, fade in that loop.
 
 ## text-engine
