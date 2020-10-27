@@ -1,8 +1,9 @@
+// Mark the context (item) as examined.
 const examine = function() {
   this.examined = true;
 };
 
-// Prints room descriptions in order until they are exhausted (then repeats final description).
+// Print room descriptions in order until they are exhausted (then repeats final description).
 const getNextDescription = function(room) {
   if (this.examined) {
     return;
@@ -18,7 +19,7 @@ const getNextDescription = function(room) {
   room.desc = nextDesc;
 };
 
-// Moves THIS (character) to an adjacent room along their route.
+// Move THIS (character) to an adjacent room along their route.
 const updateLocation = function() {
   const reportEntrances = () => {
     const inRoom = getCharactersInRoom(disk.roomId);
@@ -107,12 +108,12 @@ const branchingConversationTopics = function() {
 
 // Handle the carriage arriving at its destination.
 const arrive = ({room}) => {
- let fadeAudio = setInterval(function () {
-        adagio.volume -= 0.05;
+  const fadeAudio = setInterval(function () {
+    adagio.volume -= 0.05;
     if (adagio.volume <= 0.05) {
-        clearInterval(fadeAudio);
+      clearInterval(fadeAudio);
     }
-}, 400);
+  }, 400);
   
   const door = {
     name: 'door',
@@ -134,6 +135,7 @@ const arrive = ({room}) => {
       setTimeout(() =>  enterRoom('gate'),4000);
     };
   }, 10000);
+
   room.items.push(door);
 };
 
@@ -167,7 +169,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'start',
+  roomId: 'gate',
   rooms: [
     {
       name: 'Carriage',
@@ -476,10 +478,8 @@ const uneBelleSoiree = {
         }
 
         if(this.currentRoute === 'helpingGuests'){
-          return {escort: 'Right this way madam'};
+          return {escort: 'Right this way, madame.'};
         }
-      
-        
       }
     },
     {
@@ -509,7 +509,7 @@ const uneBelleSoiree = {
         ]},
         {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
         {name: `end`},
-        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we'll speaking more this evening! A pleasure.”`},
+        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we will be speaking more this evening! A pleasure.”`},
       ],
       conversationType: 'branching',
       stepIndex: 0,
@@ -517,6 +517,10 @@ const uneBelleSoiree = {
       currentRoute: 'arriving',
       roomId: 'innerCourt',
       topics: branchingConversationTopics,
+    },
+    {
+      name: 'Grandfather Dauphin',
+      desc: `The eldest Dauphin was once known for his cosmopolitan adventurism. At seventy-nine, he has become increasingly devout.`,
     },
   ],
 };
