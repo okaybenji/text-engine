@@ -67,6 +67,7 @@ const updateLocation = function() {
 };
 
 var adagio = document.getElementById("adagio");
+var defunctis = document.getElementById("defunctis");
 
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = function() {
@@ -425,7 +426,10 @@ const uneBelleSoiree = {
       desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in lit votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
       exits: [
         { dir: 'east', id: 'library' },  
-      ]
+      ],
+      onEnter() {
+        defunctis.play();
+      }
     },
     {
       name: 'West Hall',
@@ -558,15 +562,15 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           name: 'interrupt',
           question: `“The party’s in the salon,” he scowls. “You’re not meant to be here.”`,
           answers: [
-            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I did not intend to eavesdrop on your communion... or penitance?”`},
+            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I wished to see the chapel, but had no intention of trespassing on your communion, I confess I was fascinate by the fervor of your penitance--”`},
             {response: `Just LEAVE`, next: 'leave'},
           ],
         },
         {
           name: 'press',
-          question: `“Penitance?” he replies, anger in his voice. “Who exactly are you? And who invited you into my home?”`,
+          question: `“Penitance?” he replies, anger in his voice. You feel a little embarrased at having landed unconsciously on that word. “Who exactly are you? And who invited you into my home?”`,
           answers: [
-             {response: `IDENTIFY yourself`, next: 'identify', line: `“I am Emille Cassat,” you tell him with pride, “daughter of Count Chocula Cacky Cassat III. (D’uh.)”`},
+             {response: `IDENTIFY yourself`, next: 'identify', line: `“I am Emille Cassat,” you tell him with pride, “daughter of Frederic Cassat--”`},
              {response: `Just LEAVE`, next: 'leave'},
            ]
         },
