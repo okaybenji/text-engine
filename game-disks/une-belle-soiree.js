@@ -71,13 +71,27 @@ var adagio = document.getElementById("adagio");
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = function() {
   const character = this;
+  console.log({character});
   const findStepWithName = name => this.conversation.findIndex((step, i) =>
-    step.name == name && i > character.stepIndex);
+    step.name == name && i > character.stepIndex
+  );
+
   let topics;
+  // let bookmark = 0;
 
   while (character.stepIndex < character.conversation.length) {
-    const step = character.conversation[character.stepIndex];
+    let step = character.conversation[character.stepIndex];
+    if(typeof step === 'function'){
+      step = step();
+    }
 
+    // if (step.bookmark){
+    //   if(typeof step.bookmark == 'string'){
+    //     bookmark = findStepWithName(step.bookmark);
+    //   }else if(typeof step.bookmark == 'number'){
+    //     bookmark = step.bookmark;
+    //   }
+    // }
     if (step.line) {
       println(step.line);
       if (step.next) {
@@ -99,12 +113,7 @@ const branchingConversationTopics = function() {
       }, {});
       break;
     }
-
     character.stepIndex++;
-
-    if (step.callback) {
-      step.callback();
-    }
   }
 
   return topics || {};
@@ -561,30 +570,28 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
              {response: `Just LEAVE`, next: 'leave'},
            ]
         },
-        {
-          name: 'identify',
-          line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
-
-          “You’ll be needing this far more than I.”
-          `,
-          callback() {
-            const gramps = findCharacter('Grandfather Dauphin');
+        function identify() {
+          const gramps = findCharacter('Grandfather Dauphin');
             gramps.currentRoute = 'retire';
             gramps.updateLocation();
             disk.inventory.push({
               name: 'rosary',
             });
             disk.guilt--;
-          }
+
+          return {
+          name: 'identify',
+          line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
+
+          “You’ll be needing this far more than I.”
+          `};    
         },
-        {
-          name: 'leave',
-          callback() {
-            // Reset the conversation.
-            const gramps = findCharacter('Grandfather Dauphin');
-            gramps.stepIndex = 0;
-          },
-        },
+        function leave(){ 
+          return {
+            name: 'leave',
+            reset:true,
+          };
+      }
       ],
       stepIndex: 0,
       conversationType: 'branching',
