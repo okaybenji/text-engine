@@ -73,14 +73,13 @@ const branchingConversationTopics = function() {
   const character = this;
   const findStepWithName = name => this.conversation.findIndex((step, i) =>
     step.name == name && i > character.stepIndex);
+  let topics;
 
   while (character.stepIndex < character.conversation.length) {
     const step = character.conversation[character.stepIndex];
+
     if (step.line) {
       println(step.line);
-      if (step.callback) {
-        step.callback();
-      }
       if (step.next) {
         character.stepIndex = findStepWithName(step.next);
       }
@@ -88,7 +87,7 @@ const branchingConversationTopics = function() {
       println(step.question);
 
       // Return the reponses as topics.
-      return step.answers.reduce((acc, cur) => {
+      topics = step.answers.reduce((acc, cur) => {
         acc[cur.next] = {
           response: cur.response,
           onSelected: function() {
@@ -102,12 +101,14 @@ const branchingConversationTopics = function() {
     }
 
     character.stepIndex++;
+
+    if (step.callback) {
+      step.callback();
+    }
   }
 
-  // No topics remain.
-  return {};
+  return topics || {};
 };
-
 
 // Handle the carriage arriving at its destination.
 const arrive = ({room}) => {
@@ -500,18 +501,18 @@ const uneBelleSoiree = {
       },
       conversation: [
         {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
-          {response: `Say YES`, next: `yes`},
-          {response: `ASK about Richard’s family`, next: `ask`},
+          {response: `Say YES`, next: 'yes'},
+          {response: `ASK about Richard’s family`, next: 'ask'},
         ]},
-        {name: `yes`, line: `“They are both of excellent health, thank you,” you reply.`, next: `end`},
-        {name: `ask`, question: `“They are,” you reply, “And yours as well I trust?”
+        {name: 'yes', line: `“They are both of excellent health, thank you,” you reply.`, next: 'end'},
+        {name: 'ask', question: `“They are,” you reply, “And yours as well I trust?”
         “My mother yes,” Richard says, “But unfortunately my father Edoard is quite sick.”`,
         answers: [
-          {response: `ASK about father’s illness`, next: `ask`},
-          {response: `END the conversation`, next: `end`},
+          {response: `ASK about father’s illness`, next: 'ask'},
+          {response: `END the conversation`, next: 'end'},
         ]},
-        {name: `ask`, line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
-        {name: `end`},
+        {name: 'ask', line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
+        {name: 'end'},
         {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we will be speaking more this evening! A pleasure.”`},
       ],
       conversationType: 'branching',
@@ -541,23 +542,23 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
   and blessed is the fruit of thy womb, Jesus.”`,
           answers: [
             {response: `INTERRUPT Grandfather Dauphin`, next: `interrupt`},
-            {response: `LEAVE him be`, next: `end`},
+            {response: `LEAVE him be`, next: 'leave'},
           ]
         },
         {
           name: 'interrupt',
           question: `“The party’s in the salon,” he scowls. “You’re not meant to be here.”`,
           answers: [
-            {response: `PRESS him`, next: `press`, line: `“Terribly sorry, Sir,” you reply. “I did not intend to eavesdrop on your communion... or penitance?”`},
-            {response: `Just LEAVE`, next: `end`},
+            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I did not intend to eavesdrop on your communion... or penitance?”`},
+            {response: `Just LEAVE`, next: 'leave'},
           ],
         },
         {
           name: 'press',
           question: `“Penitance?” he replies, anger in his voice. “Who exactly are you? And who invited you into my home?”`,
           answers: [
-             {response: `IDENTIFY yourself`, next: `identify`, line: `“I am Emille Cassat,” you tell him with pride, “daughter of Count Chocula Cacky Cassat III. (D’uh.)”`},
-             {response: `Just LEAVE`, next: `end`},
+             {response: `IDENTIFY yourself`, next: 'identify', line: `“I am Emille Cassat,” you tell him with pride, “daughter of Count Chocula Cacky Cassat III. (D’uh.)”`},
+             {response: `Just LEAVE`, next: 'leave'},
            ]
         },
         {
@@ -566,7 +567,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
 
           “You’ll be needing this far more than I.”
           `,
-          callback: function() {
+          callback() {
             const gramps = findCharacter('Grandfather Dauphin');
             gramps.currentRoute = 'retire';
             gramps.updateLocation();
@@ -577,7 +578,12 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           }
         },
         {
-          name: `end`
+          name: 'leave',
+          callback() {
+            // Reset the conversation.
+            const gramps = findCharacter('Grandfather Dauphin');
+            gramps.stepIndex = 0;
+          },
         },
       ],
       stepIndex: 0,
