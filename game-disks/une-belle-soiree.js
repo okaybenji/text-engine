@@ -78,6 +78,9 @@ const branchingConversationTopics = function() {
     const step = character.conversation[character.stepIndex];
     if (step.line) {
       println(step.line);
+      if (step.callback) {
+        step.callback();
+      }
       if (step.next) {
         character.stepIndex = findStepWithName(step.next);
       }
@@ -169,7 +172,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'gate',
+  roomId: 'chapel',
   rooms: [
     {
       name: 'Carriage',
@@ -519,8 +522,68 @@ const uneBelleSoiree = {
       topics: branchingConversationTopics,
     },
     {
-      name: 'Grandfather Dauphin',
-      desc: `The eldest Dauphin was once known for his cosmopolitan adventurism. At seventy-nine, he has become increasingly devout.`,
+      name: ['Grandfather Dauphin', 'Gramps'],
+      desc: `The eldest Dauphin was once known for his cosmopolitan adventurism. At seventy-nine, he has become increasingly devout.
+
+He is clutching a rosary near the front of the chapel. Sweat accumulates around his collar and drips from his brow. He is quietly muttering to himself, presumably praying.`,
+      routes: {
+        retire: {
+          path: ['chapel', 'library', 'entry', 'landing'],
+          type: 'patrol', // TODO: Add type where character ends at destination. Also, add a callback at the end of the route.
+        },
+      },
+      roomId: 'chapel',
+      conversation: [
+        {
+          question: `“Hail Mary, full of grace,
+  the Lord is with thee.
+  Blessed art thou amongst women,
+  and blessed is the fruit of thy womb, Jesus.”`,
+          answers: [
+            {response: `INTERRUPT Grandfather Dauphin`, next: `interrupt`},
+            {response: `LEAVE him be`, next: `end`},
+          ]
+        },
+        {
+          name: 'interrupt',
+          question: `“The party’s in the salon,” he scowls. “You’re not meant to be here.”`,
+          answers: [
+            {response: `PRESS him`, next: `press`, line: `“Terribly sorry, Sir,” you reply. “I did not intend to eavesdrop on your communion... or penitance?”`},
+            {response: `Just LEAVE`, next: `end`},
+          ],
+        },
+        {
+          name: 'press',
+          question: `“Penitance?” he replies, anger in his voice. “Who exactly are you? And who invited you into my home?”`,
+          answers: [
+             {response: `IDENTIFY yourself`, next: `identify`, line: `“I am Emille Cassat,” you tell him with pride, “daughter of Count Chocula Cacky Cassat III. (D’uh.)”`},
+             {response: `Just LEAVE`, next: `end`},
+           ]
+        },
+        {
+          name: 'identify',
+          line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
+
+          “You’ll be needing this far more than I.”
+          `,
+          callback: function() {
+            const gramps = findCharacter('Grandfather Dauphin');
+            gramps.currentRoute = 'retire';
+            gramps.updateLocation();
+            disk.inventory.push({
+              name: 'rosary',
+            });
+            disk.guilt--;
+          }
+        },
+        {
+          name: `end`
+        },
+      ],
+      stepIndex: 0,
+      conversationType: 'branching',
+      topics: branchingConversationTopics,
+      updateLocation,
     },
   ],
 };

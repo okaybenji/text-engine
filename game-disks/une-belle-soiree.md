@@ -7,6 +7,7 @@
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
 * Add a character to the game who the player can ask for directions. The player gives the name of a room they want to get to and the character responds with a list of directions from BFS.
 * In `enterRoom`, fade out any ambient loop. If the new room has the name of an ambient loop sound defined, fade in that loop.
+* For branching conversations, simplify configuration. For instance, stepIndex should be added automatically (at 0) if it's not on the character.
 
 ## text-engine
 * When pressing UP to get to last command, move cursor to the end of the line.
