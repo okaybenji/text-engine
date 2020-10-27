@@ -443,7 +443,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               topics = character.topics({println, room});
 
               if (!Object.keys(topics).length) {
-                println(`You have nothing to discuss with ${character.name} at this time.`);
+                println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
 
