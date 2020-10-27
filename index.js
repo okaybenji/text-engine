@@ -323,8 +323,13 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
             if (item) {
               if (item.use) {
-                const use = typeof item.use === 'string' ? eval(item.use) : item.use;
-                use({disk, println, getRoom, enterRoom, item}); // use item and give it a reference to the game
+                // use item and give it a reference to the game
+                if (typeof item.use === 'string') {
+                  const use = eval(item.use);
+                  use({disk, println, getRoom, enterRoom, item});
+                } else if (typeof item.use === 'function') {
+                  item.use({disk, println, getRoom, enterRoom, item});
+                }
               } else {
                 println('That item doesn\'t have a use.');
               }
