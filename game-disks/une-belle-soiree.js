@@ -407,12 +407,13 @@ const uneBelleSoiree = {
     {
       name: 'Library',
       id: 'library', 
-      desc:[`Bookshelves line the entirety of the room. The look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of the locked doors in the cabinetry that they house shelves of private information `],
+      desc:[`Bookshelves line the entirety of the room. They look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of a few locked cabinet doors that they house shelves of private information `],
       items:[
         {name:['law'], desc:`One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
         {name:['reference'], desc:`Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
         {name:['atlas'], desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
         {name:['economy'], desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
+        {name:['cabinet'], desc:`It's locked.`},
       ],
       exits: [
         { dir: 'east', id: 'entry' }, 
@@ -423,7 +424,11 @@ const uneBelleSoiree = {
     {
       name: 'Chapel',
       id: 'chapel', 
-      desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in lit votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
+      desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
+      items:[
+        {name:['candles'], desc:'they\'re candles'},
+        {name:['Christ'], desc:'It\'sa me, Jesusa Christa'}
+      ],
       exits: [
         { dir: 'east', id: 'library' },  
       ],
