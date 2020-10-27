@@ -83,23 +83,23 @@ var defunctis = document.getElementById("defunctis");
 const branchingConversationTopics = function() {
   const character = this;
   const findStepWithName = name => this.conversation.findIndex((step, i) =>
-    step.name == name && i > character.stepIndex
+    step.name == name && i > character.conversationStep
   );
   let topics;
   // let bookmark = 0;
 
-  while (character.stepIndex < character.conversation.length) {
-    let step = character.conversation[character.stepIndex];
+  while (character.conversationStep < character.conversation.length) {
+    let step = character.conversation[character.conversationStep];
     if(typeof step === 'function'){
       step = step();
     }
     if (step.bookmark != undefined){
       if(typeof step.bookmark === 'string')
       {
-        character.stepIndex = findStepWithName(step.bookmark);
+        character.conversationStep = findStepWithName(step.bookmark);
       }else if(typeof step.bookmark === 'number')
       {
-        character.stepIndex = step.bookmark;
+        character.conversationStep = step.bookmark;
       }
       return {};
     }
@@ -107,7 +107,7 @@ const branchingConversationTopics = function() {
     if (step.line) {
       println(step.line);
       if (step.next) {
-        character.stepIndex = findStepWithName(step.next);
+        character.conversationStep = findStepWithName(step.next);
       }
     } else if (step.question) {
       println(step.question);
@@ -118,14 +118,14 @@ const branchingConversationTopics = function() {
           response: cur.response,
           onSelected: function() {
             println(cur.line);
-            character.stepIndex = findStepWithName(cur.next);
+            character.conversationStep = findStepWithName(cur.next);
           },
         };
         return acc;
       }, {});
       break;
     }
-    character.stepIndex++;
+    character.conversationStep++;
   }
   return topics || {};
 };
@@ -544,7 +544,7 @@ const uneBelleSoiree = {
         {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we will be speaking more this evening! A pleasure.”`},
       ],
       conversationType: 'branching',
-      stepIndex: 0,
+      conversationStep: 0,
       updateLocation,
       currentRoute: 'arriving',
       roomId: 'innerCourt',
@@ -613,7 +613,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           };
       }
       ],
-      stepIndex: 0,
+      conversationStep: 0,
       conversationType: 'branching',
       topics: branchingConversationTopics,
       updateLocation,
