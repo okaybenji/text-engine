@@ -2,6 +2,7 @@
 const getNextDescription = (room) => {
   let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
   println(roomDesc); 
+  
   return roomDesc;
 };
 
@@ -131,8 +132,11 @@ const uneBelleSoiree = {
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with. And strangely, in your excitement you also feel homesick and sad.`,
     look: () => {
-       
       const room = getRoom('start');
+      if(this.examined){
+        return;
+      }
+      this.examined = true;
       room.desc = getNextDescription(room);
       if (!room.descriptions.length) {
         arrive({room});
@@ -142,6 +146,10 @@ const uneBelleSoiree = {
       
       println(item.desc);
       const room = getRoom('start');
+      if(this.examined){
+        return;
+      }
+      this.examined = true;
       room.desc = getNextDescription(room);
       if (!room.descriptions.length) {
         arrive({room});
@@ -152,6 +160,10 @@ const uneBelleSoiree = {
     desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
     look: ({item}) => {
       const room = getRoom('start');
+      if(this.examined){
+        return;
+      }
+      this.examined = true;
       room.desc = getNextDescription(room);
       if (!room.descriptions.length) {
         arrive({room});
@@ -174,10 +186,15 @@ const uneBelleSoiree = {
       items: [{
         name: ['invitation', 'letter'],
         desc: `You'll have to pick it up. Try: TAKE INVITATION`,
+        examined: false,
         isTakeable: true,
         onTake: ({item}) => {
           adagio.play();
           const room = getRoom('start');
+          if(this.examined){
+            return;
+          }
+          this.examined = true;
           room.desc = getNextDescription(room);
           if (!room.descriptions.length) {
             arrive({room});
@@ -188,6 +205,10 @@ const uneBelleSoiree = {
           `;
 
           item.look = () => {
+            if(this.examined){
+              return;
+            }
+            this.examined = true;
             room.desc = getNextDescription(room);
             if (!room.descriptions.length) {
               arrive({room});
