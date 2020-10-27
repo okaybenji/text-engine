@@ -387,7 +387,7 @@ const uneBelleSoiree = {
         { dir: 'south', id: 'grandPorch' },  
         { dir: 'north', id: 'grandSalon' },  
         { dir: 'east', id: 'sittingRoom'},
-        { dir: 'west', id: 'library'},
+        { dir: 'west', id: 'library', block:'Something is keeping the door from opening!'},
         { dir: 'up', id: 'landing'},  
       ]
     },
@@ -398,7 +398,8 @@ const uneBelleSoiree = {
       exits: [
         { dir: 'south', id: 'entry' },
         { dir: 'north', id: 'backLawn'},
-        { dir: 'east', id: 'kitchen'},
+        { dir: 'east', id: 'kitchen', block: `The eastern door leads to the Kitchen. You decide to avoid needlessly encouraging the censure and gossip of the guests of the house by mingling openly with the kitchen staff. 
+        You can well imagine: “Is she for want of equal company?”, “Perhaps she's accustomed to onions straight from the garden! These dishes have not enough dirt for her liking?”`},
         { dir: 'west', id: 'westhall'},
       ]
     },

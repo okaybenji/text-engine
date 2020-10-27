@@ -282,7 +282,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               println('There\'s nowhere to go.');
               return;
             }
-            const nextRoom = exits.find(exit =>
+            const nextRoom = exits.find(exit => 
               typeof exit.dir === 'object'
                 ? exit.dir.includes(args[1])
                 : exit.dir === args[1]
@@ -290,7 +290,9 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
             if (!nextRoom) {
               println('There is no exit in that direction.');
-            } else {
+            }else if(nextRoom.block){
+              println(nextRoom.block);
+            }else {
               enterRoom(nextRoom.id);
             }
           },
