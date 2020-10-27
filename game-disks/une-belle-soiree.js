@@ -562,7 +562,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           name: 'interrupt',
           question: `“The party’s in the salon,” he scowls. “You’re not meant to be here.”`,
           answers: [
-            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I wished to see the chapel, but had no intention of trespassing on your communion, I confess I was fascinate by the fervor of your penitance--”`},
+            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I wished to see the chapel; I had no intention of trespassing on your communion, I confess I admired the fervor of your penitance--”`},
             {response: `Just LEAVE`, next: 'leave'},
           ],
         },
