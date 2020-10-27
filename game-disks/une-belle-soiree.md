@@ -9,7 +9,6 @@
 * Rename `stepIndex` to `conversationStep` or something similar so we're not confused about what it represents.
 
 ## text-engine
-* When pressing UP to get to last command, move cursor to the end of the line.
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION.
 * Add a "block" string property to exits. If player tries to go in that direction, print the string.
 * Add a feature to clear screen and print at top.

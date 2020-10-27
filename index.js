@@ -37,6 +37,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     // overwrite user input
     setInput: (str) => {
       input.value = str;
+      setTimeout(function(){ input.selectionStart = input.selectionEnd = input.value.length;}, 0);  
     },
     // render output
     println: (line, isImg = false, isName = false, isDesc = false) => {
