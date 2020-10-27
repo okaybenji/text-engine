@@ -72,7 +72,6 @@ const updateLocation = function() {
         return;
       }
       this.roomId = route.path[currentRoomIndex + 1];
-      console.log(currentRoomIndex + 1, route.path)
       reportEntrances();
   }
 };
