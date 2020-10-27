@@ -1,11 +1,19 @@
 // Prints room descriptions in order until they are exhausted (then repeats final description).
-const getNextDescription = (room) => {
-  let roomDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;  
-  println(roomDesc); 
-  
-  return roomDesc;
-};
+const getNextDescription = function(room) {
+  if (this.examined) {
+    return;
+  }
+  this.examined = true;
 
+  const nextDesc = room.descriptions.length ? room.descriptions.shift() : room.desc;
+  println(nextDesc);
+
+  if (!room.descriptions.length) {
+    arrive({room});
+  }
+  
+  room.desc = nextDesc;
+};
 
 // Moves THIS (character) to an adjacent room along their route.
 const updateLocation = function() {
@@ -131,44 +139,24 @@ const uneBelleSoiree = {
   inventory: [{
     name: ['hand-mirror', 'mirror'],
     desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with. And strangely, in your excitement you also feel homesick and sad.`,
-    look: () => {
+    getNextDescription,
+    look: function() {
       const room = getRoom('start');
-      if(this.examined){
-        return;
-      }
-      this.examined = true;
-      room.desc = getNextDescription(room);
-      if (!room.descriptions.length) {
-        arrive({room});
-      }
+      this.getNextDescription(room);
     },
-    use: ({item}) => {
-      
-      println(item.desc);
+    use: function() {
+      println(this.desc);
       const room = getRoom('start');
-      if(this.examined){
-        return;
-      }
-      this.examined = true;
-      room.desc = getNextDescription(room);
-      if (!room.descriptions.length) {
-        arrive({room});
-      }
+      this.getNextDescription(room);
     },
   }, {
     name: 'ring',
     desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
-    look: ({item}) => {
+    getNextDescription,
+    look: function() {
       const room = getRoom('start');
-      if(this.examined){
-        return;
-      }
-      this.examined = true;
-      room.desc = getNextDescription(room);
-      if (!room.descriptions.length) {
-        arrive({room});
-      }
-      item.desc = `It was a gift from your father to your mother.`;
+      this.getNextDescription(room);
+      this.desc = `It was a gift from your father to your mother.`;
     },
   }],
   roomId: 'start',
@@ -188,31 +176,18 @@ const uneBelleSoiree = {
         desc: `You'll have to pick it up. Try: TAKE INVITATION`,
         examined: false,
         isTakeable: true,
-        onTake: ({item}) => {
+        getNextDescription,
+        onTake: function() {
           adagio.play();
           const room = getRoom('start');
-          if(this.examined){
-            return;
-          }
-          this.examined = true;
-          room.desc = getNextDescription(room);
-          if (!room.descriptions.length) {
-            arrive({room});
-          }
-          item.desc = `In bold typeset and surrounded by Parisian filligree you read:
+          this.getNextDescription(room);
+          this.desc = `In bold typeset and surrounded by Parisian filligree you read:
 
           Mlle. Cassat is requested to attend the ball at Chateau de Dauphin on Tuesday the 1st of June at 8'00 PM.
           `;
 
-          item.look = () => {
-            if(this.examined){
-              return;
-            }
-            this.examined = true;
-            room.desc = getNextDescription(room);
-            if (!room.descriptions.length) {
-              arrive({room});
-            }
+          this.look = function() {
+            this.getNextDescription(room);
           };
         },
       },
