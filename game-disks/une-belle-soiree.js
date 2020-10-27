@@ -29,6 +29,7 @@ const updateLocation = function() {
   }
 
   const route = this.routes[this.currentRoute];
+  console.log(route)
 
   if (!route || !route.path.length) {
     return;
@@ -63,6 +64,16 @@ const updateLocation = function() {
       this.roomId = path[1].id;
       reportEntrances();
     }
+  }
+  else if (route.type == 'simple') {
+      let currentRoomIndex = route.path.findIndex(p => p === this.roomId);
+       
+      if(currentRoomIndex + 1 == route.path.length){
+        return;
+      }
+      this.roomId = route.path[currentRoomIndex + 1];
+      console.log(currentRoomIndex + 1, route.path)
+      reportEntrances();
   }
 };
 
@@ -484,7 +495,7 @@ const uneBelleSoiree = {
       routes: {
         helpingGuests: {
           path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
-          type: 'patrol',
+          type: 'follow',
           },
         investigatingSound: {
           path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
@@ -548,7 +559,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       routes: {
         retire: {
           path: ['chapel', 'library', 'entry', 'landing'],
-          type: 'patrol', // TODO: Add type where character ends at destination. Also, add a callback at the end of the route.
+          type: 'simple', // TODO: Add type where character ends at destination. Also, add a callback at the end of the route.
         },
       },
       roomId: 'chapel',
