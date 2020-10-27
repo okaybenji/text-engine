@@ -71,11 +71,9 @@ var adagio = document.getElementById("adagio");
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = function() {
   const character = this;
-  console.log({character});
   const findStepWithName = name => this.conversation.findIndex((step, i) =>
     step.name == name && i > character.stepIndex
   );
-
   let topics;
   // let bookmark = 0;
 
@@ -84,14 +82,17 @@ const branchingConversationTopics = function() {
     if(typeof step === 'function'){
       step = step();
     }
+    if (step.bookmark != undefined){
+      if(typeof step.bookmark === 'string')
+      {
+        character.stepIndex = findStepWithName(step.bookmark);
+      }else if(typeof step.bookmark === 'number')
+      {
+        character.stepIndex = step.bookmark;
+      }
+      return {};
+    }
 
-    // if (step.bookmark){
-    //   if(typeof step.bookmark == 'string'){
-    //     bookmark = findStepWithName(step.bookmark);
-    //   }else if(typeof step.bookmark == 'number'){
-    //     bookmark = step.bookmark;
-    //   }
-    // }
     if (step.line) {
       println(step.line);
       if (step.next) {
@@ -115,7 +116,6 @@ const branchingConversationTopics = function() {
     }
     character.stepIndex++;
   }
-
   return topics || {};
 };
 
@@ -583,13 +583,14 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           name: 'identify',
           line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
 
-          “You’ll be needing this far more than I.”
+          “You may need this more than I.”
           `};    
         },
         function leave(){ 
+          let haveRosary = !!disk.inventory.find((item) => item.name == 'rosary');
           return {
             name: 'leave',
-            reset:true,
+            bookmark:haveRosary ? 4 : 0,
           };
       }
       ],
