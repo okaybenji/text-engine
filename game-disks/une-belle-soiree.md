@@ -1,7 +1,5 @@
 # TODO:
 
-* Why are some of the room descriptions not printing when entering for the first time?
-
 ## Une Belle Soiree
 * Ending: Take off dress; go into pool; offer statue rum; gate opens behind you; THE END.
 * At some point, add IN as an exit to FOUNTAIN, blocked by "You don't want to get your dress wet."
