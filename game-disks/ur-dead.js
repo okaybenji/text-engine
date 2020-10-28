@@ -53,7 +53,7 @@ const urDead = {
             const skeletons = findCharacter('skeletons');
             skeletons.topics = () => ({ball: `Give us the ball.`});
           },
-          use: ({println}) => println(`You'll have to take it first.`),
+          use: () => println(`You'll have to take it first.`),
         }
       ],
       exits: [{dir: 'north', id: 'beach'}],
@@ -78,6 +78,7 @@ There's a bearded skeleton by the sign.`,
       desc: [`They look competitive.`, `They're still on 'H'.`],
       roomId: 'court',
       topics: `They look pretty busy.`,
+      onTalk: () => println(`"Give it back," one of them says.`),
     },
   ],
 };
