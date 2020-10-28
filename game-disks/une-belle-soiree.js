@@ -438,7 +438,8 @@ const uneBelleSoiree = {
       desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
       items:[
         {name:['candles'], desc:'they\'re candles'},
-        {name:['Christ'], desc:'It\'sa me, Jesusa Christa'}
+        {name:['christ'], desc:'It\'sa me, Jesusa Christa'},
+        {name:['candies'], desc:'It\'sa me, Jesusa Candiesa'}
       ],
       exits: [
         { dir: 'east', id: 'library' },  

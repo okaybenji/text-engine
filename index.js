@@ -107,11 +107,62 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       input.onkeydown = (e) => {
         const UP = 38;
         const DOWN = 40;
+        const TAB = 9;
+
+
 
         if (e.keyCode === UP) {
           navigateHistory('prev');
         } else if (e.keyCode === DOWN) {
           navigateHistory('next');
+        }
+        else if (e.keyCode === TAB) {
+          e.stopPropagation();
+          e.preventDefault()
+          let room = getRoom(disk.roomId);
+          let words = input.value.trim().split(/\s+/);
+          let wordsSansStub = words.slice(0, words.length - 1);
+          console.log({wordsSansStub});
+          let stub = words[words.length - 1];
+          let options;
+          console.log({stub});
+          if(words.length == 1){
+             options = ['look','take','go','inv','help','exits']
+          }else if(words.length == 2){
+            let optionMap = {
+              talk:['to, about'],
+              take:room.items.map(item => Array.isArray( item.name ) ? item.name[0]:item.name),
+              go:room.exits.map(exit => Array.isArray( exit.dir) ? exit.dir[0]:exit.dir),
+            }
+            options = optionMap[words[0]];
+          }else if(words.length == 3){
+            let optionMap = {
+              to:getCharactersInRoom(room.id).map(character => Array.isArray(character.name)? character.name[0]:character.name[0]),
+            }
+            options = optionMap[words[1]];
+          }
+
+          console.log(stub,options);
+
+          let matches = options.filter(option => option.includes(stub));
+          console.log(matches);
+
+
+          if(!matches.length){
+            //do nothing; this needs refactoring.
+          }
+          else if(matches.length > 1){
+            function longest_common_starting_substring(arr1){
+              let arr= arr1.concat().sort(),
+              a1= arr[0], a2= arr[arr.length-1], L= a1.length, i=0;
+              while(i< L && a1.charAt(i)=== a2.charAt(i)) i++;
+              return a1.substring(0, i);
+            }
+            
+            input.value= [...wordsSansStub,longest_common_starting_substring(matches)].join(' ');
+          }else{
+            input.value=[...wordsSansStub, matches[0]].join(' ');
+          }
         }
       };
     }
@@ -524,3 +575,5 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = loadDisk;
 }
+
+
