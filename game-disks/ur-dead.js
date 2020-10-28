@@ -91,13 +91,13 @@ const urDead = {
     {
       name: 'The "Beach"',
       id: 'beach',
-      desc: `There's a sign that reads "Death's a Beach." There's sand, to be sure, but there's no water in sight. And the sky is black.
+      desc: `There's a sign that reads "Death's a Beach." There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
 To the NORTH you see a yaught in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
 
 To the SOUTH is the gate to the half-court.
 
-There's a bearded skeleton by the sign.`,
+There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
         {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
         {name: 'yaught', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
