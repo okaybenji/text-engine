@@ -1,7 +1,7 @@
 const urDead = {
   roomId: 'court',
   inventory: [
-    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to work fine down here.`}
+    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`}
   ],
   rooms: [
     {
@@ -41,8 +41,7 @@ const urDead = {
           name: ['basketball', 'ball'],
           desc: 'You could really have a ball with that thing.',
           isTakeable: true,
-          onTake: ({item}) => {
-            const room = getRoom('court');
+          onTake: ({item, room}) => {
             room.desc = `You see a couple of skeletons. You get the feeling they don't care for you.`;
             println(`One of the skeletons performs an elaborate dance to set up their shot, dribbling out a steady beat. They are clearly banking on the other forgetting one of the many the steps, and thus adding an 'O' to their 'H'. They're so swept up in their routine that you're able to step in and swipe the ball on a down beat.
 
@@ -50,17 +49,28 @@ const urDead = {
             item.desc = 'You could really have a ball with this thing.';
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
+
             const skeletons = findCharacter('skeletons');
+
+            // Set the skeletons back to playing basketball.
+            const reset = () => {
+              skeletons.topics = 'They look pretty busy.';
+              endConversation();
+
+              // Put the ball back in the room.
+              item.use = () => println(`You'll have to take it first.`);
+              room.items.push(item);
+              const itemIndex = disk.inventory.findIndex(i => i === item);
+              disk.inventory.splice(itemIndex, 1);
+            };
+
             skeletons.topics = [
               {
                 option: 'Use the leverage to get INFO',
                 keyword: 'info',
                 cb: () => {
                   println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
-
-                  // TODO: Put the ball back in the room.
-
-                  endConversation();
+                  reset();
                 },
               },
               {
@@ -68,10 +78,7 @@ const urDead = {
                 keyword: 'give',
                 cb: () => {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
-
-                  // TODO: Put the ball back in the room
-
-                  endConversation();
+                  reset();
                 },
               },
             ];
