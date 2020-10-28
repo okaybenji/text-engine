@@ -457,13 +457,13 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             const listTopics = (character) => {
               disk.conversation = topics;
 
-              if (character.conversationType === 'branching' && Object.keys(topics).length) {
-                println(`Select a response:`);
-                Object.keys(topics).forEach(topic => println(topics[topic].response));
-              } else if (topics.length) {
+              if (topics.length) {
                 println(`What would you like to discuss?`);
                 topics.forEach(topic => println(topic.option));
                 println(`NOTHING`);
+              } else if (Object.keys(topics).length) {
+                println(`Select a response:`);
+                Object.keys(topics).forEach(topic => println(topics[topic].response));
               } else {
                 endConversation();
               }
@@ -498,7 +498,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 ? character.topics({println, room})
                 : character.topics;
 
-              if (!topics.length) {
+              if (!topics.length && !Object.keys(topics).length) {
                 println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
@@ -515,11 +515,11 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 const response = args[2].toLowerCase();
                 if (response === 'nothing') {
                   endConversation();
-                } else if (character.conversationType === 'branching') {
-                  const topics = disk.conversation;
-                  topics[response].onSelected();
+                } else if (disk.conversation && disk.conversation[response]) {
+                  disk.conversation[response].onSelected();
                 } else {
-                  const topic = disk.conversation.find(t => t.keyword === response);
+                  const topic = disk.conversation.length
+                    && disk.conversation.find(t => t.keyword === response);
                   if (topic) {
                     topic.cb({disk, println, getRoom, enterRoom, room, character});
                   } else {
