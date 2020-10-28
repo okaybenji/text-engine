@@ -1,9 +1,12 @@
 const urDead = {
-  roomId: 'start',
+  roomId: 'court',
+  inventory: [
+    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to work fine down here.`}
+  ],
   rooms: [
     {
-      name: 'Afterlife',
-      id: 'start',
+      name: 'Craggy Half-Court',
+      id: 'court',
       img: `
       .-.
      (o.o)
@@ -21,12 +24,12 @@ const urDead = {
     ==' '==
       `,
       onEnter: ({getRoom, println}) => {
-        const room = getRoom('start');
+        const room = getRoom('court');
 
         if (room.visits === 1) {
           println(`The bad news is you are dead. The good news is, it's not so bad. Type LOOK to have a look around.`);
 
-          room.desc = `You see a couple of skeletons playing HORSE.`;
+          room.desc = `You see a couple of skeletons playing HORSE. A gate leads NORTH.`;
         }
       },
       items: [
@@ -48,12 +51,20 @@ const urDead = {
           use: ({println}) => println(`You'll have to take it first.`),
         }
       ],
-      exits: [{dir: 'down', id: 'purg'}],
+      exits: [{dir: 'north', id: 'beach'}],
     },
     {
-      name: 'Purgatory',
-      id: 'purg',
-      exits: [{dir: 'up', id: 'start'}],
+      name: 'The "Beach"',
+      id: 'beach',
+      desc: `There's a sign that reads "Death's a Beach." There's sand, to be sure, but there's no water in sight. And the sky is black.
+
+To the NORTH you see a yaught in the sand, lit up like a Christmas tree. You hear the bassy thump of dance music.
+
+To the SOUTH is the gate to the half-court.
+
+There's a bearded skeleton by the sign.`,
+      items: [{name: 'sign', desc: `It says: DEATH'S A BEACH.`}],
+      exits: [{dir: 'south', id: 'court'}],
     }
   ],
   characters: [
