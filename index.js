@@ -447,8 +447,8 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             }
 
             const character =
-              preposition === 'to' && findCharacter(args[2])
-                ? findCharacter(args[2])
+              preposition === 'to' && findCharacter(args[2], getCharactersInRoom(room.id))
+                ? findCharacter(args[2], getCharactersInRoom(room.id))
                 : disk.conversant;
             let topics;
 
