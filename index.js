@@ -139,21 +139,23 @@ const loadDisk = (uninitializedDisk, config = {}) => {
              options = ['look','take','go','inv','help','exits']
           }else if(words.length == 2){
             let optionMap = {
-              talk:['to, about'],
+              talk:['to', 'about'],
               take:room.items.map(item => Array.isArray( item.name ) ? item.name[0]:item.name),
               go:room.exits.map(exit => Array.isArray( exit.dir) ? exit.dir[0]:exit.dir),
+              look:['at'],
             }
             options = optionMap[words[0]];
           }else if(words.length == 3){
             let optionMap = {
               to:getCharactersInRoom(room.id).map(character => Array.isArray(character.name)? character.name[0]:character.name[0]),
+              at:room.items.map(item => Array.isArray( item.name ) ? item.name[0]:item.name)
             }
             options = optionMap[words[1]];
           }
 
           console.log(stub,options);
-
-          let matches = options.filter(option => option.includes(stub));
+          let stubRegex = new RegExp(`^${stub}`);
+          let matches = options.filter(option => option.match(stubRegex));
           console.log(matches);
 
 
