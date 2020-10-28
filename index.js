@@ -522,7 +522,23 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                   disk.conversation[response].onSelected();
                 } else {
                   const topic = disk.conversation.length
-                    && disk.conversation.find(t => t.keyword === response);
+                    && disk.conversation.find(t => {
+                      if (t.keyword) {
+                        return t.keyword === response;
+                      }
+
+                      // find the keyword in the option
+                      // (the word in all caps)
+                      const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                      const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
+                      const keyword = removeExtraSpaces(removePunctuation(t.option))
+                        // separate words by spaces
+                        .split(' ')
+                        // find the word that is in uppercase
+                        .find(w => w.toUpperCase() === w);
+
+                      return keyword.toLowerCase() === response;
+                    });
                   if (topic) {
                     if (topic.line) {
                       println(topic.line);
