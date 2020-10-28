@@ -121,7 +121,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           option: 'TODO item',
           keyword: 'todo',
-          cb: () => println(`TODO: Give me some topics that lay out the player's goals in this game.`),
+          line: `TODO: Give me some topics that lay out the player's goals in this game.`,
         },
       ],
       onTalk: () => println(`"You're dead," he says in a scratchy voice, "You must've gathered that much."`),
