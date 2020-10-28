@@ -462,7 +462,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
               if (topics.length) {
                 println(`What would you like to discuss?`);
-                topics.forEach(topic => println(topic.option));
+                topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
                 println(`NOTHING`);
               } else if (Object.keys(topics).length) {
                 println(`Select a response:`);
