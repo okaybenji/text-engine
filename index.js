@@ -524,7 +524,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                   const topic = disk.conversation.length
                     && disk.conversation.find(t => t.keyword === response);
                   if (topic) {
-                    topic.cb({disk, println, getRoom, enterRoom, room, character});
+                    if (topic.line) {
+                      println(topic.line);
+                    }
+                    if (topic.cb) {
+                      topic.cb({disk, println, getRoom, enterRoom, room, character});
+                    }
                   } else {
                     println(`You talk about ${args[2]}.`);
                   }
