@@ -51,7 +51,26 @@ const urDead = {
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
             const skeletons = findCharacter('skeletons');
-            skeletons.topics = () => ({ball: `Give us the ball.`});
+            skeletons.topics = [
+              {
+                option: 'Use the leverage to get INFO',
+                keyword: 'info',
+                cb: () => {
+                  println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
+
+                  // TODO: Put the ball back in the room.
+                },
+              },
+              {
+                option: 'GIVE the ball back',
+                keyword: 'give',
+                cb: () => {
+                  println(`Feeling a bit bad, you decide to return the ball and move on.`);
+
+                  // TODO: Put the ball back in the room.
+                },
+              },
+            ];
           },
           use: () => println(`You'll have to take it first.`),
         }
