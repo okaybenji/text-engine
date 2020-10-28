@@ -23,7 +23,6 @@ const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
 const endConversation = () => {
   disk.conversant = undefined;
   disk.conversation = undefined;
-  println(`You politely end the conversation.`)
 };
 
 // global properties that need to be assigned in loadDisk
