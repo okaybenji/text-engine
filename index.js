@@ -516,7 +516,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 const response = args[2].toLowerCase();
                 if (response === 'nothing') {
                   endConversation();
-                  return;
                 } else if (character.conversationType === 'branching') {
                   const topics = disk.conversation;
                   topics[response].onSelected();
@@ -530,10 +529,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 }
 
                 // continue the conversation.
-                topics = typeof character.topics === 'function'
-                  ? character.topics({println, room})
-                  : character.topics;
-                listTopics(character);
+                if (disk.conversation) {
+                  topics = typeof character.topics === 'function'
+                    ? character.topics({println, room})
+                    : character.topics;
+                  listTopics(character);
+                }
               } else {
                 println(`That person is no longer available for conversation.`);
                 disk.conversant = undefined;
