@@ -37,7 +37,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     // overwrite user input
     setInput: (str) => {
       input.value = str;
-      setTimeout(function(){ input.selectionStart = input.selectionEnd = input.value.length;}, 0);  
+      // on the next frame, move the cursor to the end of the line
+      setTimeout(() => {
+        input.selectionStart = input.selectionEnd = input.value.length;
+      });
     },
     // render output
     println: (line, isImg = false, isName = false, isDesc = false) => {
@@ -140,7 +143,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     if (!initializedDisk.inventory) {
       initializedDisk.inventory = [];
     }
-    
+
     if (!initializedDisk.characters) {
       initializedDisk.characters = [];
     }
@@ -282,7 +285,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               println('There\'s nowhere to go.');
               return;
             }
-            const nextRoom = exits.find(exit => 
+            const nextRoom = exits.find(exit =>
               typeof exit.dir === 'object'
                 ? exit.dir.includes(args[1])
                 : exit.dir === args[1]
@@ -489,7 +492,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             }
           }
         };
- 
+
         exec(cmds[cmd]);
       }
     };
