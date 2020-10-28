@@ -37,6 +37,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     // overwrite user input
     setInput: (str) => {
       input.value = str;
+      // on the next frame, move the cursor to the end of the line
+      setTimeout(() => {
+        input.selectionStart = input.selectionEnd = input.value.length;
+      });
     },
     // render output
     println: (line, isImg = false, isName = false, isDesc = false) => {
@@ -139,7 +143,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     if (!initializedDisk.inventory) {
       initializedDisk.inventory = [];
     }
-    
+
     if (!initializedDisk.characters) {
       initializedDisk.characters = [];
     }
@@ -165,7 +169,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     const input = getInput();
     inputs.push(input);
     inputsPos = inputs.length;
-    println('> ' + input);
+    println(`> ${input}`);
 
     const val = input.toLowerCase();
     setInput(''); // reset input field
@@ -174,7 +178,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       if (cmd) {
         cmd();
       } else {
-        println('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
+        println(`Sorry, I didn't understand your input. For a list of available commands, type HELP.`);
       }
     };
 
@@ -198,10 +202,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
         const cmds = {
           inv() {
             if (!disk.inventory.length) {
-              println('You don\'t have any items in your inventory.')
+              println(`You don't have any items in your inventory.`);
               return;
             }
-            println('You have the following items in your inventory:');
+            println(`You have the following items in your inventory:`);
             disk.inventory.forEach(item => {
               println(`* ${getName(item.name)}`);
             });
@@ -212,10 +216,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           go() {
             const exits = room.exits;
             if (!exits) {
-              println('There\'s nowhere to go.');
+              println(`There's nowhere to go.`);
               return;
             }
-            println('Where would you like to go? Available directions are:');
+            println(`Where would you like to go? Available directions are:`);
             exits.forEach((exit) => {
               const rm = getRoom(exit.id);
 
@@ -229,20 +233,20 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
             if (!items.length) {
-              println('There\'s nothing to take.');
+              println(`There's nothing to take.`);
               return;
             }
-            println('What would you like to take? Available items are:');
+            println(`What would you like to take? Available items are:`);
             items
               .forEach(item => println(getName(item.name)));
           },
           items() {
             const items = (room.items || []);
             if (!items.length) {
-              println('There\'s nothing here.');
+              println(`There's nothing here.`);
               return;
             }
-            println('You see the following:');
+            println(`You see the following:`);
             items
               .forEach(item => println(getName(item.name)));
           },
@@ -278,7 +282,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           go() {
             const exits = room.exits;
             if (!exits) {
-              println('There\'s nowhere to go.');
+              println(`There's nowhere to go.`);
               return;
             }
             const nextRoom = exits.find(exit =>
@@ -288,8 +292,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             );
 
             if (!nextRoom) {
-              println('There is no exit in that direction.');
-            } else {
+              println(`There is no exit in that direction.`);
+            }else if(nextRoom.block){
+              println(nextRoom.block);
+            }else {
               enterRoom(nextRoom.id);
             }
           },
@@ -306,14 +312,14 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                   item.onTake({disk, println, getRoom, enterRoom, item});
                 }
               } else {
-                println('You can\'t take that.');
+                println(`You can't take that.`);
               }
             } else {
               itemIndex = disk.inventory.findIndex(findItem);
               if (typeof itemIndex === 'number' && itemIndex > -1) {
-                println('You already have that.');
+                println(`You already have that.`);
               } else {
-                println('You don\'t see any such thing.');
+                println(`You don't see any such thing.`);
               }
             }
           },
@@ -323,13 +329,18 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
             if (item) {
               if (item.use) {
-                const use = typeof item.use === 'string' ? eval(item.use) : item.use;
-                use({disk, println, getRoom, enterRoom, item}); // use item and give it a reference to the game
+                // use item and give it a reference to the game
+                if (typeof item.use === 'string') {
+                  const use = eval(item.use);
+                  use({disk, println, getRoom, enterRoom, item});
+                } else if (typeof item.use === 'function') {
+                  item.use({disk, println, getRoom, enterRoom, item});
+                }
               } else {
-                println('That item doesn\'t have a use.');
+                println(`That item doesn't have a use.`);
               }
             } else {
-              println('You don\'t have that.');
+              println(`You don't have that.`);
             }
           },
           say() {
@@ -351,7 +362,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (item.desc) {
                 println(item.desc);
               } else {
-                println('You don\'t notice anythign remarkable about it.');
+                println(`You don\'t notice anything remarkable about it.`);
               }
 
               if (typeof(item.look) === 'function') {
@@ -364,10 +375,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 if (character.desc) {
                   println(character.desc);
                 } else {
-                  println('You don\'t notice anything remarkable about them.');
+                  println(`You don't notice anything remarkable about them.`);
                 }
               } else {
-                println('You don\'t see any such thing.');
+                println(`You don't see any such thing.`);
               }
             }
           },
@@ -395,12 +406,12 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
               if (Object.keys(topics).length) {
                 if (character.conversationType === 'branching') {
-                  println('Select a response:');
+                  println(`Select a response:`);
                   Object.keys(topics).forEach(topic => println(topics[topic].response));
                 } else {
-                  println('What would you like to discuss?');
+                  println(`What would you like to discuss?`);
                   Object.keys(topics).forEach(topic => println(topic));
-                  println('NOTHING');
+                  println(`NOTHING`);
                 }
               } else {
                 endConversation();
@@ -411,17 +422,17 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             const endConversation = () => {
               disk.conversant = undefined;
               disk.conversation = undefined;
-              println('You politely end the conversation.')
+              println(`You politely end the conversation.`)
             };
 
             if (preposition === 'to') {
               if (!findCharacter(args[2])) {
-                println('There is no one here by that name.');
+                println(`There is no one here by that name.`);
                 return;
               }
 
               if (!findCharacter(getName(character.name), getCharactersInRoom(room.id))) {
-                println('There is no one here by that name.');
+                println(`There is no one here by that name.`);
                 return;
               }
 
@@ -438,7 +449,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               topics = character.topics({println, room});
 
               if (!Object.keys(topics).length) {
-                println(`You have nothing to discuss with ${character.name} at this time.`);
+                println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
 
@@ -446,7 +457,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               listTopics(character);
             } else if (preposition === 'about'){
               if (!disk.conversant) {
-                println('You need to be in a conversation to talk about something');
+                println(`You need to be in a conversation to talk about something`);
                 return;
               }
               const character = eval(disk.conversant);
@@ -474,14 +485,14 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 topics = character.topics({println, room});
                 listTopics(character);
               } else {
-                println('That person is no longer available for conversation.')
+                println(`That person is no longer available for conversation.`);
                 disk.conversant = undefined;
                 disk.conversation = undefined;
               }
             }
           }
         };
- 
+
         exec(cmds[cmd]);
       }
     };
