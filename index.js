@@ -149,7 +149,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               to: getCharactersInRoom(room.id).map(character => Array.isArray(character.name)
                 ? character.name[0]
                 : character.name[0]),
-              at: room.items.map(item => Array.isArray(item.name) ? item.name[0] : item.name)
+              at: room.items.concat(disk.inventory).map(item => Array.isArray(item.name) ? item.name[0] : item.name)
             }
             options = optionMap[words[1]];
           }
