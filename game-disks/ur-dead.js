@@ -44,7 +44,9 @@ const urDead = {
           onTake: ({item}) => {
             const room = getRoom('court');
             room.desc = `You see a couple of skeletons. You get the feeling they don't care for you.`;
-            println(`They don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
+            println(`One of the skeletons performs an elaborate dance to set up their shot, dribbling out a steady beat. They are clearly banking on the other forgetting one of the many the steps, and thus adding an 'O' to their 'H'. They're so swept up in their routine that you're able to step in and swipe the ball on a down beat.
+
+            The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
             item.desc = 'You could really have a ball with this thing.';
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
