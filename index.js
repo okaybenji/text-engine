@@ -223,6 +223,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             exits.forEach((exit) => {
               const rm = getRoom(exit.id);
 
+              if (!rm) {
+                return;
+              }
+
               println(
                 rm.visits > 0
                   ? `${getName(exit.dir)} - ${rm.name}`
@@ -334,9 +338,9 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 
             if (!nextRoom) {
               println(`There is no exit in that direction.`);
-            }else if(nextRoom.block){
+            } else if (nextRoom.block) {
               println(nextRoom.block);
-            }else {
+            } else {
               enterRoom(nextRoom.id);
             }
           },
