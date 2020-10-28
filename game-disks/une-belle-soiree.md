@@ -10,4 +10,5 @@
 ## text-engine
 * Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION.
 * Add a feature to clear screen and print at top.
-* Use N,E,S and W as shorthand for Go North, East, South and West commands.
+* Use N, E, S and W as shorthand for Go North, East, South and West commands.
+* Clean up conversation API and move it fully into the engine (with options for static or branching.)
