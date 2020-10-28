@@ -503,12 +503,26 @@ const uneBelleSoiree = {
       currentRoute: 'helpingGuests',
       roomId: 'gate',
       topics: function({room}) {
-        if(this.roomId === 'fountain'){
-          return {fountain: 'This fountain was installed by Count Dauhphin, it is a recent addition.'};
+        if (this.roomId === 'fountain') {
+          return [{
+            option: 'Talk about the FOUNTAIN',
+            keyword: 'fountain',
+            cb: () => {
+              println('This fountain was installed by Count Dauhphin, it is a recent addition.');
+              endConversation();
+            },
+          }];
         }
 
-        if(this.currentRoute === 'helpingGuests'){
-          return {escort: 'Right this way, madame.'};
+        if (this.currentRoute === 'helpingGuests') {
+          return [{
+            option: 'Ask that he ESCORT you to the party',
+            keyword: 'escort',
+            cb: () => {
+              println('Right this way, madame.');
+              endConversation();
+            },
+          }];
         }
       }
     },
@@ -605,6 +619,10 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
         },
         function leave() {
           const haveRosary = !!disk.inventory.find((item) => item.name == 'rosary');
+
+          if (!haveRosary) {
+            println('You politely end the conversation.');
+          }
           return {
             name: 'leave',
             bookmark: haveRosary ? 4 : 0,
