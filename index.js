@@ -451,15 +451,13 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             const listTopics = (character) => {
               disk.conversation = topics;
 
-              if (Object.keys(topics).length) {
-                if (character.conversationType === 'branching') {
-                  println(`Select a response:`);
-                  Object.keys(topics).forEach(topic => println(topics[topic].response));
-                } else {
-                  println(`What would you like to discuss?`);
-                  Object.keys(topics).forEach(topic => println(topic));
-                  println(`NOTHING`);
-                }
+              if (character.conversationType === 'branching' && Object.keys(topics).length) {
+                println(`Select a response:`);
+                Object.keys(topics).forEach(topic => println(topics[topic].response));
+              } else if (topics.length) {
+                println(`What would you like to discuss?`);
+                topics.forEach(topic => println(topic.option));
+                println(`NOTHING`);
               } else {
                 endConversation();
               }
@@ -497,43 +495,44 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 character.onTalk({disk, println, getRoom, enterRoom, room, character});
               }
 
-              topics = character.topics({println, room});
+              topics = typeof character.topics === 'function'
+                ? character.topics({println, room})
+                : character.topics;
 
-              if (!Object.keys(topics).length) {
+              if (!topics.length) {
                 println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
 
               disk.conversant = character;
-              listTopics(character);
+              listTopics(topics);
             } else if (preposition === 'about'){
               if (!disk.conversant) {
                 println(`You need to be in a conversation to talk about something`);
                 return;
               }
               const character = eval(disk.conversant);
-              if(getCharactersInRoom(room.id).includes(disk.conversant)){
-                const response = disk.conversation[args[2]];
-                if (args[2].toLowerCase() === 'nothing'){
+              if (getCharactersInRoom(room.id).includes(disk.conversant)) {
+                const response = args[2].toLowerCase();
+                if (response === 'nothing') {
                   endConversation();
                   return;
-                } else if (response) {
-                  if (character.conversationType === 'branching') {
-                    const topics = disk.conversation;
-                    topics[args[2]].onSelected();
-                  } else {
-                    if (typeof response === 'function'){
-                      println(response());
-                    } else {
-                      println(response);
-                    }
-                  }
+                } else if (character.conversationType === 'branching') {
+                  const topics = disk.conversation;
+                  topics[response].onSelected();
                 } else {
-                  println(`You talk about ${args[2]}.`);
+                  const topic = disk.conversation.find(t => t.keyword === response);
+                  if (topic) {
+                    topic.cb({disk, println, getRoom, enterRoom, room, character});
+                  } else {
+                    println(`You talk about ${args[2]}.`);
+                  }
                 }
 
                 // continue the conversation.
-                topics = character.topics({println, room});
+                topics = typeof character.topics === 'function'
+                  ? character.topics({println, room})
+                  : character.topics;
                 listTopics(character);
               } else {
                 println(`That person is no longer available for conversation.`);
