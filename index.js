@@ -362,7 +362,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (item.desc) {
                 println(item.desc);
               } else {
-                println('You don\'t notice anythign remarkable about it.');
+                println('You don\'t notice anything remarkable about it.');
               }
 
               if (typeof(item.look) === 'function') {
