@@ -475,7 +475,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 return;
               }
 
-              if (!findCharacter(getName(character.name), getCharactersInRoom(room.id))) {
+              if (!findCharacter(getName(args[2]), getCharactersInRoom(room.id))) {
                 println(`There is no one here by that name.`);
                 return;
               }
