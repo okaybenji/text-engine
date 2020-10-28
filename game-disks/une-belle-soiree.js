@@ -15,7 +15,7 @@ const getNextDescription = function(room) {
   if (!room.descriptions.length) {
     arrive({room});
   }
-  
+
   room.desc = nextDesc;
 };
 
@@ -60,19 +60,19 @@ const updateLocation = function() {
   }
   else if (route.type == 'follow') {
     let path = BFS(disk.rooms, this.roomId, disk.roomId)
-    if(path.length > 1){
+    if (path.length > 1){
       this.roomId = path[1].id;
       reportEntrances();
     }
-  }
-  else if (route.type == 'simple') {
-      let currentRoomIndex = route.path.findIndex(p => p === this.roomId);
-       
-      if(currentRoomIndex + 1 == route.path.length){
-        return;
-      }
-      this.roomId = route.path[currentRoomIndex + 1];
-      reportEntrances();
+  } else if (route.type == 'simple') {
+    const currentRoomIndex = route.path.findIndex(p => p === this.roomId);
+
+    if (currentRoomIndex + 1 == route.path.length) {
+      return;
+    }
+
+    this.roomId = route.path[currentRoomIndex + 1];
+    reportEntrances();
   }
 };
 
@@ -90,15 +90,13 @@ const branchingConversationTopics = function() {
 
   while (character.conversationStep < character.conversation.length) {
     let step = character.conversation[character.conversationStep];
-    if(typeof step === 'function'){
+    if (typeof step === 'function') {
       step = step();
     }
-    if (step.bookmark != undefined){
-      if(typeof step.bookmark === 'string')
-      {
+    if (step.bookmark != undefined) {
+      if (typeof step.bookmark === 'string') {
         character.conversationStep = findStepWithName(step.bookmark);
-      }else if(typeof step.bookmark === 'number')
-      {
+      } else if (typeof step.bookmark === 'number') {
         character.conversationStep = step.bookmark;
       }
       return {};
@@ -138,7 +136,7 @@ const arrive = ({room}) => {
       clearInterval(fadeAudio);
     }
   }, 400);
-  
+
   const door = {
     name: 'door',
     desc: `It's a door.`,
@@ -240,8 +238,8 @@ const uneBelleSoiree = {
       },
     },
     {
-      name: 'Gate', 
-      id: 'gate', 
+      name: 'Gate',
+      id: 'gate',
       desc:`A servant ushers you forward through the wrought iron gates that disappear into the hedge at both ends.
       The fog that seemed to envelop the estate while riding from the carriage appears as a light mist here.
       Long rays of light illuminate the wet stone pathway in front of you to the NORTH. Behind you the carriage drives on.`,
@@ -259,11 +257,11 @@ const uneBelleSoiree = {
      :.......:::..::::..::........:::::........:::........::........::........::........::::::......::::.......:::....::..:::::..::........::........::`
     },
     {
-      name: 'Inside Gate', 
-      id: 'insideGate', 
+      name: 'Inside Gate',
+      id: 'insideGate',
       exits: [
         { dir: ['south', 'out'], id: 'gate' },
-        { dir: 'north', id: 'fountain' }   
+        { dir: 'north', id: 'fountain' }
       ],
       onEnter() {
         this.desc = `${this.visits == 1 ? 'The servant escorts you through' : 'You are surrounded by' } two walls of well-kempt hedges. Atop each hedge are improbably shaped silhouettes of well-manicured topiaries. You can't make out their height as their tops are obscured by the mist and the night.`;
@@ -272,13 +270,13 @@ const uneBelleSoiree = {
     },
     {
       name: 'Fountain',
-      id: 'fountain', 
+      id: 'fountain',
       exits: [
         { dir: 'south', id: 'insideGate' },
         { dir: 'north', id: 'outerCourt' },
-        { dir: 'east', id: 'eastHedge' }, 
+        { dir: 'east', id: 'eastHedge' },
         { dir: 'west', id: 'westHedge' },
-        // { dir: 'center', id: 'fountainCenter' },     
+        // { dir: 'center', id: 'fountainCenter' },
       ],
       items:[
         {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches.'},
@@ -292,33 +290,33 @@ const uneBelleSoiree = {
     },
     {
       name: 'Outer Court',
-      id: 'outerCourt', 
+      id: 'outerCourt',
       desc:[`Vines grow up the courtyard walls. To the NORTH, the windows of the house are well lit, each producing its own faint halo in the mist.`],
       items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous. It looks like they may even have compromised the wall's structural integrity.`}],
       exits: [
-        { dir: 'north', id: 'innerCourt' }, 
-        { dir: 'south', id: 'fountain' }, 
-      ]
+        { dir: 'north', id: 'innerCourt' },
+        { dir: 'south', id: 'fountain' },
+      ],
     },
     {
       name: 'Inner Court',
-      id: 'innerCourt', 
+      id: 'innerCourt',
       desc:[`The courtyard is well illuminated. The marble stairs to the NORTH look as if they were recently constructed. The lawn is scattered with impressive gardens, and small ponds seem to be sourced from redirected streams somewhere else on the grounds.`],
       exits: [
-        { dir: 'south', id: 'outerCourt' }, 
-        { dir: 'north', id: 'grandPorch' }, 
-      ]
+        { dir: 'south', id: 'outerCourt' },
+        { dir: 'north', id: 'grandPorch' },
+      ],
     },
     {
       name: 'West Hedge',
-      id: 'westHedge', 
+      id: 'westHedge',
       desc:[`It's difficult to see, but there seems to be a small stone statue in the southwest corner of this opening`],
       items:[
-        {name: ['statue','farts', 'brigid'], desc: `Incense seems to have been recently burned here. A small cup of liquid and a cross lay at the saint’s feet. ‘Brigid Of Kildare’ is engraved on to the statue’s base. `},
+        {name: ['statue', 'brigid'], desc: `Incense seems to have been recently burned here. A small cup of liquid and a cross lay at the saint’s feet. ‘Brigid Of Kildare’ is engraved on to the statue’s base. `},
         {
-          name: ['cup','liquid','rum'], 
-          desc: 'Some kind of alcohol, maybe?', 
-          isTakeable:true, 
+          name: ['cup','liquid','rum'],
+          desc: 'Some kind of alcohol, maybe?',
+          isTakeable:true,
           use: function(){
             println('Rum. That was definitely some kind of strong rum.');
             disk.guilt++;
@@ -330,82 +328,81 @@ const uneBelleSoiree = {
           // TODO
         }},
       ],
-      
       exits: [
-        { dir: 'east', id: 'fountain' }, 
-      ]
+        { dir: 'east', id: 'fountain' },
+      ],
     },
     {
       name: 'East Hedge',
-      id: 'eastHedge', 
-      desc:[`Too dark to see. The very top of the hedge is illuminated by a wedge of light coming from the house.`],
+      id: 'eastHedge',
+      desc: `Too dark to see. The very top of the hedge is illuminated by a wedge of light coming from the house.`,
       exits: [
-        { dir: 'west', id: 'fountain' }, 
-      ]
+        { dir: 'west', id: 'fountain' },
+      ],
     },
     {
       name: 'Grand Porch',
-      id: 'grandPorch', 
-      desc:[`The front of the Dauphin home is encircled by a large marble porch with ornate railing. In the moonlight, and from the relative height of the porch, you can see the entirety of the large moonlit lawn.`],
+      id: 'grandPorch',
+      desc: `The front of the Dauphin home is encircled by a large marble porch with ornate railing. In the moonlight, and from the relative height of the porch, you can see the entirety of the large moonlit lawn.`,
       items:[
-      {name:'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`},
-      {name:'lawn', desc:`It seems to have many small spaces partitioned by hedges, and networked with long pathway.`}
+      {name: 'house', desc:`Your mother told you the GRANDFATHER DAUPHIN bought the house when she was a girl, but it was constructed several centuries ago and has changed ownership several times.`},
+      {name: 'lawn', desc:`It seems to have many small spaces partitioned by hedges, and networked with long pathway.`}
     ],
       exits: [
-        { dir: 'south', id: 'innerCourt' }, 
+        { dir: 'south', id: 'innerCourt' },
         { dir: 'north', id: 'entry' },
-        { dir: 'east', id: 'eastPorch' }, 
-        { dir: 'west', id: 'westPorch' },  
-      ]
+        { dir: 'east', id: 'eastPorch' },
+        { dir: 'west', id: 'westPorch' },
+      ],
     },
     {
       name: 'East Porch',
-      id: 'eastPorch', 
-      desc:[`From high on the porch, but near the east railing you can see, tucked behind the home and a row of columnar trees, is the practical workbuildings of the estate: sheds, coops, and a conspicuous greenhouse.`],
+      id: 'eastPorch',
+      desc: `From high on the porch, but near the east railing you can see, tucked behind the home and a row of columnar trees, is the practical workbuildings of the estate: sheds, coops, and a conspicuous greenhouse.`,
       items:[{'name':['coop','coops'], desc: `Very faintly from the coops you can hear an unusuaally loud clamor of a rooster. It's calls are muffled here, but it must be loud to be carrying this far`}],
       exits: [
-        { dir: 'west', id: 'grandPorch' },  
-      ]
+        { dir: 'west', id: 'grandPorch' },
+      ],
     },
     {
       name: 'West Porch',
-      id: 'westPorch', 
-      desc:[`More of the same moonlit lawn heavily decorated with large patterns in the Hedges, in the distance you can see the lanterns of the stable hands as they tend to the riding equipment`],
+      id: 'westPorch',
+      desc: `More of the same moonlit lawn heavily decorated with large patterns in the Hedges, in the distance you can see the lanterns of the stable hands as they tend to the riding equipment`,
       exits: [
-        { dir: 'east', id: 'grandPorch' },  
-      ]
+        { dir: 'east', id: 'grandPorch' },
+      ],
     },
     {
       name: 'Entry',
-      id: 'entry', 
-      desc:[`Ornate mahogany panels surround the entrance to the home, the room seems impossibly tall. A large staircase leads up to a landing overlooking the entry room, and the grand salon.  Oil paintings adorn the walls in the room.`],
-      items:[
+      id: 'entry',
+      desc: `Ornate mahogany panels surround the entrance to the home, the room seems impossibly tall. A large staircase leads up to a landing overlooking the entry room, and the grand salon.  Oil paintings adorn the walls in the room.`,
+      items: [
         {name:['gallery','portraits','paintings'], desc:`Portraits of the Dauphins, some look to be more than a hundred years old. Broken occasionally by romaniticizations of provincial french landscape`},
         {name:['panels'], desc:`The panels seem to be made of the same wood as the similarly ornate moulding around the room. Father would have remarked unhappily at such a frivilous expense, were he here`},
       ],
       exits: [
-        { dir: 'south', id: 'grandPorch' },  
-        { dir: 'north', id: 'grandSalon' },  
+        { dir: 'south', id: 'grandPorch' },
+        { dir: 'north', id: 'grandSalon' },
         { dir: 'east', id: 'sittingRoom'},
         { dir: 'west', id: 'library', block:'Something is keeping the door from opening!'},
-        { dir: 'up', id: 'landing'},  
-      ]
+        { dir: 'up', id: 'landing'},
+      ],
     },
     {
       name: 'Grand Salon',
-      id: 'grandSalon', 
+      id: 'grandSalon',
       desc:[`A large circular room, the old salle de garde, now a salon. Elaborate embellishments on the ceiling border on onstentataious. The room is alive with chatter. A truly impressive spread of fruits, and game is available on the west side of the room.  A harpsichord is playing a minuet in the southwest corner.`],
       exits: [
-        { dir: 'south', id: 'entry' },
-        { dir: 'north', id: 'backLawn'},
-        { dir: 'east', id: 'kitchen', block: `The eastern door leads to the Kitchen. You decide to avoid needlessly encouraging the censure and gossip of the guests of the house by mingling openly with the kitchen staff. 
+        {dir: 'south', id: 'entry'},
+        {dir: 'north', id: 'backLawn'},
+        {dir: 'east', id: 'kitchen', block: `The eastern door leads to the Kitchen. You decide to avoid needlessly encouraging the censure and gossip of the guests of the house by mingling openly with the kitchen staff.
         You can well imagine: “Is she for want of equal company?”, “Perhaps she's accustomed to onions straight from the garden! These dishes have not enough dirt for her liking?”`},
-        { dir: 'west', id: 'westhall'},
-      ]
+        {dir: 'west', id: 'westhall'},
+      ],
     },
     {
       name: 'Sitting Room',
-      id: 'sittingRoom', 
+      id: 'sittingRoom',
       desc:[`Sofas are arrange to absorb heat from the sun during winter. `],
       items:[
         {name:['sofa'], desc:`Profusely decorated acanthus floral wood frames plush upholstery, somewhat faded from years in the sun`},
@@ -413,53 +410,53 @@ const uneBelleSoiree = {
       exits: [
         { dir: 'west', id: 'entry'},
         { dir: 'north', id: 'kitchen'},
-      ]
+      ],
     },
     {
       name: 'Library',
-      id: 'library', 
-      desc:[`Bookshelves line the entirety of the room. They look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of a few locked cabinet doors that they house shelves of private information `],
+      id: 'library',
+      desc: `Bookshelves line the entirety of the room. They look well-kept, in fact many look untouched. The shelves in the northwest corner hold a number of large volumes with similar binding. You suspect from the width of a few locked cabinet doors that they house shelves of private information `,
       items:[
-        {name:['law'], desc:`One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
-        {name:['reference'], desc:`Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
-        {name:['atlas'], desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
-        {name:['economy'], desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
-        {name:['cabinet'], desc:`It's locked.`},
+        {name: 'law', desc: `One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
+        {name: 'reference', desc: `Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
+        {name: 'atlas', desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
+        {name: 'economy', desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
+        {name: 'cabinet', desc:`It's locked.`},
       ],
       exits: [
-        { dir: 'east', id: 'entry' }, 
+        { dir: 'east', id: 'entry' },
         { dir: 'west', id: 'chapel'},
-        { dir: 'north', id: 'westhall'},  
-      ]
+        { dir: 'north', id: 'westhall'},
+      ],
     },
     {
       name: 'Chapel',
-      id: 'chapel', 
-      desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
-      items:[
-        {name:['candles'], desc:'they\'re candles'},
-        {name:['Christ'], desc:'It\'sa me, Jesusa Christa'}
+      id: 'chapel',
+      desc: `The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`,
+      items: [
+        {name: 'candles', desc: `They're candles.`},
+        {name: 'Christ', desc: `It'sa me, Jesusa Christa!`}
       ],
       exits: [
-        { dir: 'east', id: 'library' },  
+        { dir: 'east', id: 'library' },
       ],
       onEnter() {
         defunctis.play();
-      }
+      },
     },
     {
       name: 'West Hall',
-      id: 'westhall', 
+      id: 'westhall',
       desc:[`A hall extending from the Grand Salon to the study, a door to the NORTH lead to a vestibulary `],
       exits: [
-        { dir: 'south', id: 'library' },  
-        { dir: 'east', id: 'grandSalon'}, 
-        { dir: 'west', id: 'study' }, 
+        { dir: 'south', id: 'library' },
+        { dir: 'east', id: 'grandSalon'},
+        { dir: 'west', id: 'study' },
       ]
     },
     {
       name: 'Landing',
-      id: 'landing', 
+      id: 'landing',
       desc:[`You get the feeling you aren't meant to be up here, but no one seems to notice you, from here you can see the guests in the grand salon conversing.`],
       exits: [
         { dir: 'down', id: 'Entry' }
@@ -467,7 +464,7 @@ const uneBelleSoiree = {
     },
     {
       name: 'Study',
-      id: 'study', 
+      id: 'study',
       desc:[`A private study, it smell so strongly of tobacco it clearly doubles as a smoking room, a large wooden desk, is surrounded by exotic artifacts. `],
       exits: [
         { dir: 'east', id: 'westhall' }
@@ -475,7 +472,7 @@ const uneBelleSoiree = {
     },
     {
       name: 'Kitchen',
-      id: 'kitchen', 
+      id: 'kitchen',
       desc:[`The room is hot, and very uncomfortable, you worry that the floor will dirty your gown, everyone stops and looks up from their task. You feel very out of place.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`],
       onEnter: function() {
         this.desc = `The room is hot, and very uncomfortable.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`;
@@ -604,15 +601,15 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
           line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
 
           “You may need this more than I.”
-          `};    
+          `};
         },
-        function leave(){ 
-          let haveRosary = !!disk.inventory.find((item) => item.name == 'rosary');
+        function leave() {
+          const haveRosary = !!disk.inventory.find((item) => item.name == 'rosary');
           return {
             name: 'leave',
-            bookmark:haveRosary ? 4 : 0,
+            bookmark: haveRosary ? 4 : 0,
           };
-      }
+        },
       ],
       conversationStep: 0,
       conversationType: 'branching',
