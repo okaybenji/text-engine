@@ -19,6 +19,13 @@ const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
   return hasName(c.name);
 });
 
+// end the current conversation
+const endConversation = () => {
+  disk.conversant = undefined;
+  disk.conversation = undefined;
+  println(`You politely end the conversation.`)
+};
+
 // global properties that need to be assigned in loadDisk
 let disk, println, getCharactersInRoom, getRoom, enterRoom;
 
@@ -461,13 +468,6 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               } else {
                 endConversation();
               }
-            };
-
-            // end the current conversation
-            const endConversation = () => {
-              disk.conversant = undefined;
-              disk.conversation = undefined;
-              println(`You politely end the conversation.`)
             };
 
             if (preposition === 'to') {
