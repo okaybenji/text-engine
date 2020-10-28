@@ -352,9 +352,11 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (item.isTakeable) {
                 disk.inventory.push(item);
                 room.items.splice(itemIndex, 1);
-                println(`You took the ${getName(item.name)}.`);
+
                 if (typeof item.onTake === 'function') {
                   item.onTake({disk, println, getRoom, enterRoom, item});
+                } else {
+                  println(`You took the ${getName(item.name)}.`);
                 }
               } else {
                 println(`You can't take that.`);
@@ -489,6 +491,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (typeof(character.topics) === 'string') {
                 println(character.topics);
                 return;
+              }
+
+              if (typeof(character.onTalk) === 'function') {
+                character.onTalk({disk, println, getRoom, enterRoom, room, character});
               }
 
               topics = character.topics({println, room});
