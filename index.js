@@ -493,6 +493,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 return;
               }
 
+              if (typeof(character.onTalk) === 'function') {
+                character.onTalk({disk, println, getRoom, enterRoom, room, character});
+              }
+
               topics = character.topics({println, room});
 
               if (!Object.keys(topics).length) {
