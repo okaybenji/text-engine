@@ -281,6 +281,9 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             args[1] = 'northwest';
             strategy['2']();
           },
+          talk() {
+            println(`You can talk TO someone or ABOUT some topic.`);
+          },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
             if (!items.length) {
