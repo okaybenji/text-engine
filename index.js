@@ -19,6 +19,12 @@ const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
   return hasName(c.name);
 });
 
+// end the current conversation
+const endConversation = () => {
+  disk.conversant = undefined;
+  disk.conversation = undefined;
+};
+
 // global properties that need to be assigned in loadDisk
 let disk, println, getCharactersInRoom, getRoom, enterRoom;
 
@@ -37,7 +43,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     // overwrite user input
     setInput: (str) => {
       input.value = str;
-      setTimeout(function(){ input.selectionStart = input.selectionEnd = input.value.length;}, 0);  
+      // on the next frame, move the cursor to the end of the line
+      setTimeout(() => {
+        input.selectionStart = input.selectionEnd = input.value.length;
+      });
     },
     // render output
     println: (line, isImg = false, isName = false, isDesc = false) => {
@@ -191,7 +200,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     if (!initializedDisk.inventory) {
       initializedDisk.inventory = [];
     }
-    
+
     if (!initializedDisk.characters) {
       initializedDisk.characters = [];
     }
@@ -217,7 +226,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     const input = getInput();
     inputs.push(input);
     inputsPos = inputs.length;
-    println('> ' + input);
+    println(`> ${input}`);
 
     const val = input.toLowerCase();
     setInput(''); // reset input field
@@ -226,7 +235,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       if (cmd) {
         cmd();
       } else {
-        println('Sorry, I didn\'t understand your input. For a list of available commands, type HELP.');
+        println(`Sorry, I didn't understand your input. For a list of available commands, type HELP.`);
       }
     };
 
@@ -239,7 +248,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       args = ['talk', 'about', args[0]];
     }
 
-    const cmd = args[0];
+    let cmd = args[0];
     const room = getRoom(disk.roomId);
 
     // nested strategy pattern
@@ -250,10 +259,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
         const cmds = {
           inv() {
             if (!disk.inventory.length) {
-              println('You don\'t have any items in your inventory.')
+              println(`You don't have any items in your inventory.`);
               return;
             }
-            println('You have the following items in your inventory:');
+            println(`You have the following items in your inventory:`);
             disk.inventory.forEach(item => {
               println(`* ${getName(item.name)}`);
             });
@@ -264,12 +273,16 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           go() {
             const exits = room.exits;
             if (!exits) {
-              println('There\'s nowhere to go.');
+              println(`There's nowhere to go.`);
               return;
             }
-            println('Where would you like to go? Available directions are:');
+            println(`Where would you like to go? Available directions are:`);
             exits.forEach((exit) => {
               const rm = getRoom(exit.id);
+
+              if (!rm) {
+                return;
+              }
 
               println(
                 rm.visits > 0
@@ -278,23 +291,67 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               );
             });
           },
+          // shortcuts for cardinal directions
+          n() {
+            cmd = 'go';
+            args[1] = 'north';
+            strategy['2']();
+          },
+          s() {
+            cmd = 'go';
+            args[1] = 'south';
+            strategy['2']();
+          },
+          e() {
+            cmd = 'go';
+            args[1] = 'east';
+            strategy['2']();
+          },
+          w() {
+            cmd = 'go';
+            args[1] = 'west';
+            strategy['2']();
+          },
+          ne() {
+            cmd = 'go';
+            args[1] = 'northeast';
+            strategy['2']();
+          },
+          se() {
+            cmd = 'go';
+            args[1] = 'southeast';
+            strategy['2']();
+          },
+          sw() {
+            cmd = 'go';
+            args[1] = 'southwest';
+            strategy['2']();
+          },
+          nw() {
+            cmd = 'go';
+            args[1] = 'northwest';
+            strategy['2']();
+          },
+          talk() {
+            println(`You can talk TO someone or ABOUT some topic.`);
+          },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
             if (!items.length) {
-              println('There\'s nothing to take.');
+              println(`There's nothing to take.`);
               return;
             }
-            println('What would you like to take? Available items are:');
+            println(`What would you like to take? Available items are:`);
             items
               .forEach(item => println(getName(item.name)));
           },
           items() {
             const items = (room.items || []);
             if (!items.length) {
-              println('There\'s nothing here.');
+              println(`There's nothing here.`);
               return;
             }
-            println('You see the following:');
+            println(`You see the following:`);
             items
               .forEach(item => println(getName(item.name)));
           },
@@ -330,20 +387,20 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           go() {
             const exits = room.exits;
             if (!exits) {
-              println('There\'s nowhere to go.');
+              println(`There's nowhere to go.`);
               return;
             }
-            const nextRoom = exits.find(exit => 
+            const nextRoom = exits.find(exit =>
               typeof exit.dir === 'object'
                 ? exit.dir.includes(args[1])
                 : exit.dir === args[1]
             );
 
             if (!nextRoom) {
-              println('There is no exit in that direction.');
-            }else if(nextRoom.block){
+              println(`There is no exit in that direction.`);
+            } else if (nextRoom.block) {
               println(nextRoom.block);
-            }else {
+            } else {
               enterRoom(nextRoom.id);
             }
           },
@@ -355,19 +412,21 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (item.isTakeable) {
                 disk.inventory.push(item);
                 room.items.splice(itemIndex, 1);
-                println(`You took the ${getName(item.name)}.`);
+
                 if (typeof item.onTake === 'function') {
-                  item.onTake({disk, println, getRoom, enterRoom, item});
+                  item.onTake({disk, println, room, getRoom, enterRoom, item});
+                } else {
+                  println(`You took the ${getName(item.name)}.`);
                 }
               } else {
-                println('You can\'t take that.');
+                println(`You can't take that.`);
               }
             } else {
               itemIndex = disk.inventory.findIndex(findItem);
               if (typeof itemIndex === 'number' && itemIndex > -1) {
-                println('You already have that.');
+                println(`You already have that.`);
               } else {
-                println('You don\'t see any such thing.');
+                println(`You don't see any such thing.`);
               }
             }
           },
@@ -385,10 +444,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                   item.use({disk, println, getRoom, enterRoom, item});
                 }
               } else {
-                println('That item doesn\'t have a use.');
+                println(`That item doesn't have a use.`);
               }
             } else {
-              println('You don\'t have that.');
+              println(`You don't have that.`);
             }
           },
           say() {
@@ -410,7 +469,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
               if (item.desc) {
                 println(item.desc);
               } else {
-                println('You don\'t notice anythign remarkable about it.');
+                println(`You don\'t notice anything remarkable about it.`);
               }
 
               if (typeof(item.look) === 'function') {
@@ -423,10 +482,10 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 if (character.desc) {
                   println(character.desc);
                 } else {
-                  println('You don\'t notice anything remarkable about them.');
+                  println(`You don't notice anything remarkable about them.`);
                 }
               } else {
-                println('You don\'t see any such thing.');
+                println(`You don't see any such thing.`);
               }
             }
           },
@@ -442,8 +501,8 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             }
 
             const character =
-              preposition === 'to' && findCharacter(args[2])
-                ? findCharacter(args[2])
+              preposition === 'to' && findCharacter(args[2], getCharactersInRoom(room.id))
+                ? findCharacter(args[2], getCharactersInRoom(room.id))
                 : disk.conversant;
             let topics;
 
@@ -452,35 +511,26 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             const listTopics = (character) => {
               disk.conversation = topics;
 
-              if (Object.keys(topics).length) {
-                if (character.conversationType === 'branching') {
-                  println('Select a response:');
-                  Object.keys(topics).forEach(topic => println(topics[topic].response));
-                } else {
-                  println('What would you like to discuss?');
-                  Object.keys(topics).forEach(topic => println(topic));
-                  println('NOTHING');
-                }
+              if (topics.length) {
+                println(`What would you like to discuss?`);
+                topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
+                println(`NOTHING`);
+              } else if (Object.keys(topics).length) {
+                println(`Select a response:`);
+                Object.keys(topics).forEach(topic => println(topics[topic].response));
               } else {
                 endConversation();
               }
             };
 
-            // end the current conversation
-            const endConversation = () => {
-              disk.conversant = undefined;
-              disk.conversation = undefined;
-              println('You politely end the conversation.')
-            };
-
             if (preposition === 'to') {
               if (!findCharacter(args[2])) {
-                println('There is no one here by that name.');
+                println(`There is no one here by that name.`);
                 return;
               }
 
-              if (!findCharacter(getName(character.name), getCharactersInRoom(room.id))) {
-                println('There is no one here by that name.');
+              if (!findCharacter(getName(args[2]), getCharactersInRoom(room.id))) {
+                println(`There is no one here by that name.`);
                 return;
               }
 
@@ -494,53 +544,80 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 return;
               }
 
-              topics = character.topics({println, room});
+              if (typeof(character.onTalk) === 'function') {
+                character.onTalk({disk, println, getRoom, enterRoom, room, character});
+              }
 
-              if (!Object.keys(topics).length) {
+              topics = typeof character.topics === 'function'
+                ? character.topics({println, room})
+                : character.topics;
+
+              if (!topics.length && !Object.keys(topics).length) {
                 println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
                 return;
               }
 
               disk.conversant = character;
-              listTopics(character);
+              listTopics(topics);
             } else if (preposition === 'about'){
               if (!disk.conversant) {
-                println('You need to be in a conversation to talk about something');
+                println(`You need to be in a conversation to talk about something`);
                 return;
               }
               const character = eval(disk.conversant);
-              if(getCharactersInRoom(room.id).includes(disk.conversant)){
-                const response = disk.conversation[args[2]];
-                if (args[2].toLowerCase() === 'nothing'){
+              if (getCharactersInRoom(room.id).includes(disk.conversant)) {
+                const response = args[2].toLowerCase();
+                if (response === 'nothing') {
                   endConversation();
-                  return;
-                } else if (response) {
-                  if (character.conversationType === 'branching') {
-                    const topics = disk.conversation;
-                    topics[args[2]].onSelected();
-                  } else {
-                    if (typeof response === 'function'){
-                      println(response());
-                    } else {
-                      println(response);
-                    }
-                  }
+                } else if (disk.conversation && disk.conversation[response]) {
+                  disk.conversation[response].onSelected();
                 } else {
-                  println(`You talk about ${args[2]}.`);
+                  const topic = disk.conversation.length
+                    && disk.conversation.find(t => {
+                      if (t.keyword) {
+                        return t.keyword === response;
+                      }
+
+                      // find the keyword in the option
+                      // (the word in all caps)
+                      const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                      const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
+                      const keyword = removeExtraSpaces(removePunctuation(t.option))
+                        // separate words by spaces
+                        .split(' ')
+                        // find the word that is in uppercase
+                        .find(w => w.toUpperCase() === w);
+
+                      return keyword.toLowerCase() === response;
+                    });
+                  if (topic) {
+                    if (topic.line) {
+                      println(topic.line);
+                    }
+                    if (topic.cb) {
+                      topic.cb({disk, println, getRoom, enterRoom, room, character});
+                    }
+                  } else {
+                    println(`You talk about ${args[2]}.`);
+                  }
                 }
 
                 // continue the conversation.
-                topics = character.topics({println, room});
-                listTopics(character);
+                if (disk.conversation) {
+                  topics = typeof character.topics === 'function'
+                    ? character.topics({println, room})
+                    : character.topics;
+                  listTopics(character);
+                }
               } else {
-                println('That person is no longer available for conversation.')
+                println(`That person is no longer available for conversation.`);
                 disk.conversant = undefined;
                 disk.conversation = undefined;
               }
             }
           }
         };
- 
+
         exec(cmds[cmd]);
       }
     };
