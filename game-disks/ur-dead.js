@@ -98,7 +98,10 @@ To the NORTH you see a yaught in the sand, lit up like a Christmas tree. You hea
 To the SOUTH is the gate to the half-court.
 
 There's a bearded skeleton by the sign.`,
-      items: [{name: 'sign', desc: `It says: DEATH'S A BEACH.`}],
+      items: [
+        {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
+        {name: 'yaught', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
+      ],
       exits: [{dir: 'south', id: 'court'}],
     }
   ],
@@ -109,6 +112,19 @@ There's a bearded skeleton by the sign.`,
       roomId: 'court',
       topics: `They look pretty busy.`,
       onTalk: () => println(`"Give it back," one of them says.`),
+    },
+    {
+      name: 'skeleton',
+      desc: `He appears to have something to say. Or at least, he keeps clearing his throat. Or, that is, if he had a throat... This is a confusing place.`,
+      roomId: 'beach',
+      topics: [
+        {
+          option: 'TODO item',
+          keyword: 'todo',
+          cb: () => println(`TODO: Give me some topics that lay out the player's goals in this game.`),
+        },
+      ],
+      onTalk: () => println(`"You're dead," he says in a scratchy voice, "You must've gathered that much."`),
     },
   ],
 };
