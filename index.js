@@ -191,7 +191,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       args = ['talk', 'about', args[0]];
     }
 
-    const cmd = args[0];
+    let cmd = args[0];
     const room = getRoom(disk.roomId);
 
     // nested strategy pattern
@@ -229,6 +229,47 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                   : getName(exit.dir)
               );
             });
+          },
+          // shortcuts for cardinal directions
+          n() {
+            cmd = 'go';
+            args[1] = 'north';
+            strategy['2']();
+          },
+          s() {
+            cmd = 'go';
+            args[1] = 'south';
+            strategy['2']();
+          },
+          e() {
+            cmd = 'go';
+            args[1] = 'east';
+            strategy['2']();
+          },
+          w() {
+            cmd = 'go';
+            args[1] = 'west';
+            strategy['2']();
+          },
+          ne() {
+            cmd = 'go';
+            args[1] = 'northeast';
+            strategy['2']();
+          },
+          se() {
+            cmd = 'go';
+            args[1] = 'southeast';
+            strategy['2']();
+          },
+          sw() {
+            cmd = 'go';
+            args[1] = 'southwest';
+            strategy['2']();
+          },
+          nw() {
+            cmd = 'go';
+            args[1] = 'northwest';
+            strategy['2']();
           },
           take() {
             const items = (room.items || []).filter(item => item.isTakeable);
