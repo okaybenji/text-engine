@@ -67,7 +67,6 @@ const urDead = {
             skeletons.topics = [
               {
                 option: 'Use the leverage to get INFO',
-                keyword: 'info',
                 cb: () => {
                   println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
                   reset();
@@ -75,7 +74,6 @@ const urDead = {
               },
               {
                 option: 'GIVE the ball back',
-                keyword: 'give',
                 cb: () => {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
                   reset();
@@ -120,7 +118,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: [
         {
           option: 'TODO item',
-          keyword: 'todo',
           line: `TODO: Give me some topics that lay out the player's goals in this game.`,
         },
       ],
