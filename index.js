@@ -360,7 +360,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
                 room.items.splice(itemIndex, 1);
 
                 if (typeof item.onTake === 'function') {
-                  item.onTake({disk, println, getRoom, enterRoom, item});
+                  item.onTake({disk, println, room, getRoom, enterRoom, item});
                 } else {
                   println(`You took the ${getName(item.name)}.`);
                 }
