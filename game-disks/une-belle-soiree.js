@@ -506,7 +506,6 @@ const uneBelleSoiree = {
         if (this.roomId === 'fountain') {
           return [{
             option: 'Talk about the FOUNTAIN',
-            keyword: 'fountain',
             cb: () => {
               println('This fountain was installed by Count Dauhphin, it is a recent addition.');
               endConversation();
@@ -517,7 +516,6 @@ const uneBelleSoiree = {
         if (this.currentRoute === 'helpingGuests') {
           return [{
             option: 'Ask that he ESCORT you to the party',
-            keyword: 'escort',
             cb: () => {
               println('Right this way, madame.');
               endConversation();
