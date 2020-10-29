@@ -15,4 +15,3 @@
 * Stop passing global functions to various methods (and reflect this change in the docs).
 * Add documentation for conversations.
 * Document other engine changes.
-* If command is one word and matches a direction exactly, convert to GO [dir].

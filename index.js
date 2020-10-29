@@ -379,7 +379,15 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             println(`You're already playing a game.`);
           },
         };
-        exec(cmds[cmd]);
+
+        // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
+        if (room.exits.find(exit => exit.dir === cmd)) {
+          args[1] = cmd;
+          cmd = 'go';
+          strategy[2]();
+        } else {
+          exec(cmds[cmd]);
+        }
       },
       2() {
         const cmds = {
