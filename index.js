@@ -128,7 +128,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           e.stopPropagation();
           e.preventDefault()
           const room = getRoom(disk.roomId);
-          const words = input.value.trim().split(/\s+/);
+          const words = input.value.toLowerCase().trim().split(/\s+/);
           const wordsSansStub = words.slice(0, words.length - 1);
 
           const stub = words[words.length - 1];
@@ -139,17 +139,17 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           } else if (words.length === 2) {
             const optionMap = {
               talk: ['to', 'about'],
-              take: (room.items || []).map(item => item.name).flat(),
-              go: (room.exits || []).map(exit => exit.dir).flat(),
+              take: (room.items || []).map(item => item.name),
+              go: (room.exits || []).map(exit => exit.dir),
               look: ['at'],
             };
             options = optionMap[words[0]];
           } else if (words.length === 3) {
             const optionMap = {
-              to: (getCharactersInRoom(room.id) || []).map(character => character.name).flat(),
-              at: (room.items || []).concat(disk.inventory).map(item => item.name).flat()
+              to: (getCharactersInRoom(room.id) || []).map(character => character.name),
+              at: (room.items || []).concat(disk.inventory).map(item => item.name),
             };
-            options = optionMap[words[1]];
+            options = optionMap[words[1]].flat().map(string => string.toLowerCase());
           }
 
           const stubRegex = new RegExp(`^${stub}`);
