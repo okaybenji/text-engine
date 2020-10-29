@@ -139,18 +139,16 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           } else if (words.length === 2) {
             const optionMap = {
               talk: ['to', 'about'],
-              take: room.items.map(item => Array.isArray(item.name) ? item.name[0] : item.name),
-              go: room.exits.map(exit => Array.isArray(exit.dir) ? exit.dir[0] : exit.dir),
+              take: (room.items || []).map(item => item.name).flat(),
+              go: (room.exits || []).map(exit => exit.dir).flat(),
               look: ['at'],
             };
             options = optionMap[words[0]];
           } else if (words.length === 3) {
             const optionMap = {
-              to: getCharactersInRoom(room.id).map(character => Array.isArray(character.name)
-                ? character.name[0]
-                : character.name[0]),
-              at: room.items.concat(disk.inventory).map(item => Array.isArray(item.name) ? item.name[0] : item.name)
-            }
+              to: (getCharactersInRoom(room.id) || []).map(character => character.name).flat(),
+              at: (room.items || []).concat(disk.inventory).map(item => item.name).flat()
+            };
             options = optionMap[words[1]];
           }
 
