@@ -18,3 +18,4 @@
 * Add auto-complete for conversation topic keywords.
 * Add the ITEMS command to the HELP menu.
 * Add CHARS / CHARACTERS command to list who is in the room (and add this to the HELP menu).
+* When printing list of directions from the GO command, display the dir in uppercase.
