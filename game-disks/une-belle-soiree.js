@@ -657,7 +657,7 @@ const BFS = (G, root, goal) => {
   discovered.push(root);
   Q.push(G.find(element => element.id == root));
   while (Q.length > 0){
-    const v = Object.assign({}, Q.pop());
+    const v = Object.assign({}, Q.shift());
     if (v.id === goal){
       const path = [];
       const getPath = (node) => {
