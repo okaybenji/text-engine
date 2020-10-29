@@ -191,7 +191,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'chapel',
+  roomId: 'start',
   rooms: [
     {
       name: 'Carriage',

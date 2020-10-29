@@ -136,7 +136,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
           let options;
           console.log({stub});
           if(words.length == 1){
-             options = ['look','take','go','inv','help','exits']
+             options = ['look','take','talk','go','inv','help','exits']
           }else if(words.length == 2){
             let optionMap = {
               talk:['to', 'about'],
