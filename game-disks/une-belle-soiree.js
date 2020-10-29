@@ -460,7 +460,7 @@ const uneBelleSoiree = {
       id: 'landing',
       desc:[`You get the feeling you aren't meant to be up here, but no one seems to notice you, from here you can see the guests in the grand salon conversing.`],
       exits: [
-        { dir: 'down', id: 'Entry' }
+        { dir: 'down', id: 'entry' }
       ]
     },
     {
