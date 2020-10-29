@@ -8,7 +8,6 @@
 * For branching conversations, simplify configuration. For instance, conversationStep should be added automatically (at 0) if it's not on the character.
 
 ## text-engine
-* Allow pressing TAB to autocomplete, for instance TAKE INV -> TAKE INVITATION.
 * Add a feature to clear screen and print at top.
 * Clean up conversation API and move it fully into the engine (with options for static or branching.)
 * Assign global methods with `let` instead of const so they may be overridden.
@@ -16,3 +15,4 @@
 * Stop passing global functions to various methods (and reflect this change in the docs).
 * Add documentation for conversations.
 * Document other engine changes.
+* If command is one word and matches a direction exactly, convert to GO [dir].
