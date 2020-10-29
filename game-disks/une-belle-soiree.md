@@ -12,7 +12,9 @@
 * Clean up conversation API and move it fully into the engine (with options for static or branching.)
 * Assign global methods with `let` instead of const so they may be overridden.
 * Add documentation describing global methods (and how to override them).
-* Stop passing global functions to various methods (and reflect this change in the docs).
+* Deprecate passing global functions to various methods (and reflect this change in the docs).
 * Add documentation for conversations.
 * Document other engine changes.
 * Add auto-complete for conversation topic keywords.
+* Add the ITEMS command to the HELP menu.
+* Add CHARS / CHARACTERS command to list who is in the room (and add this to the HELP menu).
