@@ -29,7 +29,6 @@ const updateLocation = function() {
   }
 
   const route = this.routes[this.currentRoute];
-  console.log(route)
 
   if (!route || !route.path.length) {
     return;
@@ -84,6 +83,15 @@ const updateLocation = function() {
     let candidateRooms = currentRoom.exits.map(exit => disk.rooms.find( room => room.id == exit.id ));
 
     let nextRoom = candidateRooms[getRandomInt(0,candidateRooms.length - 1)];
+    this.roomId = nextRoom.id;
+    reportEntrances();
+  } else if (route.type == 'flee') {
+    let currentRoom = disk.rooms.find( room => room.id == this.roomId);
+    let candidateRooms = currentRoom.exits.map(exit => disk.rooms.find( room => room.id == exit.id )).filter(room => room !== undefined);
+    let fleeRoom = disk.rooms.find( room => room.id == findCharacter(route.fleeFrom).roomId);
+    let candidatePaths = candidateRooms.map(cr => BFS(disk.rooms, cr.id, fleeRoom.id).length);
+    var indexOfMaxValue = candidatePaths.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    let nextRoom = candidateRooms[indexOfMaxValue];
     this.roomId = nextRoom.id;
     reportEntrances();
   }
@@ -204,7 +212,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'kitchen',
+  roomId: 'grandPorch',
   rooms: [
     {
       name: 'Carriage',
@@ -505,8 +513,9 @@ const uneBelleSoiree = {
       desc: 'Servant of the Dauphin household, tasked with welcoming guests.',
       routes: {
         helpingGuests: {
-          path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
-          type: 'random',
+          path: ['kitchen', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
+          type: 'flee',
+          fleeFrom: 'Richard'
           },
         investigatingSound: {
           path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
@@ -515,7 +524,7 @@ const uneBelleSoiree = {
       },
       updateLocation,
       currentRoute: 'helpingGuests',
-      roomId: 'gate',
+      roomId: 'kitchen',
       topics: function({room}) {
         if (this.roomId === 'fountain') {
           return [{
@@ -543,8 +552,8 @@ const uneBelleSoiree = {
       desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood.',
       routes: {
         ariving: {
-        path: ['innerCourt'],
-          type: 'patrol',
+          path: ['grandSalon',''],
+          type: 'follow',
         },
         walkingTheGrounds: {
           path: ['eastPorch', 'grandPorch', 'westPorch', 'innerCourt', 'outerCourt', 'fountain'],
@@ -570,8 +579,8 @@ const uneBelleSoiree = {
       conversationType: 'branching',
       conversationStep: 0,
       updateLocation,
-      currentRoute: 'arriving',
-      roomId: 'innerCourt',
+      currentRoute: 'ariving',
+      roomId: 'grandSalon',
       topics: branchingConversationTopics,
     },
     {
