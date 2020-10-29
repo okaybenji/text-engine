@@ -116,11 +116,64 @@ const loadDisk = (uninitializedDisk, config = {}) => {
       input.onkeydown = (e) => {
         const UP = 38;
         const DOWN = 40;
+        const TAB = 9;
 
         if (e.keyCode === UP) {
           navigateHistory('prev');
         } else if (e.keyCode === DOWN) {
           navigateHistory('next');
+        }
+        else if (e.keyCode === TAB) {
+          // auto-complete
+          e.stopPropagation();
+          e.preventDefault()
+          const room = getRoom(disk.roomId);
+          const words = input.value.toLowerCase().trim().split(/\s+/);
+          const wordsSansStub = words.slice(0, words.length - 1);
+
+          const stub = words[words.length - 1];
+          let options;
+
+          if (words.length === 1){
+             options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
+          } else if (words.length === 2) {
+            const optionMap = {
+              talk: ['to', 'about'],
+              take: (room.items || []).map(item => item.name),
+              go: (room.exits || []).map(exit => exit.dir),
+              look: ['at'],
+            };
+            options = optionMap[words[0]];
+          } else if (words.length === 3) {
+            const optionMap = {
+              to: (getCharactersInRoom(room.id) || []).map(character => character.name),
+              at: (room.items || []).concat(disk.inventory).map(item => item.name),
+            };
+            options = optionMap[words[1]].flat().map(string => string.toLowerCase());
+          }
+
+          const stubRegex = new RegExp(`^${stub}`);
+          const matches = options.filter(option => option.match(stubRegex));
+
+          if (!matches.length) {
+            // do nothing; this needs refactoring.
+          } else if (matches.length > 1) {
+            const longestCommonStartingSubstring = (arr1) => {
+              const arr = arr1.concat().sort();
+              const a1 = arr[0];
+              const a2 = arr[arr.length-1];
+              const L = a1.length;
+              let i = 0;
+              while (i < L && a1.charAt(i) === a2.charAt(i)) {
+                i++;
+              }
+              return a1.substring(0, i);
+            };
+            
+            input.value = [...wordsSansStub,longestCommonStartingSubstring(matches)].join(' ');
+          } else {
+            input.value = [...wordsSansStub, matches[0]].join(' ');
+          }
         }
       };
     }
@@ -326,7 +379,15 @@ const loadDisk = (uninitializedDisk, config = {}) => {
             println(`You're already playing a game.`);
           },
         };
-        exec(cmds[cmd]);
+
+        // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
+        if (room.exits.find(exit => exit.dir === cmd)) {
+          args[1] = cmd;
+          cmd = 'go';
+          strategy[2]();
+        } else {
+          exec(cmds[cmd]);
+        }
       },
       2() {
         const cmds = {
@@ -601,3 +662,5 @@ const loadDisk = (uninitializedDisk, config = {}) => {
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = loadDisk;
 }
+
+
