@@ -74,6 +74,19 @@ const updateLocation = function() {
     this.roomId = route.path[currentRoomIndex + 1];
     reportEntrances();
   }
+  else if (route.type == 'random') {
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+    let currentRoom = disk.rooms.find( room => room.id == this.roomId);
+    let candidateRooms = currentRoom.exits.map(exit => disk.rooms.find( room => room.id == exit.id ));
+
+    let nextRoom = candidateRooms[getRandomInt(0,candidateRooms.length - 1)];
+    this.roomId = nextRoom.id;
+    reportEntrances();
+  }
 };
 
 var adagio = document.getElementById("adagio");
@@ -191,7 +204,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'start',
+  roomId: 'kitchen',
   rooms: [
     {
       name: 'Carriage',
@@ -493,7 +506,7 @@ const uneBelleSoiree = {
       routes: {
         helpingGuests: {
           path: ['gate', 'insideGate', 'fountain', 'outerCourt', 'innerCourt'],
-          type: 'follow',
+          type: 'random',
           },
         investigatingSound: {
           path: ['fountain', 'eastHedge', 'fountain', 'westHedge', 'innerCourt'],
