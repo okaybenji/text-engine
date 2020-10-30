@@ -522,7 +522,9 @@ let autocomplete = () => {
   if (words.length === 1){
     options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items', 'chars'];
     if (disk.conversation) {
-      options = options.concat(disk.conversation.map(getKeywordFromTopic));
+      options = Array.isArray(disk.conversation)
+        ? options.concat(disk.conversation.map(getKeywordFromTopic))
+        : Object.keys(disk.conversation);
     }
   } else if (words.length === 2) {
     const optionMap = {
