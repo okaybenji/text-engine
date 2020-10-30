@@ -1,198 +1,30 @@
-const input = document.querySelector('#input');
-
-// get random array element
-const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
-
-// return the first name if it's an array, or the only name
-const getName = name => typeof name === 'object' ? name[0] : name;
-
-// get a character by name from a list of characters
-const findCharacter = (name, chars = disk.characters) => chars.find((c) => {
-  const hasName = n => {
-    return n.toLowerCase().includes(name.toLowerCase());
-  };
-  // search through each variation of the name in an array
-  if (typeof c.name === 'object') {
-    return c.name.find(hasName);
-  }
-
-  return hasName(c.name);
-});
-
-// end the current conversation
-const endConversation = () => {
-  disk.conversant = undefined;
-  disk.conversation = undefined;
-};
-
 // global properties that need to be assigned in loadDisk
-let disk, println, getCharactersInRoom, getRoom, enterRoom;
+// assigned with let for easy overriding by the user
+let input,
+    disk,
+    init,
+    setup,
+    getInput,
+    applyInput,
+    setInput,
+    println,
+    autocomplete,
+    navigateHistory,
+    pickOne,
+    getName,
+    getRoom,
+    enterRoom,
+    getCharactersInRoom,
+    findCharacter,
+    endConversation;
 
-document.onkeydown = () => {
-  input.focus();
-};
+const loadDisk = (uninitializedDisk) => {
+  // reference to the input element
+  input = document.querySelector('#input');
 
-const loadDisk = (uninitializedDisk, config = {}) => {
-  // get a list of all characters in the passed room
-  getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
-
-  // build default (DOM) configuration
-  const defaults = {
-    // retrieve user input (remove whitespace at beginning or end)
-    getInput: () => input.value.trim(),
-    // overwrite user input
-    setInput: (str) => {
-      input.value = str;
-      // on the next frame, move the cursor to the end of the line
-      setTimeout(() => {
-        input.selectionStart = input.selectionEnd = input.value.length;
-      });
-    },
-    // render output
-    println: (line, isImg = false, isName = false, isDesc = false) => {
-      // bail if string is null or undefined
-      if (!line) {
-        return;
-      }
-
-      // if this is an array of lines, pick one at random
-      str = typeof line === 'object' ? pickOne(line) : line;
-
-      const output = document.querySelector('#output');
-      const newLine = document.createElement('div');
-
-      if (isImg) {
-        newLine.classList.add('img');
-      }
-
-      if (isName) {
-        newLine.classList.add('roomname');
-      }
-
-      if (isDesc) {
-        newLine.classList.add('desc');
-      }
-
-      // add a class for styling prior user input
-      if (line[0] === '>') {
-        newLine.classList.add('user');
-      }
-
-      output.appendChild(newLine).innerText = str;
-      window.scrollTo(0, document.body.scrollHeight);
-    },
-    enterRoom: (id) => {
-      const room = getRoom(id);
-
-      println(room.img, true);
-
-      println(`${getName(room.name)}`,false,true);
-
-      if (room.visits === 0) {
-        println(room.desc,false,false,true);
-      }
-
-      room.visits++;
-
-      disk.roomId = id;
-
-      if (typeof room.onEnter === 'function') {
-        room.onEnter({disk, println, getRoom, enterRoom});
-      }
-
-      // reset any active conversation
-      delete disk.conversant;
-    },
-    // prepare the environment
-    setup: ({applyInput = (() => {}), navigateHistory = (() => {})}) => {
-      input.onkeypress = (e) => {
-        const ENTER = 13;
-
-        if (e.keyCode === ENTER) {
-          applyInput();
-        }
-      };
-
-      input.onkeydown = (e) => {
-        const UP = 38;
-        const DOWN = 40;
-        const TAB = 9;
-
-        if (e.keyCode === UP) {
-          navigateHistory('prev');
-        } else if (e.keyCode === DOWN) {
-          navigateHistory('next');
-        }
-        else if (e.keyCode === TAB) {
-          // auto-complete
-          e.stopPropagation();
-          e.preventDefault()
-          const room = getRoom(disk.roomId);
-          const words = input.value.toLowerCase().trim().split(/\s+/);
-          const wordsSansStub = words.slice(0, words.length - 1);
-
-          const stub = words[words.length - 1];
-          let options;
-
-          if (words.length === 1){
-             options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
-          } else if (words.length === 2) {
-            const optionMap = {
-              talk: ['to', 'about'],
-              take: (room.items || []).map(item => item.name),
-              go: (room.exits || []).map(exit => exit.dir),
-              look: ['at'],
-            };
-            options = optionMap[words[0]];
-          } else if (words.length === 3) {
-            const optionMap = {
-              to: (getCharactersInRoom(room.id) || []).map(character => character.name),
-              at: (room.items || []).concat(disk.inventory).map(item => item.name),
-            };
-            options = optionMap[words[1]].flat().map(string => string.toLowerCase());
-          }
-
-          const stubRegex = new RegExp(`^${stub}`);
-          const matches = options.filter(option => option.match(stubRegex));
-
-          if (!matches.length) {
-            // do nothing; this needs refactoring.
-          } else if (matches.length > 1) {
-            const longestCommonStartingSubstring = (arr1) => {
-              const arr = arr1.concat().sort();
-              const a1 = arr[0];
-              const a2 = arr[arr.length-1];
-              const L = a1.length;
-              let i = 0;
-              while (i < L && a1.charAt(i) === a2.charAt(i)) {
-                i++;
-              }
-              return a1.substring(0, i);
-            };
-            
-            input.value = [...wordsSansStub,longestCommonStartingSubstring(matches)].join(' ');
-          } else {
-            input.value = [...wordsSansStub, matches[0]].join(' ');
-          }
-        }
-      };
-    }
-  };
-
-  // Debugging: Allow pressing > to force characters to move to adjacent rooms.
-  document.onkeypress = function (e) {
-    if (e.keyCode == 62) {
-      disk.characters.map(c => c.updateLocation({println, disk}));
-    }
-  };
-
-  const configuration = Object.assign(defaults, config);
-  const {getInput, setInput, setup} = configuration;
-  println = configuration.println;
-  enterRoom = configuration.enterRoom;
-
-  // Disk -> Disk
-  const init = (disk) => {
+  // add any default values to the disk, such as the number of times a room has been visited
+  // disk -> disk
+  init = (disk) => {
     const initializedDisk = Object.assign({}, disk);
     initializedDisk.rooms = disk.rooms.map((room) => {
       room.visits = 0;
@@ -210,21 +42,41 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     return initializedDisk;
   };
 
-  disk = init(uninitializedDisk);
+  // register listeners for input events
+  setup = () => {
+    input.onkeypress = (e) => {
+      const ENTER = 13;
 
-  const inputs = ['']; // store all user commands
-  let inputsPos = 0;
+      if (e.keyCode === ENTER) {
+        applyInput();
+      }
+    };
 
-  // String -> Room
-  getRoom = (id) => disk.rooms.find(room => room.id === id);
+    input.onkeydown = (e) => {
+      input.focus();
 
-  const startGame = (disk) => {
-    enterRoom(disk.roomId);
+      const UP = 38;
+      const DOWN = 40;
+      const TAB = 9;
+
+      if (e.keyCode === UP) {
+        navigateHistory('prev');
+      } else if (e.keyCode === DOWN) {
+        navigateHistory('next');
+      } else if (e.keyCode === TAB) {
+        e.stopPropagation();
+        e.preventDefault()
+        autocomplete();
+      }
+    };
   };
 
-  startGame(disk);
-
-  const applyInput = () => {
+  // retrieve user input (remove whitespace at beginning or end)
+  // -> string
+  getInput = () => input.value.trim();
+  
+  // process user input & update game state
+  applyInput = () => {
     const input = getInput();
     inputs.push(input);
     inputsPos = inputs.length;
@@ -639,7 +491,102 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     }
   };
 
-  const navigateHistory = (dir) => {
+  // overwrite user input
+  setInput = (str) => {
+    input.value = str;
+    // on the next frame, move the cursor to the end of the line
+    setTimeout(() => {
+      input.selectionStart = input.selectionEnd = input.value.length;
+    });
+  };
+
+  // render output
+  println = (line, isImg = false, isName = false, isDesc = false) => {
+    // bail if string is null or undefined
+    if (!line) {
+      return;
+    }
+
+    // if this is an array of lines, pick one at random
+    str = typeof line === 'object' ? pickOne(line) : line;
+
+    const output = document.querySelector('#output');
+    const newLine = document.createElement('div');
+
+    if (isImg) {
+      newLine.classList.add('img');
+    }
+
+    if (isName) {
+      newLine.classList.add('roomname');
+    }
+
+    if (isDesc) {
+      newLine.classList.add('desc');
+    }
+
+    // add a class for styling prior user input
+    if (line[0] === '>') {
+      newLine.classList.add('user');
+    }
+
+    output.appendChild(newLine).innerText = str;
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+
+  // predict what the user is trying to type
+  autocomplete = () => {    
+    const room = getRoom(disk.roomId);
+    const words = input.value.toLowerCase().trim().split(/\s+/);
+    const wordsSansStub = words.slice(0, words.length - 1);
+
+    const stub = words[words.length - 1];
+    let options;
+
+    if (words.length === 1){
+       options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
+    } else if (words.length === 2) {
+      const optionMap = {
+        talk: ['to', 'about'],
+        take: (room.items || []).map(item => item.name),
+        go: (room.exits || []).map(exit => exit.dir),
+        look: ['at'],
+      };
+      options = optionMap[words[0]];
+    } else if (words.length === 3) {
+      const optionMap = {
+        to: (getCharactersInRoom(room.id) || []).map(character => character.name),
+        at: (room.items || []).concat(disk.inventory).map(item => item.name),
+      };
+      options = optionMap[words[1]].flat().map(string => string.toLowerCase());
+    }
+
+    const stubRegex = new RegExp(`^${stub}`);
+    const matches = options.filter(option => option.match(stubRegex));
+
+    if (!matches.length) {
+      // do nothing; this needs refactoring.
+    } else if (matches.length > 1) {
+      const longestCommonStartingSubstring = (arr1) => {
+        const arr = arr1.concat().sort();
+        const a1 = arr[0];
+        const a2 = arr[arr.length-1];
+        const L = a1.length;
+        let i = 0;
+        while (i < L && a1.charAt(i) === a2.charAt(i)) {
+          i++;
+        }
+        return a1.substring(0, i);
+      };
+
+      input.value = [...wordsSansStub,longestCommonStartingSubstring(matches)].join(' ');
+    } else {
+      input.value = [...wordsSansStub, matches[0]].join(' ');
+    }
+  };
+
+  // select previously entered commands
+  navigateHistory = (dir) => {
     if (dir === 'prev') {
       inputsPos--;
       if (inputsPos < 0) {
@@ -655,12 +602,82 @@ const loadDisk = (uninitializedDisk, config = {}) => {
     setInput(inputs[inputsPos] || '');
   };
 
-  setup({applyInput, navigateHistory});
+  // get random array element
+  // array -> any
+  pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  // return the first name if it's an array, or the only name
+  // string | array -> string
+  getName = name => typeof name === 'object' ? name[0] : name;
+
+  // retrieve room by its ID
+  // string -> room
+  getRoom = (id) => disk.rooms.find(room => room.id === id);
+
+  // move the player into room with passed ID
+  // string ->
+  enterRoom = (id) => {
+    const room = getRoom(id);
+
+    println(room.img, true);
+
+    println(`${getName(room.name)}`,false,true);
+
+    if (room.visits === 0) {
+      println(room.desc,false,false,true);
+    }
+
+    room.visits++;
+
+    disk.roomId = id;
+
+    if (typeof room.onEnter === 'function') {
+      room.onEnter({disk, println, getRoom, enterRoom});
+    }
+
+    // reset any active conversation
+    delete disk.conversant;
+  };
+
+  // get a list of all characters in the passed room
+  // string -> characters
+  getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
+
+  // get a character by name from a list of characters
+  // string, characters -> character
+  findCharacter = (name, chars = disk.characters) => chars.find((c) => {
+    const hasName = n => {
+      return n.toLowerCase().includes(name.toLowerCase());
+    };
+    // search through each variation of the name in an array
+    if (typeof c.name === 'object') {
+      return c.name.find(hasName);
+    }
+
+    return hasName(c.name);
+  });
+
+  // end the current conversation
+  endConversation = () => {
+    disk.conversant = undefined;
+    disk.conversation = undefined;
+  };
+
+  // initialize the disk
+  disk = init(uninitializedDisk);
+
+  // store user input history
+  const inputs = [''];
+  let inputsPos = 0;
+
+  // start the game
+  enterRoom(disk.roomId);
+
+  // start listening for user input
+  setup();
 };
 
 // npm support
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = loadDisk;
 }
-
-
