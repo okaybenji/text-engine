@@ -175,6 +175,14 @@ let applyInput = () => {
           strategy['2']();
         },
         talk() {
+          const chars = getCharactersInRoom(room.id);
+          // assume players wants to talk to the only character in the room
+          if (chars.length === 1) {
+            args[1] = 'to';
+            args[2] = getName(chars[0].name);
+            strategy['3']();
+            return;
+          }
           println(`You can talk TO someone or ABOUT some topic.`);
         },
         take() {
@@ -423,7 +431,7 @@ let applyInput = () => {
             listTopics(topics);
           } else if (preposition === 'about'){
             if (!disk.conversant) {
-              println(`You need to be in a conversation to talk about something`);
+              println(`You need to be in a conversation to talk about something.`);
               return;
             }
             const character = eval(disk.conversant);
