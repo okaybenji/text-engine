@@ -487,7 +487,7 @@ let setInput = (str) => {
 };
 
 // render output
-let println = (line, isImg = false, isName = false, isDesc = false) => {
+let println = (line, isImg = false) => {
   // bail if string is null or undefined
   if (!line) {
     return;
@@ -501,14 +501,6 @@ let println = (line, isImg = false, isName = false, isDesc = false) => {
 
   if (isImg) {
     newLine.classList.add('img');
-  }
-
-  if (isName) {
-    newLine.classList.add('roomname');
-  }
-
-  if (isDesc) {
-    newLine.classList.add('desc');
   }
 
   // add a class for styling prior user input
