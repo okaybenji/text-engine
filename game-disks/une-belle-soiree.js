@@ -1,3 +1,63 @@
+// Override println to add styling
+println = (line, isImg = false, isName = false, isDesc = false) => {
+  // bail if string is null or undefined
+  if (!line) {
+    return;
+  }
+
+  // if this is an array of lines, pick one at random
+  str = typeof line === 'object' ? pickOne(line) : line;
+
+  const output = document.querySelector('#output');
+  const newLine = document.createElement('div');
+
+  if (isImg) {
+    newLine.classList.add('img');
+  }
+
+  if (isName) {
+    newLine.classList.add('roomname');
+  }
+
+  if (isDesc) {
+    newLine.classList.add('desc');
+  }
+
+  // add a class for styling prior user input
+  if (line[0] === '>') {
+    newLine.classList.add('user');
+  }
+
+  output.appendChild(newLine).innerText = str;
+  window.scrollTo(0, document.body.scrollHeight);
+};
+
+// Override enterRoom to show list of characters in room
+enterRoom = (id) => {
+  const room = getRoom(id);
+
+  println(room.img, true);
+
+  println(`${getName(room.name)}`,false,true);
+
+  if (room.visits === 0) {
+    println(room.desc,false,false,true);
+  }
+  const characters = getCharactersInRoom(room.id);
+  characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
+
+  room.visits++;
+
+  disk.roomId = id;
+
+  if (typeof room.onEnter === 'function') {
+    room.onEnter({disk, println, getRoom, enterRoom});
+  }
+
+  // reset any active conversation
+  delete disk.conversant;
+};
+
 // Mark the context (item) as examined.
 const examine = function() {
   this.examined = true;
