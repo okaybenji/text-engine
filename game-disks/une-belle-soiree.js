@@ -703,3 +703,10 @@ const BFS = (G, root, goal) => {
     });
   }
 };
+
+// Debugging: Allow pressing > to force characters to move to adjacent rooms.
+document.onkeypress = function (e) {
+  if (e.keyCode == 62) {
+    disk.characters.map(c => c.updateLocation({println, disk}));
+  }
+};
