@@ -714,7 +714,43 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       conversationType: 'branching',
       topics: branchingConversationTopics,
       updateLocation,
+    },{
+      name: 'René Dauphins',
+      desc: 'A middle aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Daphin family, He is the eldest male, and stands to inherit the dauphin estate manages upon the death of Grandfather Dauphin',
+      routes: {
+        cavorting: {
+          path: ['grandSalon'],
+          type: 'patrol',
+        }
+      },
+      conversation: [
+      ],
+      conversationType: 'branching',
+      conversationStep: 0,
+      updateLocation,
+      currentRoute: 'cavorting',
+      roomId: 'grandSalon',
+      topics: branchingConversationTopics,
     },
+    {
+      name: 'Marie Dauphin',
+      desc: 'The wife of René, she was a woman who could help but appear miserable. She married at 18 and produced him two sons, both handsome, and one capable. Mother said she is from a family of dubious connection to the Bourbons, and is unlikely to approve of matrimonial arrangements beneath her imagined station.',
+      routes: {
+        cavorting: {
+          path: ['grandSalon'],
+          type: 'patrol',
+        }
+      },
+      conversation: [
+      ],
+      conversationType: 'branching',
+      conversationStep: 0,
+      updateLocation,
+      currentRoute: 'cavorting',
+      roomId: 'grandSalon',
+      topics: branchingConversationTopics,
+    },
+
   ],
 };
 
