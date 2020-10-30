@@ -124,10 +124,12 @@ let applyInput = () => {
               return;
             }
 
+            const dir = getName(exit.dir).toUpperCase();
+
             println(
               rm.visits > 0
-                ? `${getName(exit.dir)} - ${rm.name}`
-                : getName(exit.dir)
+                ? `${dir} - ${rm.name}`
+                : dir
             );
           });
         },
