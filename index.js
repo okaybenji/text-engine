@@ -529,7 +529,7 @@ let autocomplete = () => {
   }
 
   const stubRegex = new RegExp(`^${stub}`);
-  const matches = options.filter(option => option.match(stubRegex));
+  const matches = options.flat().filter(option => option.match(stubRegex));
 
   if (!matches.length) {
     // do nothing; this needs refactoring.
