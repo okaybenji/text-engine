@@ -525,7 +525,7 @@ let autocomplete = () => {
       to: characterNames,
       at: characterNames.concat(itemNames),
     };
-    options = optionMap[words[1]].flat().map(string => string.toLowerCase());
+    options = (optionMap[words[1]] || []).flat().map(string => string.toLowerCase());
   }
 
   const stubRegex = new RegExp(`^${stub}`);
