@@ -12,40 +12,13 @@
 <audio id="defunctis">
     <source src="http://127.0.0.1:8080/defunctis.mp3" type="audio/mpeg" />
 </audio>
+<!-- Include game engine -->
+<script src="index.js"></script>
 <!-- Include game data ('disk') -->
 <script src="game-disks/unlimited-adventure.js"></script>
 <script src="game-disks/ur-dead.js"></script>
 <script src="game-disks/screen-creatures.js"></script>
 <script src="game-disks/une-belle-soiree.js"></script>
-<!-- Include game engine -->
-<script src="index.js"></script>
-<script>
-  const config = {
-    enterRoom: (id) => {
-        const room = getRoom(id);
 
-        println(room.img, true);
-
-        println(`${getName(room.name)}`,false,true);
-
-        if (room.visits === 0) {
-          println(room.desc,false,false,true);
-        }
-        const characters = getCharactersInRoom(room.id);
-        characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
-
-        room.visits++;
-
-        disk.roomId = id;
-
-        if (typeof room.onEnter === 'function') {
-          room.onEnter({disk, println, getRoom, enterRoom});
-        }
-
-        // reset any active conversation
-        delete disk.conversant;
-      },
-  };
-</script>
 <!-- Load disk into engine -->
-<script>loadDisk(uneBelleSoiree, config);</script>
+<script>loadDisk(uneBelleSoiree);</script>
