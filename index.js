@@ -540,9 +540,11 @@ let autocomplete = () => {
     };
     options = optionMap[words[0]];
   } else if (words.length === 3) {
+    const characterNames = (getCharactersInRoom(room.id) || []).map(character => character.name);
+    const itemNames = (room.items || []).concat(disk.inventory).map(item => item.name);
     const optionMap = {
-      to: (getCharactersInRoom(room.id) || []).map(character => character.name),
-      at: (room.items || []).concat(disk.inventory).map(item => item.name),
+      to: characterNames,
+      at: characterNames.concat(itemNames),
     };
     options = optionMap[words[1]].flat().map(string => string.toLowerCase());
   }
