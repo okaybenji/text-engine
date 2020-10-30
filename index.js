@@ -195,6 +195,16 @@ let applyInput = () => {
           items
             .forEach(item => println(getName(item.name)));
         },
+        chars() {
+          const chars = getCharactersInRoom(room.id);
+          if (!chars.length) {
+            println(`There's no one here.`);
+            return;
+          }
+          println(`You see the following:`);
+          chars
+            .forEach(item => println(getName(item.name)));
+        },
         help() {
           const instructions = `
             The following commands are available:
@@ -205,6 +215,7 @@ let applyInput = () => {
             USE [OBJECT NAME] e.g. 'use door'
             TALK TO [CHARACTER NAME] e.g. 'talk to mary'
             TALK ABOUT [SUBJECT] e.g. 'talk about horses'
+            CHARS :: list characters in the room
             INV :: list inventory items
             ITEMS :: list items in the room
             HELP :: this help menu
@@ -507,7 +518,7 @@ let autocomplete = () => {
   let options;
 
   if (words.length === 1){
-    options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
+    options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items', 'chars'];
     if (disk.conversation) {
       options = options.concat(disk.conversation.map(getKeywordFromTopic));
     }
