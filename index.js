@@ -193,7 +193,7 @@ let applyInput = () => {
           }
           println(`You see the following:`);
           items
-            .forEach(item => println(getName(item.name)));
+            .forEach(item => println(`* ${getName(item.name)}`));
         },
         chars() {
           const chars = getCharactersInRoom(room.id);
@@ -203,7 +203,7 @@ let applyInput = () => {
           }
           println(`You see the following:`);
           chars
-            .forEach(item => println(getName(item.name)));
+            .forEach(char => println(`* ${getName(char.name)}`));
         },
         help() {
           const instructions = `
