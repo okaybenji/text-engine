@@ -381,7 +381,7 @@ const loadDisk = (uninitializedDisk, config = {}) => {
         };
 
         // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
-        if (room.exits.find(exit => exit.dir === cmd)) {
+        if (room.exits && room.exits.find(exit => exit.dir === cmd)) {
           args[1] = cmd;
           cmd = 'go';
           strategy[2]();
