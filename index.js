@@ -206,6 +206,7 @@ let applyInput = () => {
             TALK TO [CHARACTER NAME] e.g. 'talk to mary'
             TALK ABOUT [SUBJECT] e.g. 'talk about horses'
             INV :: list inventory items
+            ITEMS :: list items in the room
             HELP :: this help menu
           `;
           println(instructions);
