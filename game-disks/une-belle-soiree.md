@@ -14,8 +14,4 @@
 * Deprecate passing global functions to various methods (and reflect this change in the docs).
 * Add documentation for conversations.
 * Document other engine changes.
-* Add auto-complete for conversation topic keywords.
 * BUGFIX: For some reason, auto-complete doesn't work for the PANELS in the ENTRY.
-* Add the ITEMS command to the HELP menu.
-* Add CHARS / CHARACTERS command to list who is in the room (and add this to the HELP menu).
-* When printing list of directions from the GO command, display the dir in uppercase.
