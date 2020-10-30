@@ -421,23 +421,7 @@ let applyInput = () => {
                 disk.conversation[response].onSelected();
               } else {
                 const topic = disk.conversation.length
-                  && disk.conversation.find(t => {
-                    if (t.keyword) {
-                      return t.keyword === response;
-                    }
-
-                    // find the keyword in the option
-                    // (the word in all caps)
-                    const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-                    const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
-                    const keyword = removeExtraSpaces(removePunctuation(t.option))
-                      // separate words by spaces
-                      .split(' ')
-                      // find the word that is in uppercase
-                      .find(w => w.toUpperCase() === w);
-
-                    return keyword.toLowerCase() === response;
-                  });
+                  && disk.conversation.find(t => getKeywordFromTopic(t) === response);
                 if (topic) {
                   if (topic.line) {
                     println(topic.line);
@@ -522,7 +506,10 @@ let autocomplete = () => {
   let options;
 
   if (words.length === 1){
-     options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
+    options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items'];
+    if (disk.conversation) {
+      options = options.concat(disk.conversation.map(getKeywordFromTopic));
+    }
   } else if (words.length === 2) {
     const optionMap = {
       talk: ['to', 'about'],
@@ -636,6 +623,27 @@ let findCharacter = (name, chars = disk.characters) => chars.find((c) => {
 
   return hasName(c.name);
 });
+
+// retrieves a keyword from a topic
+// topic -> string
+let getKeywordFromTopic = (topic) => {
+  if (topic.keyword) {
+    return topic.keyword;
+  }
+
+  // find the keyword in the option
+  // (the word in all caps)
+  const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
+  const keyword = removeExtraSpaces(removePunctuation(topic.option))
+    // separate words by spaces
+    .split(' ')
+    // find the word that is in uppercase
+    .find(w => w.toUpperCase() === w)
+    .toLowerCase();
+
+  return keyword;
+};
 
 // end the current conversation
 let endConversation = () => {
