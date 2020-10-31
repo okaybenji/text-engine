@@ -61,6 +61,27 @@ let setup = () => {
   });
 };
 
+// convert the disk to JSON and store it
+let save = (name = 'save') => {
+  const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
+  localStorage.setItem(name, save);
+  println(`Game saved.`)
+};
+
+// restore the disk from storage
+let load = (name = 'save') => {
+  const save = localStorage.getItem(name);
+  disk = JSON.parse(save, (key, value) => {
+    try {
+      return eval(value);
+    } catch (error) {
+      return value;
+    }
+  });
+  println(`Game loaded.`)
+  enterRoom(disk.roomId);
+};
+
 // retrieve user input (remove whitespace at beginning or end)
 // nothing -> string
 let getInput = () => input.value.trim();
@@ -248,23 +269,8 @@ let applyInput = () => {
         play() {
           println(`You're already playing a game.`);
         },
-        save() {
-          const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
-          localStorage.setItem('save', save);
-          println(`Game saved.`)
-        },
-        load() {
-          const save = localStorage.getItem('save');
-          disk = JSON.parse(save, (key, value) => {
-            try {
-              return eval(value);
-            } catch (error) {
-              return value;
-            }
-          });
-          println(`Game loaded.`)
-          enterRoom(disk.roomId);
-        }
+        save,
+        load,
       };
 
       // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
@@ -352,6 +358,14 @@ let applyInput = () => {
         },
         play() {
           println(`You're already playing a game.`);
+        },
+        save() {
+          // save the game with the passed name
+          save(args[1]);
+        },
+        load() {
+          // load the game with the passed name
+          load(args[1]);
         },
       };
       exec(cmds[cmd]);
