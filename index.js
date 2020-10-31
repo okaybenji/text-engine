@@ -245,11 +245,19 @@ let applyInput = () => {
           println(`You're already playing a game.`);
         },
         save() {
-          localStorage.setItem('save', JSON.stringify(disk));
+          const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
+          localStorage.setItem('save', save);
           println(`Game saved.`)
         },
         load() {
-          disk = JSON.parse(localStorage.getItem('save'));
+          const save = localStorage.getItem('save');
+          disk = JSON.parse(save, (key, value) => {
+            try {
+              return eval(value);
+            } catch (error) {
+              return value;
+            }
+          });
           println(`Game loaded.`)
           enterRoom(disk.roomId);
         }
