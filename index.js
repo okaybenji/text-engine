@@ -188,6 +188,10 @@ let applyInput = () => {
             return;
           }
           println(`You can talk TO someone or ABOUT some topic.`);
+
+          // list characters in the room
+          cmd = 'chars';
+          strategy['1']();
         },
         take() {
           const items = (room.items || []).filter(item => item.isTakeable);
