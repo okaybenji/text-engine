@@ -228,6 +228,8 @@ let applyInput = () => {
             CHARS :: list characters in the room
             INV :: list inventory items
             ITEMS :: list items in the room
+            SAVE :: save the current game
+            LOAD :: load the last saved game
             HELP :: this help menu
           `;
           println(instructions);
@@ -238,6 +240,15 @@ let applyInput = () => {
         play() {
           println(`You're already playing a game.`);
         },
+        save() {
+          localStorage.setItem('save', JSON.stringify(disk));
+          println(`Game saved.`)
+        },
+        load() {
+          disk = JSON.parse(localStorage.getItem('save'));
+          println(`Game loaded.`)
+          enterRoom(disk.roomId);
+        }
       };
 
       // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
