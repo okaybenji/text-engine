@@ -272,7 +272,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'grandPorch',
+  roomId: 'kitchen',
   rooms: [
     {
       name: 'Carriage',
@@ -636,13 +636,13 @@ const uneBelleSoiree = {
       },
       updateLocation,
       currentRoute: 'helpingGuests',
-      roomId: 'kitchen',
+      roomId: 'grandPorch',
       topics: function({room}) {
         if (this.roomId === 'fountain') {
           return [{
             option: 'Talk about the FOUNTAIN',
             cb: () => {
-              println('This fountain was installed by Count Dauhphin, it is a recent addition.');
+              println('This fountain was installed by Count Dauphin, it is a recent addition.');
               endConversation();
             },
           }];
@@ -767,8 +767,8 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       topics: branchingConversationTopics,
       updateLocation,
     },{
-      name: 'René Dauphins',
-      desc: 'A middle aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Daphin family, He is the eldest male, and stands to inherit the dauphin estate manages upon the death of Grandfather Dauphin',
+      name: 'René Dauphin',
+      desc: 'A middle aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Daphin family, He is the eldest male, and stands to inherit the Dauphin estate manages upon the death of Grandfather Dauphin',
       routes: {
         cavorting: {
           path: ['grandSalon'],
