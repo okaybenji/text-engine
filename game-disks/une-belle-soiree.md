@@ -15,3 +15,4 @@
 * Add documentation for conversations.
 * Document other engine changes.
 * BUGFIX: For some reason, auto-complete doesn't work for the PANELS in the ENTRY.
+* Need to `stringify` functions on SAVE and `eval` them on LOAD.
