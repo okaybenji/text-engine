@@ -691,7 +691,6 @@ const uneBelleSoiree = {
         {name: 'end'},
         {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I’m sure we will be speaking more this evening! A pleasure.”`},
       ],
-      conversationType: 'branching',
       conversationStep: 0,
       updateLocation,
       currentRoute: 'ariving',
@@ -766,7 +765,6 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
         },
       ],
       conversationStep: 0,
-      conversationType: 'branching',
       topics: () => branchingConversationTopics('gramps'),
       updateLocation,
     } , {
@@ -780,7 +778,6 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       },
       conversation: [
       ],
-      conversationType: 'branching',
       conversationStep: 0,
       updateLocation,
       currentRoute: 'cavorting',
@@ -798,7 +795,6 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       },
       conversation: [
       ],
-      conversationType: 'branching',
       conversationStep: 0,
       updateLocation,
       currentRoute: 'cavorting',
