@@ -49,34 +49,21 @@ const urDead = {
             item.desc = 'You could really have a ball with this thing.';
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
-
             const skeletons = findCharacter('skeletons');
-
-            // Set the skeletons back to playing basketball.
-            const reset = () => {
-              skeletons.topics = 'They look pretty busy.';
-              endConversation();
-
-              // Put the ball back in the room.
-              item.use = () => println(`You'll have to take it first.`);
-              room.items.push(item);
-              const itemIndex = disk.inventory.findIndex(i => i === item);
-              disk.inventory.splice(itemIndex, 1);
-            };
 
             skeletons.topics = [
               {
                 option: 'Use the leverage to get INFO',
                 cb: () => {
                   println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
-                  reset();
+                  disk.methods.resetCourt();
                 },
               },
               {
                 option: 'GIVE the ball back',
                 cb: () => {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
-                  reset();
+                  disk.methods.resetCourt();
                 },
               },
             ];
@@ -124,4 +111,19 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       onTalk: () => println(`"You're dead," he says in a scratchy voice, "You must've gathered that much."`),
     },
   ],
+  methods: {
+    resetCourt: () => {
+      const skeletons = findCharacter('skeletons');
+      const ball = disk.inventory.find(i => i.name.includes('basketball'));
+      const room = getRoom('court');
+      skeletons.topics = 'They look pretty busy.';
+      endConversation();
+
+      // Put the ball back in the room.
+      ball.use = () => println(`You'll have to take it first.`);
+      room.items.push(ball);
+      const itemIndex = disk.inventory.findIndex(i => i === ball);
+      disk.inventory.splice(itemIndex, 1);
+    },
+  },
 };
