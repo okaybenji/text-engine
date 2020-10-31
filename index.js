@@ -656,7 +656,7 @@ let enterRoom = (id) => {
   println(`${getName(room.name)}`,false,true);
 
   if (room.visits === 0) {
-    println(room.desc,false,false,true);
+    println(room.desc);
   }
 
   room.visits++;
