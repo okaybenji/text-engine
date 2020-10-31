@@ -244,7 +244,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
-  roomId: 'grandPorch',
+  roomId: 'chapel',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
@@ -705,7 +705,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       routes: {
         retire: {
           path: ['chapel', 'library', 'entry', 'landing'],
-          type: 'simple', // TODO: Add type where character ends at destination. Also, add a callback at the end of the route.
+          type: 'simple',
         },
       },
       roomId: 'chapel',
@@ -746,11 +746,11 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
             disk.guilt--;
 
           return {
-          name: 'identify',
-          line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
+            name: 'identify',
+            line: `At the sound of your family name, Dauphin unclenches his jaw. With a short, contemptuous laugh, he forcefully takes your wrist and thrusts his rosary into your palm.
 
-          “You may need this more than I.”
-          `};
+            “You may need this more than I.”`
+          };
         },
         function leave() {
           const haveRosary = !!disk.inventory.find((item) => item.name == 'rosary');
