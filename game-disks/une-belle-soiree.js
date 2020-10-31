@@ -272,7 +272,7 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'kitchen',
+  roomId: 'grandPorch',
   rooms: [
     {
       name: 'Carriage',
@@ -636,7 +636,7 @@ const uneBelleSoiree = {
       },
       updateLocation,
       currentRoute: 'helpingGuests',
-      roomId: 'grandPorch',
+      roomId: 'kitchen',
       topics: function({room}) {
         if (this.roomId === 'fountain') {
           return [{
