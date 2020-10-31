@@ -161,9 +161,10 @@ var adagio = document.getElementById("adagio");
 var defunctis = document.getElementById("defunctis");
 
 // Determine the topics to return for a branching conversation.
-const branchingConversationTopics = function() {
-  const character = this;
-  const findStepWithName = name => this.conversation.findIndex((step, i) =>
+const branchingConversationTopics = (characterName) => {
+  const character = findCharacter(characterName);
+
+  const findStepWithName = name => character.conversation.findIndex((step, i) =>
     step.name == name && i > character.conversationStep
   );
   let topics;
@@ -637,8 +638,8 @@ const uneBelleSoiree = {
       updateLocation,
       currentRoute: 'helpingGuests',
       roomId: 'kitchen',
-      topics: function({room}) {
-        if (this.roomId === 'fountain') {
+      topics: ({room}) => {
+        if (room.id === 'fountain') {
           return [{
             option: 'Talk about the FOUNTAIN',
             cb: () => {
@@ -648,7 +649,7 @@ const uneBelleSoiree = {
           }];
         }
 
-        if (this.currentRoute === 'helpingGuests') {
+        if (findCharacter('gaspard').currentRoute === 'helpingGuests') {
           return [{
             option: 'Ask that he ESCORT you to the party',
             cb: () => {
@@ -657,7 +658,9 @@ const uneBelleSoiree = {
             },
           }];
         }
-      }
+
+        return [];
+      },
     },
     {
       name: 'Richard',
@@ -693,7 +696,7 @@ const uneBelleSoiree = {
       updateLocation,
       currentRoute: 'ariving',
       roomId: 'grandSalon',
-      topics: branchingConversationTopics,
+      topics: () => branchingConversationTopics('richard'),
     },
     {
       name: ['Grandfather Dauphin', 'Gramps'],
@@ -764,10 +767,10 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       ],
       conversationStep: 0,
       conversationType: 'branching',
-      topics: branchingConversationTopics,
+      topics: () => branchingConversationTopics('gramps'),
       updateLocation,
-    },{
-      name: 'René Dauphin',
+    } , {
+      name: ['René Dauphin', 'Rene Dauphin', 'René', 'Rene'],
       desc: 'A middle aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Daphin family, He is the eldest male, and stands to inherit the Dauphin estate manages upon the death of Grandfather Dauphin',
       routes: {
         cavorting: {
@@ -782,10 +785,10 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       updateLocation,
       currentRoute: 'cavorting',
       roomId: 'grandSalon',
-      topics: branchingConversationTopics,
+      topics: () => branchingConversationTopics('rene'),
     },
     {
-      name: 'Marie Dauphin',
+      name: ['Marie Dauphin', 'Marie'],
       desc: 'The wife of René, she was a woman who could help but appear miserable. She married at 18 and produced him two sons, both handsome, and one capable. Mother said she is from a family of dubious connection to the Bourbons, and is unlikely to approve of matrimonial arrangements beneath her imagined station.',
       routes: {
         cavorting: {
@@ -800,7 +803,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       updateLocation,
       currentRoute: 'cavorting',
       roomId: 'grandSalon',
-      topics: branchingConversationTopics,
+      topics: () => branchingConversationTopics('marie'),
     },
 
   ],
