@@ -30,15 +30,15 @@ let init = (disk) => {
 
 // register listeners for input events
 let setup = () => {
-  input.onkeypress = (e) => {
+  input.addEventListener('keypress', (e) => {
     const ENTER = 13;
 
     if (e.keyCode === ENTER) {
       applyInput();
     }
-  };
+  });
 
-  input.onkeydown = (e) => {
+  input.addEventListener('keydown', (e) => {
     input.focus();
 
     const UP = 38;
@@ -54,7 +54,11 @@ let setup = () => {
       e.preventDefault()
       autocomplete();
     }
-  };
+  });
+
+  input.addEventListener('focusout', () => {
+    input.focus();
+  });
 };
 
 // retrieve user input (remove whitespace at beginning or end)
