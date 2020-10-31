@@ -243,6 +243,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
+  roomId: 'grandPorch',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
@@ -272,7 +273,6 @@ const uneBelleSoiree = {
       this.examine();
     },
   }],
-  roomId: 'grandPorch',
   rooms: [
     {
       name: 'Carriage',
