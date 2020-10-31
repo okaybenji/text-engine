@@ -220,7 +220,7 @@ const arrive = ({room}) => {
 
   const door = {
     name: 'door',
-    desc: `It's a door.`,
+    desc: `It’s a door.`,
     use: () => {
       clearTimeout(room.openTimeout);
       println(`Uncharacteristically, you open the door rather than wait for assistance. As you exit the carriage, the servant, preoccupied with some tasks, looks to you with panic. "Pardon mademoiselle! I was coming just now to accomodate you. Please forgive my lateness. I was briefly kept by the coachman and had every intention of assisting you myself."`);
@@ -361,8 +361,8 @@ const uneBelleSoiree = {
       ],
       items:[
         {name: ['dionysus','statue'], 'desc':'Frozen in a moment of orgiastic glee, balancing on the one foot of which he seems to be in control. Around his head is a bronze laurel, and oddly at his feet amid the crushed grapes, are pineapples and eucalytpus branches.'},
-        {name: ['fountain','water'], 'desc':`The fountain is large enough that the center can not be reached except by wading through the waters.  It's too dark to see the bottom, but if it's like other fountains it is likely knee-deep at most.  The courtyard is filled with the thundering weight of the water falling from the statue's vase`},
-        {name: ['vase'], 'desc':`Something is written on it, but it's too dark to see, looks like greek possibly?`},
+        {name: ['fountain','water'], 'desc':`The fountain is large enough that the center can not be reached except by wading through the waters.  It’s too dark to see the bottom, but if it’s like other fountains it is likely knee-deep at most.  The courtyard is filled with the thundering weight of the water falling from the statue’s vase`},
+        {name: ['vase'], 'desc':`Something is written on it, but it’s too dark to see, looks like greek possibly?`},
       ],
       onEnter() {
         this.desc = `${this.visits == 1 ? 'The servant has recovered an air of formality, and is sinking back into a comfortable role and station. He smells heavily of hay and sweat.' : ''} Here, the foliage is trimmed into a rectangular courtyard. In the center of the courtyard is a large fountain -- a bronze dionysus pours water with revelry from a bacchanalian vase into the water below.`;
@@ -373,7 +373,7 @@ const uneBelleSoiree = {
       name: 'Outer Court',
       id: 'outerCourt',
       desc:[`Vines grow up the courtyard walls. To the NORTH, the windows of the house are well lit, each producing its own faint halo in the mist.`],
-      items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous. It looks like they may even have compromised the wall's structural integrity.`}],
+      items:[{name: ['vines', 'walls'], desc:`The vines seem uncharacteristically tenebrous. It looks like they may even have compromised the wall’s structural integrity.`}],
       exits: [
         { dir: 'north', id: 'innerCourt' },
         { dir: 'south', id: 'fountain' },
@@ -391,7 +391,7 @@ const uneBelleSoiree = {
     {
       name: 'West Hedge',
       id: 'westHedge',
-      desc:[`It's difficult to see, but there seems to be a small stone statue in the southwest corner of this opening`],
+      desc:[`It’s difficult to see, but there seems to be a small stone statue in the southwest corner of this opening`],
       items:[
         {name: ['statue', 'brigid'], desc: `Incense seems to have been recently burned here. A small cup of liquid and a cross lay at the saint’s feet. ‘Brigid Of Kildare’ is engraved on to the statue’s base. `},
         {
@@ -440,7 +440,7 @@ const uneBelleSoiree = {
       name: 'East Porch',
       id: 'eastPorch',
       desc: `From high on the porch, but near the east railing you can see, tucked behind the home and a row of columnar trees, is the practical workbuildings of the estate: sheds, coops, and a conspicuous greenhouse.`,
-      items:[{'name':['coop','coops'], desc: `Very faintly from the coops you can hear an unusuaally loud clamor of a rooster. It's calls are muffled here, but it must be loud to be carrying this far`}],
+      items:[{'name':['coop','coops'], desc: `Very faintly from the coops you can hear an unusuaally loud clamor of a rooster. It’s calls are muffled here, but it must be loud to be carrying this far`}],
       exits: [
         { dir: 'west', id: 'grandPorch' },
       ],
@@ -477,7 +477,7 @@ const uneBelleSoiree = {
         {dir: 'south', id: 'entry'},
         {dir: 'north', id: 'backLawn'},
         {dir: 'east', id: 'kitchen', block: `The eastern door leads to the Kitchen. You decide to avoid needlessly encouraging the censure and gossip of the guests of the house by mingling openly with the kitchen staff.
-        You can well imagine: “Is she for want of equal company?”, “Perhaps she's accustomed to onions straight from the garden! These dishes have not enough dirt for her liking?”`},
+        You can well imagine: “Is she for want of equal company?”, “Perhaps she’s accustomed to onions straight from the garden! These dishes have not enough dirt for her liking?”`},
         {dir: 'west', id: 'westhall'},
       ],
     },
@@ -500,9 +500,9 @@ const uneBelleSoiree = {
       items:[
         {name: 'law', desc: `One section seems to be organized around law and legal theory. Loose folios of Montesquieu, are packed tightly on the lowest shelf. The rest seem to be analyses of various cases in maritime law, that Mr. Dauphin has had bound himself`},
         {name: 'reference', desc: `Atlases, encyclopedias, historical records.  Oddly many of the historical records are in Spanish, several histories, and short articles and a prominent tome by Bartolome De Las Casaas and another set of the correspondence of Nicolás de Ovando`},
-        {name: 'atlas', desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It's an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
+        {name: 'atlas', desc:`You unshelf one of the Atlases out of curiousity, and thumb through. It’s an atlas of the Americas. Largely focused on the Carribean, and Florida. A piece of paper covered in numbers, has apparently been used as a bookmark on an old record of Spanish Hispaniola.`},
         {name: 'economy', desc:`Some of the older untouched books appear to be about Flemish financial practices, newer tomes seem to be centered on the production, trade, and markets of indigo, tobacco, and sugar`},
-        {name: 'cabinet', desc:`It's locked.`},
+        {name: 'cabinet', desc:`It’s locked.`},
       ],
       exits: [
         { dir: 'east', id: 'entry' },
@@ -515,9 +515,9 @@ const uneBelleSoiree = {
       id: 'chapel', 
       desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
       items:[
-        {name:['candles'], desc:'They\'re candles'},
-        {name:['christ'], desc:'It\'sa me, Jesusa Christa'},
-        {name:['candies'], desc:'It\'sa me, Jesusa Candiesa'}
+        {name:['candles'], desc:'They’re candles'},
+        {name:['christ'], desc:'It’sa me, Jesusa Christa'},
+        {name:['candies'], desc:'It’sa me, Jesusa Candiesa'}
       ],
       exits: [
         { dir: 'east', id: 'library' },
@@ -555,17 +555,69 @@ const uneBelleSoiree = {
     {
       name: 'Kitchen',
       id: 'kitchen',
-      desc:[`The room is hot, and very uncomfortable, you worry that the floor will dirty your gown, everyone stops and looks up from their task. You feel very out of place.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`],
+      desc: `The room is hot, and very uncomfortable, you worry that the floor will dirty your gown, everyone stops and looks up from their task. You feel very out of place.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`,
       onEnter: function() {
         this.desc = `The room is hot, and very uncomfortable.  Game is being carved on a large wooden table. Vegetables from the garden are being washed in a stone basin.`;
       },
       exits: [
         { dir: 'south', id: 'sittingRoom' },
         { dir: 'west', id: 'grandSalon' },
-        { dir: 'east', id: 'garden'},
+        { dir: 'east', id: 'pantry' },
       ]
     },
+    {
+      name: 'Pantry',
+      id: 'pantry',
+      desc: `Shelving wraps around the pantry. Apricots, plums, a basket full of celery and onions. On a back shelf, in between a shelf of breads and one of dried fish, is a glass eye.
 
+      An herby aroma of turnips, rutabaga, radishes, potatoes, and carrots wafts up the staircase.`,
+      items: [
+        {name: ['glass eye', 'eye'], desc: `Here’s looking at you, cod.`},
+      ],
+      exits: [
+        {dir: 'east', id: 'garden'},
+        {dir: 'down', id: 'rootCellar'},
+      ],
+    },
+    {
+      name: 'Garden',
+      id: 'garden',
+      desc: `Rows of trellises and beanpoles stretch out in front of you. The perimeter of the garden is surrounded by mature nut trees. Pecan and walnut you recognize, but there are varieties you’ve never seen before.`,
+      items: [{name: 'eye', desc: `Here's looking at you, cadydid.`}],
+      exits: [
+        {dir: 'west', id: 'pantry'},
+      ],
+    },
+    {
+      name: 'Root Cellar',
+      id: 'rootCellar',
+      desc: `The root cellar is only faintly illuminated, but the subterranean shelving appears to continue rightward towards a large, wooden door with a wrought-iron handle.
+
+      The smell of dirt and tubers hangs thick in the air.`,
+      items: [
+        {name: 'door', desc: ``},
+        {name: ['door handle', 'handle'], desc: ``},
+      ],
+      exits: [
+        {dir: 'up', id: 'pantry'},
+      ],
+    },
+    {
+      name: 'Coal Cellar',
+      id: 'coalCellar',
+      desc: `You choke on the dust you’ve stirred up in the room. A black, coarse powder sticks to the sweat on your skin. Only a thin beam of light pierces the dark, coming from a large, tin door directly in front of you.`,
+      exits: [
+        {dir: 'up', id: 'westLawn'},
+      ],
+    },
+    {
+      name: 'West Lawn',
+      id: 'westLawn',
+      desc: ``,
+      exits: [
+        {dir: 'down', id: 'coalCellar'},
+      ],
+    },
   ],
   characters: [
     {
@@ -634,7 +686,7 @@ const uneBelleSoiree = {
         ]},
         {name: 'ask', line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
         {name: 'end'},
-        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I'm sure we will be speaking more this evening! A pleasure.”`},
+        {line: `“Well I should join Miss Blackwood on her walk around the grounds,” he says with a bow. “I’m sure we will be speaking more this evening! A pleasure.”`},
       ],
       conversationType: 'branching',
       conversationStep: 0,
