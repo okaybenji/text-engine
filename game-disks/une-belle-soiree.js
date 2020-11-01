@@ -244,7 +244,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
-  roomId: 'chapel',
+  roomId: 'kitchen',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
@@ -642,7 +642,7 @@ const uneBelleSoiree = {
         if (room.id === 'fountain') {
           return [{
             option: 'Talk about the FOUNTAIN',
-            cb: () => {
+            onSelected: () => {
               println('This fountain was installed by Count Dauphin, it is a recent addition.');
               endConversation();
             },
@@ -652,7 +652,7 @@ const uneBelleSoiree = {
         if (findCharacter('gaspard').currentRoute === 'helpingGuests') {
           return [{
             option: 'Ask that he ESCORT you to the party',
-            cb: () => {
+            onSelected: () => {
               println('Right this way, madame.');
               endConversation();
             },
