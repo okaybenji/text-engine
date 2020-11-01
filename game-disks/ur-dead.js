@@ -104,99 +104,95 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       roomId: 'beach',
       topics: [
         {
-          keyword: 'how',
-          option: `HOW did I get here?`,
+          keyword: 'here',
+          option: `How did I get HERE?`,
           line: `"You're dead," he says in a scratchy voice, "You must've gathered that much."`,
-          cb: () => {
-            // replace this topic
-            const skeleton = findCharacter('beard');
-            const topic = skeleton.topics.find(t => t.keyword === 'how');
-            topic.option = `HOW did I die?`;
-            topic.line = `He half-smiles and says, "That, you'll find, is the million-dollar question."
+          removeOnRead: true,
+        },
+        {
+          keyword: 'die',
+          option: `How did I DIE?`,
+          prereqs: ['here'],
+          removeOnRead: true,
+          line: `He half-smiles and says, "That, you'll find, is the million-dollar question."
             Mysterious.
             "Well, one of them."
-            You don't know how you can tell he is smiling, but you CAN tell.`;
-            topic.cb = () => {
-              // remove this topic
-              disk.methods.removeTopic('beard', 'how');
-              // add another
-              const skeleton = findCharacter('beard');
-              skeleton.topics.push({
-                keyword: 'back',
-                option: `I don't want to die! How can I go BACK?`,
-                line: `He looks grim. "Now, I wouldn't get your hopes up on that matter. Almost nobody pulls it off. But it is my duty to tell you anyhow."`,
-                cb: () => {
-                  disk.methods.removeTopic('beard', 'back');
-                  const skeleton = findCharacter('beard');
-                  skeleton.topics = skeleton.topics.concat([{
-                    keyword: 'almost',
-                    option: `ALMOST no one?`,
-                    line: `"Well, yeah, there was Liam. Liam Hemsworth."`,
-                    cb: () => disk.methods.removeTopic('beard', 'almost'),
-                  }, {
-                    keyword: 'how',
-                    option: 'HOW then?',
-                    line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your NAME. And two, as you asked before, HOW you died."
+            You don't know how you can tell he is smiling, but you CAN tell.`,
+        },
+        {
+          keyword: 'skeleton',
+          option: `Will I become a SKELETON, too?`,
+          prereqs: ['here'],
+          removeOnRead: true,
+          line: `"You already are one, as far as I can see!" he chuckles. "Down here, we can only see our own bodies. We all look like skeletons to one another. It's kind of nice, in a way. We don't have many beauty contests. Or anyway, our pageants don't hinge on natural good looks."`,
+        },
+        {
+          keyword: 'back',
+          option: `I don't want to die! How can I go BACK?`,
+          prereqs: ['die'],
+          removeOnRead: true,
+          line: `He looks grim. "Now, I wouldn't get your hopes up on that matter. Almost nobody pulls it off. But it is my duty to tell you anyhow."`,
+        },
+        {
+          keyword: 'almost',
+          option: `ALMOST no one?`,
+          prereqs: ['back'],
+          removeOnRead: true,
+          line: `"Well, yeah, there was Liam. Liam Hemsworth."`,
+        },
+        {
+          keyword: 'how',
+          option: `HOW then?`,
+          prereqs: ['back'],
+          removeOnRead: true,
+          line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your NAME. And two, as you asked before, HOW you died."
 
-                    It's at this moment that you realize you don't know your own name.
+          It's at this moment that you realize you don't know your own name.
 
-                    He continues, "And there's a reason you're not likely to find this information: who would you ask? After all, we're all in the same boat, up the same river."
+          He continues, "And there's a reason you're not likely to find this information: who would you ask? After all, we're all in the same boat, up the same river."
 
-                    He pauses to whistle a bar from COME SAIL AWAY.
+          He pauses to whistle a bar from COME SAIL AWAY.
 
-                    "In other words, if I don't know so much as MY own name, how could I hope to tell you YOURS. You see?"
+          "In other words, if I don't know so much as MY own name, how could I hope to tell you YOURS. You see?"
 
-                    This talking, bearded skeleton is starting to make some sense.
+          This talking, bearded skeleton is starting to make some sense.
 
-                    "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."
-                    `,
-                    cb: () => {
-                      disk.methods.removeTopic('beard', 'how');
-                      const skeleton = findCharacter('beard');
-                      skeleton.topics.push({
-                        keyword: 'home',
-                        option: `HOME? But where is home?`,
-                        line: `He smiles again, and holds out his hands as if to gesture: Everywhere.
+          "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
+        },
+        {
+          keyword: 'home',
+          option: `HOME? But where is home?`,
+          prereqs: ['how'],
+          removeOnRead: true,
+          line: `He smiles again, and holds out his hands as if to gesture: Everywhere.
 
-                        "Have a look around. You can venture wherever strikes your fancy. No one frets much over privacy or personal space. No one will accuse you of trespassing. You don't need to eat or sleep. And no real harm can come to you! Just explore and enjoy yourself.
+          "Have a look around. You can venture wherever strikes your fancy. No one frets much over privacy or personal space. No one will accuse you of trespassing. You don't need to eat or sleep. And no real harm can come to you! Just explore and enjoy yourself.
 
-                        "Anyhow, I've said my spiel. I'll be here if you need me."
+          "Anyhow, I've said my spiel. I'll be here if you need me."
 
-                        You thank him and end the conversation.
-                        `,
-                        cb: () => {
-                          endConversation();
-                          disk.methods.removeTopic('beard', 'home');
+          You thank him and end the conversation.`,
+          cb: () => {
+            endConversation();
 
-                          const skeleton = findCharacter('beard');
-                          skeleton.topics.push({
-                            keyword: 'what',
-                            option: `WHAT was I supposed to be doing again?`,
-                            line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
-                            cb: () => endConversation(),
-                          });
-                          skeleton.onTalk = () => {};
-                          skeleton.desc = `I wonder how he attaches that beard...`;
+            const skeleton = findCharacter('beard');
 
-                          // remove the last sentence of the description now that you've talked
-                          const room = getRoom(disk.roomId);
-                          room.desc = room.desc.replace(` He seems to want to TALK.`, '');
-                        },
-                      });
-                    },
-                  }]);
-                },
-              });
-            };
+            // remove "I'm sure you have questions" comment
+            skeleton.onTalk = () => {};
 
-            // add another topic
-            skeleton.topics.push({
-              keyword: 'skeleton',
-              option: `Will I become a SKELETON, too?`,
-              line: `"You already are one, as far as I can see!" he chuckles. "Down here, we can only see our own bodies. We all look like skeletons to one another. It's kind of nice, in a way. We don't have many beauty contests. Or anyway, our pageants don't hinge on natural good looks."`,
-              cb: () => disk.methods.removeTopic('beard', 'skeleton'),
-            });
+            // replace "Looks like he wants to say something"
+            skeleton.desc = `I wonder how he attaches that beard...`;
+
+            // remove the last sentence of the description now that you've talked
+            const room = getRoom(disk.roomId);
+            room.desc = room.desc.replace(` He seems to want to TALK.`, '');
           },
+        },
+        {
+          keyword: 'what',
+          option: `WHAT was I supposed to be doing again?`,
+          prereqs: ['home'],
+          line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
+          cb: endConversation,
         },
       ],
       onTalk: () => println(`"I imagine," he begins, "you have some questions."`),
