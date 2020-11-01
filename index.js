@@ -738,7 +738,8 @@ let getKeywordFromTopic = (topic) => {
     // separate words by spaces
     .split(' ')
     // find the word that is in uppercase
-    .find(w => w.toUpperCase() === w)
+    // (must be at least 2 characters long)
+    .find(w => w.length > 1 && w.toUpperCase() === w)
     .toLowerCase();
 
   return keyword;
