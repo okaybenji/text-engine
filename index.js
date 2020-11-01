@@ -230,8 +230,8 @@ let talkToOrAboutX = (preposition, x) => {
 
     if (topics.length) {
       println(`What would you like to discuss?`);
-      topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
-      println(`NOTHING`);
+      topics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
+      println(`* NOTHING`);
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
       Object.keys(topics).forEach(topic => println(topics[topic].response));
@@ -286,6 +286,7 @@ let talkToOrAboutX = (preposition, x) => {
       const response = x.toLowerCase();
       if (response === 'nothing') {
         endConversation();
+        println(`You end the conversation.`);
       } else if (disk.conversation && disk.conversation[response]) {
         disk.conversation[response].onSelected();
       } else {
@@ -573,7 +574,7 @@ let println = (line, isImg = false) => {
 };
 
 // predict what the user is trying to type
-let autocomplete = () => {  
+let autocomplete = () => {
   const room = getRoom(disk.roomId);
   const words = input.value.toLowerCase().trim().split(/\s+/);
   const wordsSansStub = words.slice(0, words.length - 1);
@@ -587,6 +588,7 @@ let autocomplete = () => {
       options = Array.isArray(disk.conversation)
         ? options.concat(disk.conversation.map(getKeywordFromTopic))
         : Object.keys(disk.conversation);
+      options.push('nothing');
     }
   } else if (words.length === 2) {
     const optionMap = {
