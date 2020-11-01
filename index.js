@@ -230,8 +230,8 @@ let talkToOrAboutX = (preposition, x) => {
 
     if (topics.length) {
       println(`What would you like to discuss?`);
-      topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
-      println(`NOTHING`);
+      topics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
+      println(`* NOTHING`);
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
       Object.keys(topics).forEach(topic => println(topics[topic].response));
