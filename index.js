@@ -62,6 +62,7 @@ let setup = () => {
 };
 
 // convert the disk to JSON and store it
+// (optionally accepts a name for the save)
 let save = (name = 'save') => {
   const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
   localStorage.setItem(name, save);
@@ -69,6 +70,7 @@ let save = (name = 'save') => {
 };
 
 // restore the disk from storage
+// (optionally accepts a name for the save)
 let load = (name = 'save') => {
   const save = localStorage.getItem(name);
   disk = JSON.parse(save, (key, value) => {
@@ -80,6 +82,358 @@ let load = (name = 'save') => {
   });
   println(`Game loaded.`)
   enterRoom(disk.roomId);
+};
+
+// list player inventory
+let inv = () => {
+  if (!disk.inventory.length) {
+    println(`You don't have any items in your inventory.`);
+    return;
+  }
+  println(`You have the following items in your inventory:`);
+  disk.inventory.forEach(item => {
+    println(`* ${getName(item.name)}`);
+  });
+};
+
+// show room description
+let look = () => println(getRoom(disk.roomId).desc);
+
+// look in the passed way
+let lookThusly = (str) => println(`You look ${str}.`);
+
+// look at the passed item or character
+let lookAt = (name) => {
+  const room = getRoom(disk.roomId);
+  const findItem = item => item.name === name || item.name.includes(name);
+  const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
+  if (item) {
+    // Look at an item.
+    if (item.desc) {
+      println(item.desc);
+    } else {
+      println(`You don\'t notice anything remarkable about it.`);
+    }
+
+    if (typeof(item.look) === 'function') {
+      item.look({disk, println, getRoom, enterRoom, item});
+    }
+  } else {
+    const character = findCharacter(name, getCharactersInRoom(room.id));
+    if (character) {
+      // Look at a character.
+      if (character.desc) {
+        println(character.desc);
+      } else {
+        println(`You don't notice anything remarkable about them.`);
+      }
+    } else {
+      println(`You don't see any such thing.`);
+    }
+  }
+};
+
+// list available exits
+let go = () => {
+  const room = getRoom(disk.roomId);
+  const exits = room.exits;
+  if (!exits) {
+    println(`There's nowhere to go.`);
+    return;
+  }
+  println(`Where would you like to go? Available directions are:`);
+  exits.forEach((exit) => {
+    const rm = getRoom(exit.id);
+
+    if (!rm) {
+      return;
+    }
+
+    const dir = getName(exit.dir).toUpperCase();
+
+    println(
+      rm.visits > 0
+        ? `${dir} - ${rm.name}`
+        : dir
+    );
+  });
+};
+
+// go the passed direction
+let goDir = (dir) => {
+  const room = getRoom(disk.roomId);
+  const exits = room.exits;
+  if (!exits) {
+    println(`There's nowhere to go.`);
+    return;
+  }
+  const nextRoom = exits.find(exit =>
+    typeof exit.dir === 'object'
+      ? exit.dir.includes(dir)
+      : exit.dir === dir
+  );
+
+  if (!nextRoom) {
+    println(`There is no exit in that direction.`);
+  } else if (nextRoom.block) {
+    println(nextRoom.block);
+  } else {
+    enterRoom(nextRoom.id);
+  }
+};
+
+// shortcuts for cardinal directions
+let n = () => goDir('north');
+let s = () => goDir('south');
+let e = () => goDir('east');
+let w = () => goDir('west');
+let ne = () => goDir('northeast');
+let se = () => goDir('southeast');
+let nw = () => goDir('northwest');
+let sw = () => goDir('southwest');
+
+// if there is one character in the room, engage that character in conversation
+// otherwise, list characters in the room
+let talk = () => {
+  const chars = getCharactersInRoom(disk.roomId);
+  // assume players wants to talk to the only character in the room
+  if (chars.length === 1) {
+    talkToOrAboutX('to', getName(chars[0].name));
+    return;
+  }
+  println(`You can talk TO someone or ABOUT some topic.`);
+
+  // list characters in the room
+  cmd = 'chars';
+  strategy['1']();
+};
+
+// list takeable items in room
+let take = () => {
+  const room = getRoom(disk.roomId);
+  const items = (room.items || []).filter(item => item.isTakeable);
+  if (!items.length) {
+    println(`There's nothing to take.`);
+    return;
+  }
+  println(`What would you like to take? Available items are:`);
+  items
+    .forEach(item => println(getName(item.name)));
+};
+
+// take the item with the given name
+let takeItem = (itemName) => {
+  const room = getRoom(disk.roomId);
+  const findItem = item => item.name === itemName || item.name.includes(itemName);
+  let itemIndex = room.items && room.items.findIndex(findItem);
+  if (typeof itemIndex === 'number' && itemIndex > -1) {
+    const item = room.items[itemIndex];
+    if (item.isTakeable) {
+      disk.inventory.push(item);
+      room.items.splice(itemIndex, 1);
+
+      if (typeof item.onTake === 'function') {
+        item.onTake({disk, println, room, getRoom, enterRoom, item});
+      } else {
+        println(`You took the ${getName(item.name)}.`);
+      }
+    } else {
+      println(`You can't take that.`);
+    }
+  } else {
+    itemIndex = disk.inventory.findIndex(findItem);
+    if (typeof itemIndex === 'number' && itemIndex > -1) {
+      println(`You already have that.`);
+    } else {
+      println(`You don't see any such thing.`);
+    }
+  }
+};
+
+// use the item with the given name
+let useItem = (itemName) => {
+  const room = getRoom(disk.roomId);
+  const findItem = item => item.name === itemName || item.name.includes(itemName);
+  const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
+
+  if (item) {
+    if (item.use) {
+      // use item and give it a reference to the game
+      if (typeof item.use === 'string') {
+        const use = eval(item.use);
+        use({disk, println, getRoom, enterRoom, item});
+      } else if (typeof item.use === 'function') {
+        item.use({disk, println, getRoom, enterRoom, item});
+      }
+    } else {
+      println(`That item doesn't have a use.`);
+    }
+  } else {
+    println(`You don't have that.`);
+  }
+};
+
+// list items in room
+let items = () => {
+  const room = getRoom(disk.roomId);
+  const items = (room.items || []);
+  if (!items.length) {
+    println(`There's nothing here.`);
+    return;
+  }
+  println(`You see the following:`);
+  items
+    .forEach(item => println(`* ${getName(item.name)}`));
+}
+
+// list characters in room
+let chars = () => {
+  const room = getRoom(disk.roomId);
+  const chars = getCharactersInRoom(room.id);
+  if (!chars.length) {
+    println(`There's no one here.`);
+    return;
+  }
+  println(`You see the following:`);
+  chars
+    .forEach(char => println(`* ${getName(char.name)}`));
+};
+
+// display help menu
+let help = () => {
+  const instructions = `
+    The following commands are available:
+    LOOK :: repeat room description
+    LOOK AT [OBJECT NAME] e.g. 'look at key'
+    TAKE [OBJECT NAME] e.g. 'take book'
+    GO [DIRECTION] e.g. 'go north'
+    USE [OBJECT NAME] e.g. 'use door'
+    TALK TO [CHARACTER NAME] e.g. 'talk to mary'
+    TALK ABOUT [SUBJECT] e.g. 'talk about horses'
+    CHARS :: list characters in the room
+    INV :: list inventory items
+    ITEMS :: list items in the room
+    SAVE :: save the current game
+    LOAD :: load the last saved game
+    HELP :: this help menu
+  `;
+  println(instructions);
+};
+
+// handle say command with no args
+let say = () => println([`Say what?`, `You don't say.`]);
+
+// say the passed string
+let sayString = (str) => println(`You say ${str}.`);
+
+// speak to someone or about some topic
+let talkToOrAboutX = (preposition, x) => {
+  const room = getRoom(disk.roomId);
+
+  if (preposition !== 'to' && preposition !== 'about') {
+    println(`You can talk TO someone or ABOUT some topic.`);
+    return;
+  }
+
+  const character =
+    preposition === 'to' && findCharacter(x, getCharactersInRoom(room.id))
+      ? findCharacter(x, getCharactersInRoom(room.id))
+      : disk.conversant;
+  let topics;
+
+  // give the player a list of topics to choose from for the character
+  // (if this is a branching conversation, list possible responses)
+  const listTopics = (character) => {
+    disk.conversation = topics;
+
+    if (topics.length) {
+      println(`What would you like to discuss?`);
+      topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
+      println(`NOTHING`);
+    } else if (Object.keys(topics).length) {
+      println(`Select a response:`);
+      Object.keys(topics).forEach(topic => println(topics[topic].response));
+    } else {
+      endConversation();
+    }
+  };
+
+  if (preposition === 'to') {
+    if (!findCharacter(x)) {
+      println(`There is no one here by that name.`);
+      return;
+    }
+
+    if (!findCharacter(getName(x), getCharactersInRoom(room.id))) {
+      println(`There is no one here by that name.`);
+      return;
+    }
+
+    if (!character.topics) {
+      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
+      return;
+    }
+
+    if (typeof(character.topics) === 'string') {
+      println(character.topics);
+      return;
+    }
+
+    if (typeof(character.onTalk) === 'function') {
+      character.onTalk({disk, println, getRoom, enterRoom, room, character});
+    }
+
+    topics = typeof character.topics === 'function'
+      ? character.topics({println, room})
+      : character.topics;
+
+    if (!topics.length && !Object.keys(topics).length) {
+      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
+      return;
+    }
+
+    disk.conversant = character;
+    listTopics(topics);
+  } else if (preposition === 'about'){
+    if (!disk.conversant) {
+      println(`You need to be in a conversation to talk about something.`);
+      return;
+    }
+    const character = eval(disk.conversant);
+    if (getCharactersInRoom(room.id).includes(disk.conversant)) {
+      const response = x.toLowerCase();
+      if (response === 'nothing') {
+        endConversation();
+      } else if (disk.conversation && disk.conversation[response]) {
+        disk.conversation[response].onSelected();
+      } else {
+        const topic = disk.conversation.length
+          && disk.conversation.find(t => getKeywordFromTopic(t) === response);
+        if (topic) {
+          if (topic.line) {
+            println(topic.line);
+          }
+          if (topic.cb) {
+            topic.cb({disk, println, getRoom, enterRoom, room, character});
+          }
+        } else {
+          println(`You talk about ${x}.`);
+        }
+      }
+
+      // continue the conversation.
+      if (disk.conversation) {
+        topics = typeof character.topics === 'function'
+          ? character.topics({println, room})
+          : character.topics;
+        listTopics(character);
+      }
+    } else {
+      println(`That person is no longer available for conversation.`);
+      disk.conversant = undefined;
+      disk.conversation = undefined;
+    }
+  }
 };
 
 // retrieve user input (remove whitespace at beginning or end)
@@ -122,395 +476,54 @@ let applyInput = () => {
   const strategy = {
     1() {
       const cmds = {
-        inv() {
-          if (!disk.inventory.length) {
-            println(`You don't have any items in your inventory.`);
-            return;
-          }
-          println(`You have the following items in your inventory:`);
-          disk.inventory.forEach(item => {
-            println(`* ${getName(item.name)}`);
-          });
-        },
-        look() {
-          println(room.desc,false,false,true);
-        },
-        go() {
-          const exits = room.exits;
-          if (!exits) {
-            println(`There's nowhere to go.`);
-            return;
-          }
-          println(`Where would you like to go? Available directions are:`);
-          exits.forEach((exit) => {
-            const rm = getRoom(exit.id);
-
-            if (!rm) {
-              return;
-            }
-
-            const dir = getName(exit.dir).toUpperCase();
-
-            println(
-              rm.visits > 0
-                ? `${dir} - ${rm.name}`
-                : dir
-            );
-          });
-        },
-        // shortcuts for cardinal directions
-        n() {
-          cmd = 'go';
-          args[1] = 'north';
-          strategy['2']();
-        },
-        s() {
-          cmd = 'go';
-          args[1] = 'south';
-          strategy['2']();
-        },
-        e() {
-          cmd = 'go';
-          args[1] = 'east';
-          strategy['2']();
-        },
-        w() {
-          cmd = 'go';
-          args[1] = 'west';
-          strategy['2']();
-        },
-        ne() {
-          cmd = 'go';
-          args[1] = 'northeast';
-          strategy['2']();
-        },
-        se() {
-          cmd = 'go';
-          args[1] = 'southeast';
-          strategy['2']();
-        },
-        sw() {
-          cmd = 'go';
-          args[1] = 'southwest';
-          strategy['2']();
-        },
-        nw() {
-          cmd = 'go';
-          args[1] = 'northwest';
-          strategy['2']();
-        },
-        talk() {
-          const chars = getCharactersInRoom(room.id);
-          // assume players wants to talk to the only character in the room
-          if (chars.length === 1) {
-            args[1] = 'to';
-            args[2] = getName(chars[0].name);
-            strategy['3']();
-            return;
-          }
-          println(`You can talk TO someone or ABOUT some topic.`);
-
-          // list characters in the room
-          cmd = 'chars';
-          strategy['1']();
-        },
-        take() {
-          const items = (room.items || []).filter(item => item.isTakeable);
-          if (!items.length) {
-            println(`There's nothing to take.`);
-            return;
-          }
-          println(`What would you like to take? Available items are:`);
-          items
-            .forEach(item => println(getName(item.name)));
-        },
-        items() {
-          const items = (room.items || []);
-          if (!items.length) {
-            println(`There's nothing here.`);
-            return;
-          }
-          println(`You see the following:`);
-          items
-            .forEach(item => println(`* ${getName(item.name)}`));
-        },
-        chars() {
-          const chars = getCharactersInRoom(room.id);
-          if (!chars.length) {
-            println(`There's no one here.`);
-            return;
-          }
-          println(`You see the following:`);
-          chars
-            .forEach(char => println(`* ${getName(char.name)}`));
-        },
-        help() {
-          const instructions = `
-            The following commands are available:
-            LOOK :: repeat room description
-            LOOK AT [OBJECT NAME] e.g. 'look at key'
-            TAKE [OBJECT NAME] e.g. 'take book'
-            GO [DIRECTION] e.g. 'go north'
-            USE [OBJECT NAME] e.g. 'use door'
-            TALK TO [CHARACTER NAME] e.g. 'talk to mary'
-            TALK ABOUT [SUBJECT] e.g. 'talk about horses'
-            CHARS :: list characters in the room
-            INV :: list inventory items
-            ITEMS :: list items in the room
-            SAVE :: save the current game
-            LOAD :: load the last saved game
-            HELP :: this help menu
-          `;
-          println(instructions);
-        },
-        say() {
-          println([`Say what.`, `You don't say.`])
-        },
-        play() {
-          println(`You're already playing a game.`);
-        },
+        inv,
+        look,
+        go,
+        n,
+        s,
+        e,
+        w,
+        ne,
+        se,
+        sw,
+        nw,
+        talk,
+        take,
+        items,
+        chars,
+        help,
+        say,
         save,
         load,
       };
 
       // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
       if (room.exits && room.exits.find(exit => exit.dir === cmd)) {
-        args[1] = cmd;
-        cmd = 'go';
-        strategy[2]();
+        goDir(cmd);
       } else {
         exec(cmds[cmd]);
       }
     },
     2() {
       const cmds = {
-        look() {
-          println(`You look ${args[1]}.`);
-        },
-        go() {
-          const exits = room.exits;
-          if (!exits) {
-            println(`There's nowhere to go.`);
-            return;
-          }
-          const nextRoom = exits.find(exit =>
-            typeof exit.dir === 'object'
-              ? exit.dir.includes(args[1])
-              : exit.dir === args[1]
-          );
-
-          if (!nextRoom) {
-            println(`There is no exit in that direction.`);
-          } else if (nextRoom.block) {
-            println(nextRoom.block);
-          } else {
-            enterRoom(nextRoom.id);
-          }
-        },
-        take() {
-          const findItem = item => item.name === args[1] || item.name.includes(args[1]);
-          let itemIndex = room.items && room.items.findIndex(findItem);
-          if (typeof itemIndex === 'number' && itemIndex > -1) {
-            const item = room.items[itemIndex];
-            if (item.isTakeable) {
-              disk.inventory.push(item);
-              room.items.splice(itemIndex, 1);
-
-              if (typeof item.onTake === 'function') {
-                item.onTake({disk, println, room, getRoom, enterRoom, item});
-              } else {
-                println(`You took the ${getName(item.name)}.`);
-              }
-            } else {
-              println(`You can't take that.`);
-            }
-          } else {
-            itemIndex = disk.inventory.findIndex(findItem);
-            if (typeof itemIndex === 'number' && itemIndex > -1) {
-              println(`You already have that.`);
-            } else {
-              println(`You don't see any such thing.`);
-            }
-          }
-        },
-        use() {
-          const findItem = item => item.name === args[1] || item.name.includes(args[1]);
-          const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
-
-          if (item) {
-            if (item.use) {
-              // use item and give it a reference to the game
-              if (typeof item.use === 'string') {
-                const use = eval(item.use);
-                use({disk, println, getRoom, enterRoom, item});
-              } else if (typeof item.use === 'function') {
-                item.use({disk, println, getRoom, enterRoom, item});
-              }
-            } else {
-              println(`That item doesn't have a use.`);
-            }
-          } else {
-            println(`You don't have that.`);
-          }
-        },
-        say() {
-          println(`You say ${args[1]}.`);
-        },
-        play() {
-          println(`You're already playing a game.`);
-        },
-        save() {
-          // save the game with the passed name
-          save(args[1]);
-        },
-        load() {
-          // load the game with the passed name
-          load(args[1]);
-        },
+        look: () => lookThusly(args[1]),
+        go: () => goDir(args[1]),
+        take: () => takeItem(args[1]),
+        use: () => useItem(args[1]),
+        say: () => sayString(args[1]),
+        save: () => save(args[1]),
+        load: () => load(args[1]),
       };
       exec(cmds[cmd]);
     },
     3() {
       const cmds = {
-        look() {
-          const findItem = item => item.name === args[2] || item.name.includes(args[2]);
-          const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
-          if (item) {
-            // Look at an item.
-            if (item.desc) {
-              println(item.desc);
-            } else {
-              println(`You don\'t notice anything remarkable about it.`);
-            }
-
-            if (typeof(item.look) === 'function') {
-              item.look({disk, println, getRoom, enterRoom, item});
-            }
-          } else {
-            const character = findCharacter(args[2], getCharactersInRoom(room.id));
-            if (character) {
-              // Look at a character.
-              if (character.desc) {
-                println(character.desc);
-              } else {
-                println(`You don't notice anything remarkable about them.`);
-              }
-            } else {
-              println(`You don't see any such thing.`);
-            }
-          }
-        },
+        look: () => lookAt(args[2]),
         say() {
-          const str = args.splice(1).reduce((cur, acc) => cur + ' ' + acc, `You say `) + '.';
-          println(str);
+          const str = args.splice(1).reduce((cur, acc) => cur + ' ' + acc, '');
+          sayString(str);
         },
-        talk() {
-          let preposition = args[1];
-          if (preposition !== 'to' && preposition !== 'about') {
-            println(`You can talk TO someone or ABOUT some topic.`);
-            return;
-          }
-
-          const character =
-            preposition === 'to' && findCharacter(args[2], getCharactersInRoom(room.id))
-              ? findCharacter(args[2], getCharactersInRoom(room.id))
-              : disk.conversant;
-          let topics;
-
-          // give the player a list of topics to choose from for the character
-          // (if this is a branching conversation, list possible responses)
-          const listTopics = (character) => {
-            disk.conversation = topics;
-
-            if (topics.length) {
-              println(`What would you like to discuss?`);
-              topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
-              println(`NOTHING`);
-            } else if (Object.keys(topics).length) {
-              println(`Select a response:`);
-              Object.keys(topics).forEach(topic => println(topics[topic].response));
-            } else {
-              endConversation();
-            }
-          };
-
-          if (preposition === 'to') {
-            if (!findCharacter(args[2])) {
-              println(`There is no one here by that name.`);
-              return;
-            }
-
-            if (!findCharacter(getName(args[2]), getCharactersInRoom(room.id))) {
-              println(`There is no one here by that name.`);
-              return;
-            }
-
-            if (!character.topics) {
-              println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
-              return;
-            }
-
-            if (typeof(character.topics) === 'string') {
-              println(character.topics);
-              return;
-            }
-
-            if (typeof(character.onTalk) === 'function') {
-              character.onTalk({disk, println, getRoom, enterRoom, room, character});
-            }
-
-            topics = typeof character.topics === 'function'
-              ? character.topics({println, room})
-              : character.topics;
-
-            if (!topics.length && !Object.keys(topics).length) {
-              println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
-              return;
-            }
-
-            disk.conversant = character;
-            listTopics(topics);
-          } else if (preposition === 'about'){
-            if (!disk.conversant) {
-              println(`You need to be in a conversation to talk about something.`);
-              return;
-            }
-            const character = eval(disk.conversant);
-            if (getCharactersInRoom(room.id).includes(disk.conversant)) {
-              const response = args[2].toLowerCase();
-              if (response === 'nothing') {
-                endConversation();
-              } else if (disk.conversation && disk.conversation[response]) {
-                disk.conversation[response].onSelected();
-              } else {
-                const topic = disk.conversation.length
-                  && disk.conversation.find(t => getKeywordFromTopic(t) === response);
-                if (topic) {
-                  if (topic.line) {
-                    println(topic.line);
-                  }
-                  if (topic.cb) {
-                    topic.cb({disk, println, getRoom, enterRoom, room, character});
-                  }
-                } else {
-                  println(`You talk about ${args[2]}.`);
-                }
-              }
-
-              // continue the conversation.
-              if (disk.conversation) {
-                topics = typeof character.topics === 'function'
-                  ? character.topics({println, room})
-                  : character.topics;
-                listTopics(character);
-              }
-            } else {
-              println(`That person is no longer available for conversation.`);
-              disk.conversant = undefined;
-              disk.conversation = undefined;
-            }
-          }
-        }
+        talk: () => talkToOrAboutX(args[1], args[2]),
       };
 
       exec(cmds[cmd]);
