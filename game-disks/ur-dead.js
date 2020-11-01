@@ -78,14 +78,14 @@ const urDead = {
       id: 'beach',
       desc: `There's a sign that reads DEATH'S A BEACH. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
-To the NORTH you see a yaught in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
+To the NORTH you see a yacht in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
 
 To the SOUTH is the gate to the half-court.
 
 There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
         {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
-        {name: 'yaught', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
+        {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
       ],
       exits: [{dir: 'south', id: 'court'}],
     }
