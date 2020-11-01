@@ -104,13 +104,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       roomId: 'beach',
       topics: [
         {
-          keyword: 'here',
           option: `How did I get HERE?`,
           line: `"You're dead," he says in a scratchy voice, "You must've gathered that much."`,
           removeOnRead: true,
         },
         {
-          keyword: 'die',
           option: `How did I DIE?`,
           prereqs: ['here'],
           removeOnRead: true,
@@ -120,28 +118,24 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             You don't know how you can tell he is smiling, but you CAN tell.`,
         },
         {
-          keyword: 'skeleton',
           option: `Will I become a SKELETON, too?`,
           prereqs: ['here'],
           removeOnRead: true,
           line: `"You already are one, as far as I can see!" he chuckles. "Down here, we can only see our own bodies. We all look like skeletons to one another. It's kind of nice, in a way. We don't have many beauty contests. Or anyway, our pageants don't hinge on natural good looks."`,
         },
         {
-          keyword: 'back',
           option: `I don't want to die! How can I go BACK?`,
           prereqs: ['die'],
           removeOnRead: true,
           line: `He looks grim. "Now, I wouldn't get your hopes up on that matter. Almost nobody pulls it off. But it is my duty to tell you anyhow."`,
         },
         {
-          keyword: 'almost',
           option: `ALMOST no one?`,
           prereqs: ['back'],
           removeOnRead: true,
           line: `"Well, yeah, there was Liam. Liam Hemsworth."`,
         },
         {
-          keyword: 'how',
           option: `HOW then?`,
           prereqs: ['back'],
           removeOnRead: true,
@@ -160,7 +154,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
         },
         {
-          keyword: 'home',
           option: `HOME? But where is home?`,
           prereqs: ['how'],
           removeOnRead: true,
@@ -188,7 +181,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           },
         },
         {
-          keyword: 'what',
           option: `WHAT was I supposed to be doing again?`,
           prereqs: ['home'],
           line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
@@ -211,11 +203,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       room.items.push(ball);
       const itemIndex = disk.inventory.findIndex(i => i === ball);
       disk.inventory.splice(itemIndex, 1);
-    },
-    removeTopic(characterName, keyword) {
-      const char = findCharacter(characterName);
-      const index = char.topics.findIndex(t => t.keyword === keyword);
-      char.topics.splice(index, 1);
     },
   },
 };
