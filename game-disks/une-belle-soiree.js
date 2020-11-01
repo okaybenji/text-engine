@@ -33,29 +33,12 @@ println = (line, isImg = false, isName = false, isDesc = false) => {
 };
 
 // Override enterRoom to show list of characters in room
+const originalEnterRoom = enterRoom;
 enterRoom = (id) => {
+  originalEnterRoom(id);
   const room = getRoom(id);
-
-  println(room.img, true);
-
-  println(`${getName(room.name)}`,false,true);
-
-  if (room.visits === 0) {
-    println(room.desc,false,false,true);
-  }
   const characters = getCharactersInRoom(room.id);
   characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
-
-  room.visits++;
-
-  disk.roomId = id;
-
-  if (typeof room.onEnter === 'function') {
-    room.onEnter({disk, println, getRoom, enterRoom});
-  }
-
-  // reset any active conversation
-  delete disk.conversant;
 };
 
 // Mark the context (item) as examined.
