@@ -249,7 +249,7 @@ let talkToOrAboutX = (preposition, x) => {
       }
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
-      Object.keys(topics).forEach(topic => println(topics[topic].response));
+      Object.keys(topics).forEach(topic => println(topics[topic].option));
     } else {
       endConversation();
     }

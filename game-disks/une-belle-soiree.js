@@ -195,7 +195,7 @@ const branchingConversationTopics = (characterName) => {
       // Return the reponses as topics.
       topics = step.answers.reduce((acc, cur) => {
         acc[cur.next] = {
-          response: cur.response,
+          option: cur.option,
           onSelected: function() {
             println(cur.line);
             character.conversationStep = findStepWithName(cur.next);
@@ -513,7 +513,7 @@ const uneBelleSoiree = {
     },
     {
       name: 'Chapel',
-      id: 'chapel', 
+      id: 'chapel',
       desc:[`The southern side of the chapel has large stained glass windows, the moonlight barely illuminates the chapel, the front of the chapel is illuminated by a large candle stand, covered in votive candles. From their light you can see an almost-life-size wooden Christ gazing at the candles in perpetual agony.`],
       items:[
         {name:['candles'], desc:'They’re candles'},
@@ -677,15 +677,15 @@ const uneBelleSoiree = {
       },
       conversation: [
         {question: `“I'm sorry have we met?” Richard asks, before adding, “Ah, you must be from the Cassat family, yes?  Please send your father my warmest regards. I trust your mother and father are in good health?”`, answers: [
-          {response: `Say YES`, next: 'yes'},
-          {response: `ASK about Richard’s family`, next: 'ask'},
+          {option: `Say YES`, next: 'yes'},
+          {option: `ASK about Richard’s family`, next: 'ask'},
         ]},
         {name: 'yes', line: `“They are both of excellent health, thank you,” you reply.`, next: 'end'},
         {name: 'ask', question: `“They are,” you reply, “And yours as well I trust?”
         “My mother yes,” Richard says, “But unfortunately my father Edoard is quite sick.”`,
         answers: [
-          {response: `ASK about father’s illness`, next: 'ask'},
-          {response: `END the conversation`, next: 'end'},
+          {option: `ASK about father’s illness`, next: 'ask'},
+          {option: `END the conversation`, next: 'end'},
         ]},
         {name: 'ask', line: `He seems uncomfortable discussing the topic. “Malaria, they say...”`},
         {name: 'end'},
@@ -716,24 +716,24 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
   Blessed art thou amongst women,
   and blessed is the fruit of thy womb, Jesus.”`,
           answers: [
-            {response: `INTERRUPT Grandfather Dauphin`, next: `interrupt`},
-            {response: `LEAVE him be`, next: 'leave'},
+            {option: `INTERRUPT Grandfather Dauphin`, next: `interrupt`},
+            {option: `LEAVE him be`, next: 'leave'},
           ]
         },
         {
           name: 'interrupt',
           question: `“The party’s in the salon,” he scowls. “You’re not meant to be here.”`,
           answers: [
-            {response: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I wished to see the chapel; I had no intention of trespassing on your communion, I confess I admired the fervor of your penitance--”`},
-            {response: `Just LEAVE`, next: 'leave'},
+            {option: `PRESS him`, next: 'press', line: `“Terribly sorry, Sir,” you reply. “I wished to see the chapel; I had no intention of trespassing on your communion, I confess I admired the fervor of your penitance--”`},
+            {option: `Just LEAVE`, next: 'leave'},
           ],
         },
         {
           name: 'press',
           question: `“Penitance?” he replies, anger in his voice. You feel a little embarrased at having landed unconsciously on that word. “Who exactly are you? And who invited you into my home?”`,
           answers: [
-             {response: `IDENTIFY yourself`, next: 'identify', line: `“I am Emille Cassat,” you tell him with pride, “daughter of Frederic Cassat--”`},
-             {response: `Just LEAVE`, next: 'leave'},
+             {option: `IDENTIFY yourself`, next: 'identify', line: `“I am Emille Cassat,” you tell him with pride, “daughter of Frederic Cassat--”`},
+             {option: `Just LEAVE`, next: 'leave'},
            ]
         },
         function identify() {
