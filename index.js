@@ -732,7 +732,7 @@ let getKeywordFromTopic = (topic) => {
 
   // find the keyword in the option
   // (the word in all caps)
-  const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  const removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
   const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
   const keyword = removeExtraSpaces(removePunctuation(topic.option))
     // separate words by spaces
