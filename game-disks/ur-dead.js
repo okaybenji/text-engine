@@ -136,7 +136,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
                   }, {
                     keyword: 'how',
                     option: 'HOW then?',
-                    line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your name. And two, as you asked before, HOW you died."
+                    line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your NAME. And two, as you asked before, HOW you died."
 
                     It's at this moment that you realize you don't know your own name.
 
@@ -144,11 +144,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
                     He pauses to whistle a bar from COME SAIL AWAY.
 
-                    "In other words, if I don't know so much as my own name, how could I hope to tell you yours. You see?"
+                    "In other words, if I don't know so much as MY own name, how could I hope to tell you YOURS. You see?"
 
-                    This talking, bearded skeleton was starting to make some sense.
+                    This talking, bearded skeleton is starting to make some sense.
 
-                    "Anyway, I wouldn't worry too much about it. If you do happen across your name and cause of death, come back to me and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."
+                    "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."
                     `,
                     cb: () => {
                       disk.methods.removeTopic('beard', 'how');
