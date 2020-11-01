@@ -54,14 +54,14 @@ const urDead = {
             skeletons.topics = [
               {
                 option: 'Use the leverage to get INFO',
-                cb: () => {
+                onSelected: () => {
                   println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
                   disk.methods.resetCourt();
                 },
               },
               {
                 option: 'GIVE the ball back',
-                cb: () => {
+                onSelected: () => {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
                   disk.methods.resetCourt();
                 },
@@ -164,7 +164,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           "Anyhow, I've said my spiel. I'll be here if you need me."
 
           You thank him and end the conversation.`,
-          cb: () => {
+          onSelected: () => {
             endConversation();
 
             const skeleton = findCharacter('beard');
@@ -184,7 +184,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `WHAT was I supposed to be doing again?`,
           prereqs: ['home'],
           line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
-          cb: endConversation,
+          onSelected: endConversation,
         },
       ],
       onTalk: () => println(`"I imagine," he begins, "you have some questions."`),

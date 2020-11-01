@@ -313,8 +313,8 @@ let talkToOrAboutX = (preposition, x) => {
           if (topic.line) {
             println(topic.line);
           }
-          if (topic.cb) {
-            topic.cb({disk, println, getRoom, enterRoom, room, character});
+          if (topic.onSelected) {
+            topic.onSelected({disk, println, getRoom, enterRoom, room, character});
           }
           // add the topic to the log
           character.chatLog.push(getKeywordFromTopic(topic));
