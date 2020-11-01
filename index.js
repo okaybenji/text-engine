@@ -225,13 +225,28 @@ let talkToOrAboutX = (preposition, x) => {
 
   // give the player a list of topics to choose from for the character
   // (if this is a branching conversation, list possible responses)
-  const listTopics = (character) => {
+  const listTopics = () => {
+    // capture reference to the current conversation
     disk.conversation = topics;
 
     if (topics.length) {
-      println(`What would you like to discuss?`);
-      topics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
-      println(`* NOTHING`);
+      // available topics are those which:
+      // * have no prerequistites or have had their prerequisites met
+      // * are not removed after read, or haven't been read yet
+      const availableTopics = topics.filter((topic) => {
+        const prereqsOk = !topic.prereqs || topic.prereqs.every(keyword => character.chatLog.includes(keyword));
+        const readOk = !topic.removeOnRead || !character.chatLog.includes(getKeywordFromTopic(topic));
+
+        return prereqsOk && readOk;
+      });
+
+      if (availableTopics.length) {
+        println(`What would you like to discuss?`);
+        availableTopics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
+        println(`* NOTHING`);
+      } else {
+        endConversation();
+      }
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
       Object.keys(topics).forEach(topic => println(topics[topic].response));
@@ -274,9 +289,11 @@ let talkToOrAboutX = (preposition, x) => {
       return;
     }
 
+    // initialize the chat log if there isn't one yet
+    character.chatLog = character.chatLog || [];
     disk.conversant = character;
     listTopics(topics);
-  } else if (preposition === 'about'){
+  } else if (preposition === 'about') {
     if (!disk.conversant) {
       println(`You need to be in a conversation to talk about something.`);
       return;
@@ -299,6 +316,8 @@ let talkToOrAboutX = (preposition, x) => {
           if (topic.cb) {
             topic.cb({disk, println, getRoom, enterRoom, room, character});
           }
+          // add the topic to the log
+          character.chatLog.push(getKeywordFromTopic(topic));
         } else {
           println(`You talk about ${x}.`);
         }
@@ -713,13 +732,14 @@ let getKeywordFromTopic = (topic) => {
 
   // find the keyword in the option
   // (the word in all caps)
-  const removePunctuation = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  const removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
   const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
   const keyword = removeExtraSpaces(removePunctuation(topic.option))
     // separate words by spaces
     .split(' ')
     // find the word that is in uppercase
-    .find(w => w.toUpperCase() === w)
+    // (must be at least 2 characters long)
+    .find(w => w.length > 1 && w.toUpperCase() === w)
     .toLowerCase();
 
   return keyword;
