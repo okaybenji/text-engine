@@ -195,17 +195,16 @@ let sw = () => goDir('southwest');
 // if there is one character in the room, engage that character in conversation
 // otherwise, list characters in the room
 let talk = () => {
-  const chars = getCharactersInRoom(disk.roomId);
+  const characters = getCharactersInRoom(disk.roomId);
   // assume players wants to talk to the only character in the room
-  if (chars.length === 1) {
-    talkToOrAboutX('to', getName(chars[0].name));
+  if (characters.length === 1) {
+    talkToOrAboutX('to', getName(characters[0].name));
     return;
   }
   println(`You can talk TO someone or ABOUT some topic.`);
 
   // list characters in the room
-  cmd = 'chars';
-  strategy['1']();
+  chars();
 };
 
 // speak to someone or about some topic
