@@ -208,6 +208,116 @@ let talk = () => {
   strategy['1']();
 };
 
+// speak to someone or about some topic
+let talkToOrAboutX = (preposition, x) => {
+  const room = getRoom(disk.roomId);
+
+  if (preposition !== 'to' && preposition !== 'about') {
+    println(`You can talk TO someone or ABOUT some topic.`);
+    return;
+  }
+
+  const character =
+    preposition === 'to' && findCharacter(x, getCharactersInRoom(room.id))
+      ? findCharacter(x, getCharactersInRoom(room.id))
+      : disk.conversant;
+  let topics;
+
+  // give the player a list of topics to choose from for the character
+  // (if this is a branching conversation, list possible responses)
+  const listTopics = (character) => {
+    disk.conversation = topics;
+
+    if (topics.length) {
+      println(`What would you like to discuss?`);
+      topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
+      println(`NOTHING`);
+    } else if (Object.keys(topics).length) {
+      println(`Select a response:`);
+      Object.keys(topics).forEach(topic => println(topics[topic].response));
+    } else {
+      endConversation();
+    }
+  };
+
+  if (preposition === 'to') {
+    if (!findCharacter(x)) {
+      println(`There is no one here by that name.`);
+      return;
+    }
+
+    if (!findCharacter(getName(x), getCharactersInRoom(room.id))) {
+      println(`There is no one here by that name.`);
+      return;
+    }
+
+    if (!character.topics) {
+      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
+      return;
+    }
+
+    if (typeof(character.topics) === 'string') {
+      println(character.topics);
+      return;
+    }
+
+    if (typeof(character.onTalk) === 'function') {
+      character.onTalk({disk, println, getRoom, enterRoom, room, character});
+    }
+
+    topics = typeof character.topics === 'function'
+      ? character.topics({println, room})
+      : character.topics;
+
+    if (!topics.length && !Object.keys(topics).length) {
+      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
+      return;
+    }
+
+    disk.conversant = character;
+    listTopics(topics);
+  } else if (preposition === 'about'){
+    if (!disk.conversant) {
+      println(`You need to be in a conversation to talk about something.`);
+      return;
+    }
+    const character = eval(disk.conversant);
+    if (getCharactersInRoom(room.id).includes(disk.conversant)) {
+      const response = x.toLowerCase();
+      if (response === 'nothing') {
+        endConversation();
+      } else if (disk.conversation && disk.conversation[response]) {
+        disk.conversation[response].onSelected();
+      } else {
+        const topic = disk.conversation.length
+          && disk.conversation.find(t => getKeywordFromTopic(t) === response);
+        if (topic) {
+          if (topic.line) {
+            println(topic.line);
+          }
+          if (topic.cb) {
+            topic.cb({disk, println, getRoom, enterRoom, room, character});
+          }
+        } else {
+          println(`You talk about ${x}.`);
+        }
+      }
+
+      // continue the conversation.
+      if (disk.conversation) {
+        topics = typeof character.topics === 'function'
+          ? character.topics({println, room})
+          : character.topics;
+        listTopics(character);
+      }
+    } else {
+      println(`That person is no longer available for conversation.`);
+      disk.conversant = undefined;
+      disk.conversation = undefined;
+    }
+  }
+};
+
 // list takeable items in room
 let take = () => {
   const room = getRoom(disk.roomId);
@@ -325,116 +435,6 @@ let say = () => println([`Say what?`, `You don't say.`]);
 
 // say the passed string
 let sayString = (str) => println(`You say ${str}.`);
-
-// speak to someone or about some topic
-let talkToOrAboutX = (preposition, x) => {
-  const room = getRoom(disk.roomId);
-
-  if (preposition !== 'to' && preposition !== 'about') {
-    println(`You can talk TO someone or ABOUT some topic.`);
-    return;
-  }
-
-  const character =
-    preposition === 'to' && findCharacter(x, getCharactersInRoom(room.id))
-      ? findCharacter(x, getCharactersInRoom(room.id))
-      : disk.conversant;
-  let topics;
-
-  // give the player a list of topics to choose from for the character
-  // (if this is a branching conversation, list possible responses)
-  const listTopics = (character) => {
-    disk.conversation = topics;
-
-    if (topics.length) {
-      println(`What would you like to discuss?`);
-      topics.forEach(topic => println(topic.option ? topic.option : topic.keyword.toUpperCase()));
-      println(`NOTHING`);
-    } else if (Object.keys(topics).length) {
-      println(`Select a response:`);
-      Object.keys(topics).forEach(topic => println(topics[topic].response));
-    } else {
-      endConversation();
-    }
-  };
-
-  if (preposition === 'to') {
-    if (!findCharacter(x)) {
-      println(`There is no one here by that name.`);
-      return;
-    }
-
-    if (!findCharacter(getName(x), getCharactersInRoom(room.id))) {
-      println(`There is no one here by that name.`);
-      return;
-    }
-
-    if (!character.topics) {
-      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
-      return;
-    }
-
-    if (typeof(character.topics) === 'string') {
-      println(character.topics);
-      return;
-    }
-
-    if (typeof(character.onTalk) === 'function') {
-      character.onTalk({disk, println, getRoom, enterRoom, room, character});
-    }
-
-    topics = typeof character.topics === 'function'
-      ? character.topics({println, room})
-      : character.topics;
-
-    if (!topics.length && !Object.keys(topics).length) {
-      println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
-      return;
-    }
-
-    disk.conversant = character;
-    listTopics(topics);
-  } else if (preposition === 'about'){
-    if (!disk.conversant) {
-      println(`You need to be in a conversation to talk about something.`);
-      return;
-    }
-    const character = eval(disk.conversant);
-    if (getCharactersInRoom(room.id).includes(disk.conversant)) {
-      const response = x.toLowerCase();
-      if (response === 'nothing') {
-        endConversation();
-      } else if (disk.conversation && disk.conversation[response]) {
-        disk.conversation[response].onSelected();
-      } else {
-        const topic = disk.conversation.length
-          && disk.conversation.find(t => getKeywordFromTopic(t) === response);
-        if (topic) {
-          if (topic.line) {
-            println(topic.line);
-          }
-          if (topic.cb) {
-            topic.cb({disk, println, getRoom, enterRoom, room, character});
-          }
-        } else {
-          println(`You talk about ${x}.`);
-        }
-      }
-
-      // continue the conversation.
-      if (disk.conversation) {
-        topics = typeof character.topics === 'function'
-          ? character.topics({println, room})
-          : character.topics;
-        listTopics(character);
-      }
-    } else {
-      println(`That person is no longer available for conversation.`);
-      disk.conversant = undefined;
-      disk.conversation = undefined;
-    }
-  }
-};
 
 // retrieve user input (remove whitespace at beginning or end)
 // nothing -> string
