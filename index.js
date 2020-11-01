@@ -286,6 +286,7 @@ let talkToOrAboutX = (preposition, x) => {
       const response = x.toLowerCase();
       if (response === 'nothing') {
         endConversation();
+        println(`You end the conversation.`);
       } else if (disk.conversation && disk.conversation[response]) {
         disk.conversation[response].onSelected();
       } else {
@@ -573,7 +574,7 @@ let println = (line, isImg = false) => {
 };
 
 // predict what the user is trying to type
-let autocomplete = () => {  
+let autocomplete = () => {
   const room = getRoom(disk.roomId);
   const words = input.value.toLowerCase().trim().split(/\s+/);
   const wordsSansStub = words.slice(0, words.length - 1);
