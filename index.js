@@ -235,7 +235,7 @@ let talkToOrAboutX = (preposition, x) => {
       // * are not removed after read, or haven't been read yet
       const availableTopics = topics.filter((topic) => {
         const prereqsOk = !topic.prereqs || topic.prereqs.every(keyword => character.chatLog.includes(keyword));
-        const readOk = !topic.removeOnRead || !character.chatLog.includes(topic.keyword);
+        const readOk = !topic.removeOnRead || !character.chatLog.includes(getKeywordFromTopic(topic));
 
         return prereqsOk && readOk;
       });
