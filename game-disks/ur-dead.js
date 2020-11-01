@@ -173,6 +173,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
                             keyword: 'what',
                             option: `WHAT was I supposed to be doing again?`,
                             line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
+                            cb: () => endConversation(),
                           });
                           skeleton.onTalk = () => {};
                           skeleton.desc = `I wonder how he attaches that beard...`;
