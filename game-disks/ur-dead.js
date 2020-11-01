@@ -76,7 +76,7 @@ const urDead = {
     {
       name: 'The "Beach"',
       id: 'beach',
-      desc: `There's a sign that reads "Death's a Beach." There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
+      desc: `There's a sign that reads DEATH'S A BEACH. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
 To the NORTH you see a yaught in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
 
