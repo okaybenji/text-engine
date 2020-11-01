@@ -588,6 +588,7 @@ let autocomplete = () => {
       options = Array.isArray(disk.conversation)
         ? options.concat(disk.conversation.map(getKeywordFromTopic))
         : Object.keys(disk.conversation);
+      options.push('nothing');
     }
   } else if (words.length === 2) {
     const optionMap = {
