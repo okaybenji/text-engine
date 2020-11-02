@@ -649,7 +649,7 @@ const uneBelleSoiree = {
       name: 'Richard',
       desc: 'The youngest of the Jeannin family, handsome and good-natured; but recently bethrothed to Miss Blackwood.',
       routes: {
-        ariving: {
+        arriving: {
           path: ['grandSalon',''],
           type: 'follow',
         },
@@ -676,7 +676,7 @@ const uneBelleSoiree = {
       ],
       conversationStep: 0,
       updateLocation,
-      currentRoute: 'ariving',
+      currentRoute: 'arriving',
       roomId: 'grandSalon',
       topics: () => branchingConversationTopics('richard'),
     },
