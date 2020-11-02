@@ -750,17 +750,17 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       conversationStep: 0,
       topics: () => branchingConversationTopics('gramps'),
       updateLocation,
-    } , {
+    },
+    {
       name: ['René Dauphin', 'Rene Dauphin', 'René', 'Rene'],
-      desc: 'A middle aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Daphin family, He is the eldest male, and stands to inherit the Dauphin estate manages upon the death of Grandfather Dauphin',
+      desc: 'A middle-aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Dauphin family, the eldest male, and stands to inherit the Dauphin estate upon the death of Grandfather Dauphin.',
       routes: {
         cavorting: {
           path: ['grandSalon'],
           type: 'patrol',
-        }
+        },
       },
-      conversation: [
-      ],
+      conversation: [],
       conversationStep: 0,
       updateLocation,
       currentRoute: 'cavorting',
@@ -769,22 +769,44 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
     },
     {
       name: ['Marie Dauphin', 'Marie'],
-      desc: 'The wife of René, she was a woman who could help but appear miserable. She married at 18 and produced him two sons, both handsome, and one capable. Mother said she is from a family of dubious connection to the Bourbons, and is unlikely to approve of matrimonial arrangements beneath her imagined station.',
+      desc: 'The wife of René, she is a woman who cannot help but appear miserable. She married at eighteen and produced him two sons, both handsome, and one capable. Mother said she is from a family of dubious connection to the Bourbons, and so is unlikely to approve of matrimonial arrangements beneath her imagined station.',
       routes: {
         cavorting: {
           path: ['grandSalon'],
           type: 'patrol',
-        }
+        },
       },
-      conversation: [
-      ],
+      conversation: [],
       conversationStep: 0,
       updateLocation,
       currentRoute: 'cavorting',
       roomId: 'grandSalon',
       topics: () => branchingConversationTopics('marie'),
     },
-
+    {
+      name: ['Eloise Abbiati', 'Eloise'],
+      desc: `Grandfather Dauphin’s eldest daughter. She is two years the senior of René. You are lead to understand that when she was courting, she was an accomplished harpsichordist (a hobby she subsequently replaced with opium).`,
+    },
+    {
+      name: ['Matteo Abbiati', 'Matteo'],
+      desc: `Husband to Eloise, he hails from the Amalfi Coast of Campania. Tolerated in the Campanian Halls of Learning, he imagines himself to be a philosopher, and as the rich son of a Spanish prince, his colleagues are want to disillusion him.`,
+    },
+    {
+      name: ['Henri Dauphin', 'Henri'],
+      desc: `René’s younger brother. He is unwed -- to the relief of not only himself, but also his potential sutresses.`,
+    },
+    {
+      name: ['Olivier Dauphin', 'Olivier'],
+      desc: `Exceedingly handsome, and not only because he is young. He is a most agreeable match, though not necessarily advantageous. His elder brother, Armand, stands to inherit the fortune of the Dauphin family. Surely Mother and Father would consider any connection to the Dauphin family to be a consolation prize.`,
+    },
+    {
+      name: ['Armand Dauphin', 'Armand'],
+      desc: `Exceedingly serious man of business. He has little to recommend him in his countenance, disposition, creative talents, courtly behavior, or wit. And yet, his pocketbook...`,
+    },
+    {
+      name: ['The Vicar', 'Vicar'],
+      desc: `The obsequious vicar of the local parish who enjoys nothing so much as the condescension of the Dauphin family.`,
+    }
   ],
 };
 
