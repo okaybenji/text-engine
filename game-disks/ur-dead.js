@@ -1,3 +1,9 @@
+// override commands to include custom 'play' commands
+const play = () => println(`You're already playing a game.`);
+commands[0] = Object.assign(commands[0], {play});
+commands[1] = Object.assign(commands[1], {play});
+commands[2] = Object.assign(commands[2], {play});
+
 const urDead = {
   roomId: 'court',
   inventory: [
