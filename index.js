@@ -100,10 +100,13 @@ let inv = () => {
 let look = () => println(getRoom(disk.roomId).desc);
 
 // look in the passed way
+// string -> nothing
 let lookThusly = (str) => println(`You look ${str}.`);
 
 // look at the passed item or character
-let lookAt = (name) => {
+// array -> nothing
+let lookAt = (args) => {
+  const [_, name] = args;
   const room = getRoom(disk.roomId);
   const findItem = item => item.name === name || item.name.includes(name);
   const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
@@ -160,6 +163,7 @@ let go = () => {
 };
 
 // go the passed direction
+// string -> nothing
 let goDir = (dir) => {
   const room = getRoom(disk.roomId);
   const exits = room.exits;
@@ -208,6 +212,7 @@ let talk = () => {
 };
 
 // speak to someone or about some topic
+// string, string -> nothing
 let talkToOrAboutX = (preposition, x) => {
   const room = getRoom(disk.roomId);
 
@@ -306,8 +311,7 @@ let talkToOrAboutX = (preposition, x) => {
       } else if (disk.conversation && disk.conversation[response]) {
         disk.conversation[response].onSelected();
       } else {
-        const topic = disk.conversation.length
-          && disk.conversation.find(t => getKeywordFromTopic(t) === response);
+        const topic = disk.conversation.length && conversationIncludesTopic(disk.conversation, response);
         if (topic) {
           if (topic.line) {
             println(topic.line);
@@ -352,6 +356,7 @@ let take = () => {
 };
 
 // take the item with the given name
+// string -> nothing
 let takeItem = (itemName) => {
   const room = getRoom(disk.roomId);
   const findItem = item => item.name === itemName || item.name.includes(itemName);
@@ -381,6 +386,7 @@ let takeItem = (itemName) => {
 };
 
 // use the item with the given name
+// string -> nothing
 let useItem = (itemName) => {
   const room = getRoom(disk.roomId);
   const findItem = item => item.name === itemName || item.name.includes(itemName);
@@ -454,11 +460,62 @@ let help = () => {
 let say = () => println([`Say what?`, `You don't say.`]);
 
 // say the passed string
+// string -> nothing
 let sayString = (str) => println(`You say ${removePunctuation(str)}.`);
 
 // retrieve user input (remove whitespace at beginning or end)
 // nothing -> string
 let getInput = () => input.value.trim();
+
+// objects with methods for handling commands
+// the array should be ordered by increasing number of accepted parameters
+// e.g. index 0 means no parameters ("help"), index 1 means 1 parameter ("go north"), etc.
+// the methods should be named after the command (the first argument, e.g. "help" or "go")
+// any command accepting multiple parameters should take in a single array of parameters
+// if the user has entered more arguments than the highest number you've defined here, we'll use the last set
+let commands = [
+  // no arguments (e.g. "help", "chars", "inv")
+  {
+    inv,
+    look,
+    go,
+    n,
+    s,
+    e,
+    w,
+    ne,
+    se,
+    sw,
+    nw,
+    talk,
+    take,
+    items,
+    chars,
+    help,
+    say,
+    save,
+    load,
+  },
+  // one argument (e.g. "go north", "take book")
+  {
+    look: lookThusly,
+    go: goDir,
+    take: takeItem,
+    use: useItem,
+    say: sayString,
+    save: x => save(x),
+    load: x => load(x),
+  },
+  // two+ arguments (e.g. "look at key", "talk to mary")
+  {
+    look: lookAt,
+    say(args) {
+      const str = args.reduce((cur, acc) => cur + ' ' + acc, '');
+      sayString(str);
+    },
+    talk: args => talkToOrAboutX(args[0], args[1]),
+  },
+];
 
 // process user input & update game state (bulk of the engine)
 let applyInput = () => {
@@ -470,9 +527,9 @@ let applyInput = () => {
   const val = input.toLowerCase();
   setInput(''); // reset input field
 
-  const exec = (cmd) => {
+  const exec = (cmd, arg) => {
     if (cmd) {
-      cmd();
+      cmd(arg);
     } else if (disk.conversation) {
       println(`Type the capitalized KEYWORD to select a topic.`);
     } else {
@@ -484,78 +541,20 @@ let applyInput = () => {
     // remove articles
     .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
 
-  if (disk.conversant && args.length === 1) {
-    // if player is in a conversation, assume the argument is a topic
-    args = ['talk', 'about', args[0]];
-  }
-
-  let cmd = args[0];
+  let [command, ...arguments] = args;
   const room = getRoom(disk.roomId);
 
-  // nested strategy pattern
-  // 1st tier based on # of args in user input
-  // 2nd tier based on 1st arg (command)
-  const strategy = {
-    1() {
-      const cmds = {
-        inv,
-        look,
-        go,
-        n,
-        s,
-        e,
-        w,
-        ne,
-        se,
-        sw,
-        nw,
-        talk,
-        take,
-        items,
-        chars,
-        help,
-        say,
-        save,
-        load,
-      };
-
-      // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
-      if (room.exits && room.exits.find(exit => exit.dir === cmd)) {
-        goDir(cmd);
-      } else {
-        exec(cmds[cmd]);
-      }
-    },
-    2() {
-      const cmds = {
-        look: () => lookThusly(args[1]),
-        go: () => goDir(args[1]),
-        take: () => takeItem(args[1]),
-        use: () => useItem(args[1]),
-        say: () => sayString(args[1]),
-        save: () => save(args[1]),
-        load: () => load(args[1]),
-      };
-      exec(cmds[cmd]);
-    },
-    3() {
-      const cmds = {
-        look: () => lookAt(args[2]),
-        say() {
-          const str = args.splice(1).reduce((cur, acc) => cur + ' ' + acc, '');
-          sayString(str);
-        },
-        talk: () => talkToOrAboutX(args[1], args[2]),
-      };
-
-      exec(cmds[cmd]);
-    }
-  };
-
-  if (args.length <= 3) {
-    strategy[args.length]();
+  if (arguments.length === 1) {
+    exec(commands[1][command], arguments[0]);
+  } else if (arguments.length >= commands.length) {
+    exec(commands[commands.length - 1][command], arguments);
+  } else if (room.exits && room.exits.find(exit => exit.dir === command)) {
+    // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
+    goDir(command);
+  } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
+    talkToOrAboutX('about', command);
   } else {
-    strategy[3]();
+    exec(commands[arguments.length][command], arguments);
   }
 };
 
@@ -750,6 +749,17 @@ let getKeywordFromTopic = (topic) => {
     .toLowerCase();
 
   return keyword;
+};
+
+// determine whether the passed conversation includes a topic with the passed keyword
+// conversation, string -> boolean
+let conversationIncludesTopic = (conversation, keyword) => {
+  // NOTHING is always an option
+  if (keyword === 'nothing') {
+    return true;
+  }
+
+  return disk.conversation[keyword] || disk.conversation.find(t => getKeywordFromTopic(t) === keyword);
 };
 
 // end the current conversation
