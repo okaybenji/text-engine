@@ -318,7 +318,8 @@ let talkToOrAboutX = (preposition, x) => {
           // add the topic to the log
           character.chatLog.push(getKeywordFromTopic(topic));
         } else {
-          println(`You talk about ${x}.`);
+          println(`You talk about ${removePunctuation(x)}.`);
+          println(`Type the capitalized KEYWORD to select a topic.`);
         }
       }
 
@@ -453,7 +454,7 @@ let help = () => {
 let say = () => println([`Say what?`, `You don't say.`]);
 
 // say the passed string
-let sayString = (str) => println(`You say ${str}.`);
+let sayString = (str) => println(`You say ${removePunctuation(str)}.`);
 
 // retrieve user input (remove whitespace at beginning or end)
 // nothing -> string
@@ -472,6 +473,8 @@ let applyInput = () => {
   const exec = (cmd) => {
     if (cmd) {
       cmd();
+    } else if (disk.conversation) {
+      println(`Type the capitalized KEYWORD to select a topic.`);
     } else {
       println(`Sorry, I didn't understand your input. For a list of available commands, type HELP.`);
     }
@@ -679,6 +682,14 @@ let getName = name => typeof name === 'object' ? name[0] : name;
 // string -> room
 let getRoom = (id) => disk.rooms.find(room => room.id === id);
 
+// remove punctuation marks from a string
+// string -> string
+let removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
+
+// remove extra whitespace from a string
+// string -> string
+let removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
+
 // move the player into room with passed ID
 // string -> nothing
 let enterRoom = (id) => {
@@ -729,10 +740,7 @@ let getKeywordFromTopic = (topic) => {
     return topic.keyword;
   }
 
-  // find the keyword in the option
-  // (the word in all caps)
-  const removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
-  const removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
+  // find the keyword in the option (the word in all caps)
   const keyword = removeExtraSpaces(removePunctuation(topic.option))
     // separate words by spaces
     .split(' ')
