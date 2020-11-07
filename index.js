@@ -697,6 +697,11 @@ let removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
 let enterRoom = (id) => {
   const room = getRoom(id);
 
+  if (!room) {
+    println(`That exit doesn't seem to go anywhere.`);
+    return;
+  }
+
   println(room.img, true);
 
   println(`${getName(room.name)}`,false,true);
