@@ -559,6 +559,7 @@ let applyInput = () => {
 };
 
 // overwrite user input
+// string -> nothing
 let setInput = (str) => {
   input.value = str;
   // on the next frame, move the cursor to the end of the line
@@ -568,6 +569,7 @@ let setInput = (str) => {
 };
 
 // render output
+// string, boolean -> nothing
 let println = (line, isImg = false) => {
   // bail if string is null or undefined
   if (!line) {
@@ -653,6 +655,7 @@ let autocomplete = () => {
 };
 
 // select previously entered commands
+// string -> nothing
 let navigateHistory = (dir) => {
   if (dir === 'prev') {
     inputsPos--;
@@ -773,6 +776,7 @@ let endConversation = () => {
 };
 
 // load the passed disk and start the game
+// disk -> nothing
 let loadDisk = (uninitializedDisk) => {
   // initialize the disk
   disk = init(uninitializedDisk);
