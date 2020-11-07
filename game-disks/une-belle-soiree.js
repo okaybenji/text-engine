@@ -232,7 +232,9 @@ const uneBelleSoiree = {
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
-    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with. And strangely, in your excitement you also feel homesick and sad.`,
+    desc: `You adjust your hair. Because of the boredom of provincial French life, what once felt like a duty has become a moment of excitement -- of diversion from your mother, your aunt, your brother. Rarely, the occasional businessmen visiting your father, none of whom you are given the opportunity to speak with.
+
+    You feel a bit embarrassed to be preoccupied by such a thought, but you can see that it is a simple fact that you should be counted among the more handsome of debutantes. You think on OLIVIER DAUPHIN, a suitor with handsomeness to match. If only you could fulfill both your personal desires and filial duties with the same man...`,
     getNextDescription,
     examine,
     look: function() {
@@ -248,7 +250,9 @@ const uneBelleSoiree = {
     },
   }, {
     name: 'ring',
-    desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?`,
+    desc: `The ring was a gift from your father to your mother. You absentmindedly spin it on your finger and wonder, might you meet someone at the gathering? Someone who desires to adorn you with fine clothing and jewelry? Adornments you might lend your own daughters one day?
+
+    While ARMAND DAUPHIN may not afford the same interest as his brother, I’m certain he can afford quite a lot on nine thousand marcs per annum.`,
     getNextDescription,
     examine,
     look: function() {
@@ -283,7 +287,10 @@ const uneBelleSoiree = {
           this.desc = `In bold typeset and surrounded by Parisian filligree you read:
 
           Mlle. Cassat is requested to attend the ball at Chateau de Dauphin on Tuesday the 1st of June at 8'00 PM.
-          `;
+
+          Handwritten in the bottom-right corner is a personal note:
+
+          My sons have expressed a special interest in your presence! I know that either would be keen to dance. -Mlle. Dauphin`;
 
           this.look = function() {
             this.getNextDescription(room);
