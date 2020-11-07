@@ -170,7 +170,8 @@ const branchingConversationTopics = (characterName) => {
     if (step.line) {
       println(step.line);
       if (step.next) {
-        character.conversationStep = findStepWithName(step.next);
+        // set to the "index - 1" because we increment the conversation step later
+        character.conversationStep = findStepWithName(step.next) - 1;
       }
     } else if (step.question) {
       println(step.question);
