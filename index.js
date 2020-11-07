@@ -447,8 +447,8 @@ let help = () => {
     TALK TO [CHARACTER NAME] e.g. 'talk to mary'
     TALK ABOUT [SUBJECT] e.g. 'talk about horses'
     CHARS :: list characters in the room
-    INV :: list inventory items
     ITEMS :: list items in the room
+    INV :: list inventory items
     SAVE :: save the current game
     LOAD :: load the last saved game
     HELP :: this help menu
