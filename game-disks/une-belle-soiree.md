@@ -7,6 +7,7 @@
 * In `enterRoom`, fade out any ambient loop. If the new room has the name of an ambient loop sound defined, fade in that loop.
 * For branching conversations, simplify configuration. For instance, conversationStep should be added automatically (at 0) if it's not on the character.
 * Update our overridden `println` to accept an options object instead of several bools.
+* Update engine to handle getting keyword from option in branching conversations.
 
 ## text-engine
 * Add a feature to clear screen and print at top.
