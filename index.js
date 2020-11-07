@@ -759,7 +759,11 @@ let conversationIncludesTopic = (conversation, keyword) => {
     return true;
   }
 
-  return disk.conversation[keyword] || disk.conversation.find(t => getKeywordFromTopic(t) === keyword);
+  if (Array.isArray(disk.conversation)) {
+    return disk.conversation.find(t => getKeywordFromTopic(t) === keyword);
+  }
+
+  return disk.conversation[keyword];
 };
 
 // end the current conversation
