@@ -568,9 +568,9 @@ let setInput = (str) => {
   });
 };
 
-// render output
-// string, boolean -> nothing
-let println = (line, isImg = false) => {
+// render output, with optional class
+// string, string -> nothing
+let println = (line, className) => {
   // bail if string is null or undefined
   if (!line) {
     return;
@@ -582,8 +582,8 @@ let println = (line, isImg = false) => {
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
 
-  if (isImg) {
-    newLine.classList.add('img');
+  if (className) {
+    newLine.classList.add(className);
   }
 
   // add a class for styling prior user input
@@ -702,9 +702,9 @@ let enterRoom = (id) => {
     return;
   }
 
-  println(room.img, true);
+  println(room.img, 'img');
 
-  println(`${getName(room.name)}`,false,true);
+  println(`${getName(room.name)}`, 'header');
 
   if (room.visits === 0) {
     println(room.desc);
