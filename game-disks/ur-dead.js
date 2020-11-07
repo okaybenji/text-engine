@@ -5,29 +5,22 @@ commands[1] = Object.assign(commands[1], {play});
 commands[2] = Object.assign(commands[2], {play});
 
 const urDead = {
-  roomId: 'court',
+  roomId: 'title',
   inventory: [
     {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`}
   ],
   rooms: [
     {
+      id: 'title',
+      onEnter: () => {
+        println('ur dead', 'title');
+        enterRoom('court');
+      },
+    },
+    {
       name: 'Craggy Half-Court',
       id: 'court',
-      img: `
-      .-.
-     (o.o)
-      |=|
-     __|__
-   //.=|=.\\\\
-  // .=|=. \\\\
-  \\\\ .=|=. //
-   \\\\(_=_)//
-    (:| |:)
-     || ||
-     () ()
-     || ||
-     || ||
-    ==' '==
+      img: `🏀
       `,
       onEnter: () => {
         const room = getRoom('court');
@@ -82,6 +75,8 @@ const urDead = {
     {
       name: 'The "Beach"',
       id: 'beach',
+      img: `🏖
+      `,
       desc: `There's a sign that reads DEATH'S A BEACH. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
 To the NORTH you see a yacht in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
@@ -93,8 +88,39 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
         {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
       ],
-      exits: [{dir: 'south', id: 'court'}],
-    }
+      exits: [
+        {dir: 'north', id: 'ramp'},
+        {dir: 'south', id: 'court'},
+      ],
+    },
+    {
+      name: 'Yacht Ramp',
+      id: 'ramp',
+      desc: `The music is louder here. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.`,
+      items: [
+        {
+          name: 'ramp',
+          desc: `Nothing's stopping you from having a good time but you. Type USE RAMP.`,
+          use: () => {
+            enterRoom('deck');
+
+            // add exit after player has learned the USE command
+            const room = getRoom('ramp');
+            if (!room.exits) {
+              room.exits = [{dir: 'north', id: 'deck'}];
+            }
+          },
+        },
+      ],
+    },
+    {
+      name: 'Party On Deck',
+      id: 'deck',
+      img: `🛥
+      `,
+      desc: `Several skeletons are dancing and schmoozing. The DJ looks completely lost in the music. Everyone appears to be having a great time. A SKELETON IN A RED DRESS catches your eye.`,
+      exits: [{dir: 'south', id: 'ramp'}],
+    },
   ],
   characters: [
     {
@@ -194,6 +220,19 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
       ],
       onTalk: () => println(`"I imagine," he begins, "you have some questions."`),
+    },
+    {
+      name: ['skeleton in a red dress', 'Fran'],
+      roomId: 'deck',
+      desc: `She's wearing a nametag that says "Fran".`,
+      look() {
+        // now that we know her name, let's call her by it
+        const fran = findCharacter('fran');
+        fran.name = ['Fran', 'skeleton in a red dress'];
+
+        // update her description
+        fran.desc = `She has a really warm presence. She's holding a nearly-empty piña colada, munching on the pineapple wedge.`;
+      },
     },
   ],
   methods: {
