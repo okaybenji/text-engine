@@ -756,15 +756,70 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
       desc: 'A middle-aged gentleman of a comfortable and substantial size and somewhat scarred from a childhood pox.  Mother explained to you his lineage prior to your attendance tonight. He is The second child of Dauphin family, the eldest male, and stands to inherit the Dauphin estate upon the death of Grandfather Dauphin.',
       routes: {
         cavorting: {
-          path: ['grandSalon'],
+          path: ['entry', 'grandSalon'],
           type: 'patrol',
         },
       },
-      conversation: [],
+      conversation: [
+        {
+          question: `“Mlle. Cassat  welcome!” René says, “You may have arrived just in time, I’ve just exhausted my last anecdote, and these good guests here have suffered through them in your place!”`,
+          answers: [
+            {option: `SMILE and say not at all`, next: 'smile'},
+            {option: `Stay SILENT and refuse to humor him`, next: 'silent'},
+            {option: `You LAUGH at his joke`, next: 'laugh'},
+          ],
+        },
+        {
+          name: 'smile',
+          line: `“Well, you may have to suffer through a few after all, then,” he says.`,
+          next: 'food',
+        },
+        {
+          name: 'silent',
+          line: `René’s good humor melts away and he looks embarrassed.`,
+          next: 'food',
+        },
+        {
+          name: 'laugh',
+          line: `You laugh politely.`,
+          next: 'food',
+        },
+        {
+          name: 'food',
+          line: `“I believe they have just finished preparing the table in the GRAND SALON,” he says. “We have enough food here to make everyone sick several times over. Please take whatever you want.
+          “Eloise is anxious to speak with you again. She is waiting for you in the SITTING ROOM.`,
+        },
+        {
+          question: `“And my sons are here, of course.”`,
+          answers: [
+            {option: `Inquire after OLIVIER`, next: 'olivier'},
+            {option: `Inquire after ARMAND`, next: 'armand'},
+            {option: `EXCUSE yourself`, next: 'excuse'},
+          ],
+        },
+        {
+          name: 'olivier',
+          line: `“Against my protestations, Olivier went pheasant-hunting today,” he explains. “I believe he is still upstairs, but he should be down shortly.”`,
+          next: 'end',
+        },
+        {
+          name: 'armand',
+          line: `“Armand is meant to be in the GRAND SALON,” he tells you. “However, it is likely he has found his way back into the study. He is increasingly difficult to separate from his ledger.”`,
+          next: 'end',
+        },
+        {
+          name: 'excuse',
+          next: 'end',
+        },
+        {
+          name: 'end',
+          line: `“Please give your father my warmest regards,” he tells you. “Should you need me tonight, I won’t be far.”`,
+        },
+      ],
       conversationStep: 0,
       updateLocation,
       currentRoute: 'cavorting',
-      roomId: 'grandSalon',
+      roomId: 'entry',
       topics: () => branchingConversationTopics('rene'),
     },
     {
