@@ -537,11 +537,11 @@ let applyInput = () => {
     }
   };
 
-  let args = val.split(' ')
+  const args = val.split(' ')
     // remove articles
     .filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
 
-  let [command, ...arguments] = args;
+  const [command, ...arguments] = args;
   const room = getRoom(disk.roomId);
 
   if (arguments.length === 1) {
