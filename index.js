@@ -130,6 +130,10 @@ let lookAt = (args) => {
       } else {
         println(`You don't notice anything remarkable about them.`);
       }
+
+      if (typeof(character.look) === 'function') {
+        character.look({disk, println, getRoom, enterRoom, item});
+      }
     } else {
       println(`You don't see any such thing.`);
     }
