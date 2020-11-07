@@ -228,7 +228,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
-  roomId: 'kitchen',
+  roomId: 'start',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
@@ -299,7 +299,7 @@ const uneBelleSoiree = {
           println(`WARNING: This game deals with very dark themes and includes graphic descriptions of violence.`);
           println(`You catch yourself as your head falls toward your shoulder. You always find the steady beat of hooves outside the carriage window to have a hypnotic effect. The invitation you held in your hand has fallen to the carriage floor.`);
 
-          room.desc = `There is an invitation on the floor. Underneath the beating of the hooves, you can hear the cicadas and bullfrogs of summer.`;
+          room.desc = `There is an invitation on the floor.`;
         }
       },
     },
