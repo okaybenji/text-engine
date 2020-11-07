@@ -437,21 +437,18 @@ let chars = () => {
 
 // display help menu
 let help = () => {
-  const instructions = `
-    The following commands are available:
-    LOOK :: repeat room description
-    LOOK AT [OBJECT NAME] e.g. 'look at key'
-    TAKE [OBJECT NAME] e.g. 'take book'
-    GO [DIRECTION] e.g. 'go north'
-    USE [OBJECT NAME] e.g. 'use door'
-    TALK TO [CHARACTER NAME] e.g. 'talk to mary'
-    TALK ABOUT [SUBJECT] e.g. 'talk about horses'
-    CHARS :: list characters in the room
-    ITEMS :: list items in the room
-    INV :: list inventory items
-    SAVE :: save the current game
-    LOAD :: load the last saved game
-    HELP :: this help menu
+  const instructions = `The following commands are available:
+    LOOK:   'look at key'
+    TAKE:   'take book'
+    GO:     'go north'
+    USE:    'use door'
+    TALK:   'talk to mary'
+    CHARS:  list characters in the room
+    ITEMS:  list items in the room
+    INV:    list inventory items
+    SAVE:   save the current game
+    LOAD:   load the last saved game
+    HELP:   this help menu
   `;
   println(instructions);
 };
