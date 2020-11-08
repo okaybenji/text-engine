@@ -234,7 +234,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             skeleton.onTalk = () => {};
 
             // replace "Looks like he wants to say something"
-            skeleton.desc = `I wonder how he attaches that beard...`;
+            skeleton.desc = () => `${disk.playerName ? disk.playerName + ', ' : ''} I wonder how he attaches that beard...`;
 
             // remove the last sentence of the description now that you've talked
             const room = getRoom(disk.roomId);
@@ -261,7 +261,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         fran.name = ['Fran', 'skeleton in a red dress'];
 
         // update her description
-        fran.desc = `She has a really warm presence. She's holding a nearly-empty piña colada, munching on the pineapple wedge.`;
+        fran.desc = `She has a warm presence. She's holding a nearly-empty piña colada and munching on the pineapple wedge.`;
       },
       topics: [
         {
