@@ -225,6 +225,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       name: ['skeleton in a red dress', 'Fran'],
       roomId: 'deck',
       desc: `She's wearing a nametag that says "Fran".`,
+      onTalk: () => println(`"Hello there, stranger."`),
       look() {
         // now that we know her name, let's call her by it
         const fran = findCharacter('fran');
@@ -233,6 +234,24 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         // update her description
         fran.desc = `She has a really warm presence. She's holding a nearly-empty piña colada, munching on the pineapple wedge.`;
       },
+      topics: [
+        {
+          option: `WHO are you?`,
+          line: `I'm Fran. Didn't you see the nametag?`,
+          removeOnRead: true,
+          onSelected: () => {
+            // now that we know her name, let's call her by it
+            const fran = findCharacter('fran');
+            fran.name = ['Fran', 'skeleton in a red dress'];
+          },
+        },
+        {
+          option: `How did you find your NAME?`,
+          line: `She laughs. "You must be new here," she says, "We choose our own names."`,
+          removeOnRead: true,
+          prereqs: ['who'],
+        },
+      ],
     },
   ],
   methods: {
