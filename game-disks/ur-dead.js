@@ -190,12 +190,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected() {
             // unlock asking Fran about her name
             const fran = findCharacter('fran');
-            fran.topics.push({
-              option: `How did you find your NAME?`,
-              line: `She laughs. "You must be new here," she says, "We choose our own names."`,
-              removeOnRead: true,
-              prereqs: ['who'],
-            });
+            fran.chatLog.push('beard');
           },
         },
         {
@@ -257,6 +252,12 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             const fran = findCharacter('fran');
             fran.name = ['Fran', 'skeleton in a red dress'];
           },
+        },
+        {
+          option: `How did you find your NAME?`,
+          line: `She laughs. "You must be new here," she says, "We choose our own names."`,
+          removeOnRead: true,
+          prereqs: ['who', 'beard'],
         },
       ],
     },
