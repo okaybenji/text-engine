@@ -148,8 +148,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           prereqs: ['here'],
           removeOnRead: true,
           line: `He half-smiles and says, "That, you'll find, is the million-dollar question."
+
             Mysterious.
+
             "Well, one of them."
+
             You don't know how you can tell he is smiling, but you CAN tell.`,
         },
         {
