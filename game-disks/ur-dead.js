@@ -96,7 +96,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     {
       name: 'Yacht Ramp',
       id: 'ramp',
-      desc: `The music is louder here. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.`,
+      desc: `The music is louder here. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.
+
+      To the SOUTH is the "beach".`,
       items: [
         {
           name: 'ramp',
@@ -106,11 +108,12 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
             // add exit after player has learned the USE command
             const room = getRoom('ramp');
-            if (!room.exits) {
-              room.exits = [{dir: 'north', id: 'deck'}];
-            }
+            room.exits.push({dir: 'north', id: 'deck'});
           },
         },
+      ],
+      exits: [
+        {dir: 'south', id: 'beach'},
       ],
     },
     {
@@ -184,6 +187,16 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           This talking, bearded skeleton is starting to make some sense.
 
           "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
+          onSelected() {
+            // unlock asking Fran about her name
+            const fran = findCharacter('fran');
+            fran.topics.push({
+              option: `How did you find your NAME?`,
+              line: `She laughs. "You must be new here," she says, "We choose our own names."`,
+              removeOnRead: true,
+              prereqs: ['who'],
+            });
+          },
         },
         {
           option: `HOME? But where is home?`,
@@ -244,12 +257,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             const fran = findCharacter('fran');
             fran.name = ['Fran', 'skeleton in a red dress'];
           },
-        },
-        {
-          option: `How did you find your NAME?`,
-          line: `She laughs. "You must be new here," she says, "We choose our own names."`,
-          removeOnRead: true,
-          prereqs: ['who'],
         },
       ],
     },
