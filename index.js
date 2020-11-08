@@ -130,6 +130,10 @@ let lookAt = (args) => {
       } else {
         println(`You don't notice anything remarkable about them.`);
       }
+
+      if (typeof(character.look) === 'function') {
+        character.look({disk, println, getRoom, enterRoom, item});
+      }
     } else {
       println(`You don't see any such thing.`);
     }
@@ -437,21 +441,18 @@ let chars = () => {
 
 // display help menu
 let help = () => {
-  const instructions = `
-    The following commands are available:
-    LOOK :: repeat room description
-    LOOK AT [OBJECT NAME] e.g. 'look at key'
-    TAKE [OBJECT NAME] e.g. 'take book'
-    GO [DIRECTION] e.g. 'go north'
-    USE [OBJECT NAME] e.g. 'use door'
-    TALK TO [CHARACTER NAME] e.g. 'talk to mary'
-    TALK ABOUT [SUBJECT] e.g. 'talk about horses'
-    CHARS :: list characters in the room
-    ITEMS :: list items in the room
-    INV :: list inventory items
-    SAVE :: save the current game
-    LOAD :: load the last saved game
-    HELP :: this help menu
+  const instructions = `The following commands are available:
+    LOOK:   'look at key'
+    TAKE:   'take book'
+    GO:     'go north'
+    USE:    'use door'
+    TALK:   'talk to mary'
+    CHARS:  list characters in the room
+    ITEMS:  list items in the room
+    INV:    list inventory items
+    SAVE:   save the current game
+    LOAD:   load the last saved game
+    HELP:   this help menu
   `;
   println(instructions);
 };
@@ -568,9 +569,9 @@ let setInput = (str) => {
   });
 };
 
-// render output
-// string, boolean -> nothing
-let println = (line, isImg = false) => {
+// render output, with optional class
+// string, string -> nothing
+let println = (line, className) => {
   // bail if string is null or undefined
   if (!line) {
     return;
@@ -582,8 +583,8 @@ let println = (line, isImg = false) => {
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
 
-  if (isImg) {
-    newLine.classList.add('img');
+  if (className) {
+    newLine.classList.add(className);
   }
 
   // add a class for styling prior user input
@@ -697,9 +698,16 @@ let removeExtraSpaces = str => str.replace(/\s{2,}/g," ");
 let enterRoom = (id) => {
   const room = getRoom(id);
 
-  println(room.img, true);
+  if (!room) {
+    println(`That exit doesn't seem to go anywhere.`);
+    return;
+  }
 
-  println(`${getName(room.name)}`,false,true);
+  println(room.img, 'img');
+
+  if (room.name) {
+    println(`${getName(room.name)}`, 'header');
+  }
 
   if (room.visits === 0) {
     println(room.desc);
