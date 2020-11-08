@@ -122,7 +122,7 @@ let lookAt = (args) => {
       item.look({disk, println, getRoom, enterRoom, item});
     }
   } else {
-    const character = findCharacter(name, getCharactersInRoom(room.id));
+    const character = getCharacter(name, getCharactersInRoom(room.id));
     if (character) {
       // Look at a character.
       if (character.desc) {
@@ -226,8 +226,8 @@ let talkToOrAboutX = (preposition, x) => {
   }
 
   const character =
-    preposition === 'to' && findCharacter(x, getCharactersInRoom(room.id))
-      ? findCharacter(x, getCharactersInRoom(room.id))
+    preposition === 'to' && getCharacter(x, getCharactersInRoom(room.id))
+      ? getCharacter(x, getCharactersInRoom(room.id))
       : disk.conversant;
   let topics;
 
@@ -264,12 +264,12 @@ let talkToOrAboutX = (preposition, x) => {
   };
 
   if (preposition === 'to') {
-    if (!findCharacter(x)) {
+    if (!getCharacter(x)) {
       println(`There is no one here by that name.`);
       return;
     }
 
-    if (!findCharacter(getName(x), getCharactersInRoom(room.id))) {
+    if (!getCharacter(getName(x), getCharactersInRoom(room.id))) {
       println(`There is no one here by that name.`);
       return;
     }
@@ -731,7 +731,7 @@ let getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === r
 
 // get a character by name from a list of characters
 // string, characters -> character
-let findCharacter = (name, chars = disk.characters) => chars.find((c) => {
+let getCharacter = (name, chars = disk.characters) => chars.find((c) => {
   const hasName = n => {
     return n.toLowerCase().includes(name.toLowerCase());
   };
