@@ -97,7 +97,7 @@ const updateLocation = function() {
   } else if (route.type == 'flee') {
     let currentRoom = disk.rooms.find( room => room.id == this.roomId);
     let candidateRooms = currentRoom.exits.map(exit => disk.rooms.find( room => room.id == exit.id )).filter(room => room !== undefined);
-    let fleeRoom = disk.rooms.find( room => room.id == findCharacter(route.fleeFrom).roomId);
+    let fleeRoom = disk.rooms.find( room => room.id == getCharacter(route.fleeFrom).roomId);
     let candidatePaths = candidateRooms.map(cr => BFS(disk.rooms, cr.id, fleeRoom.id).length);
     var indexOfMaxValue = candidatePaths.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
     let nextRoom = candidateRooms[indexOfMaxValue];
@@ -111,7 +111,7 @@ var defunctis = document.getElementById("defunctis");
 
 // Determine the topics to return for a branching conversation.
 const branchingConversationTopics = (characterName) => {
-  const character = findCharacter(characterName);
+  const character = getCharacter(characterName);
 
   const findStepWithName = name => character.conversation.findIndex((step, i) =>
     step.name == name && i > character.conversationStep
@@ -194,7 +194,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
-  roomId: 'start',
+  roomId: 'kitchen',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
@@ -606,7 +606,7 @@ const uneBelleSoiree = {
           }];
         }
 
-        if (findCharacter('gaspard').currentRoute === 'helpingGuests') {
+        if (getCharacter('gaspard').currentRoute === 'helpingGuests') {
           return [{
             option: 'Ask that he ESCORT you to the party',
             onSelected: () => {
@@ -694,7 +694,7 @@ He is clutching a rosary near the front of the chapel. Sweat accumulates around 
            ]
         },
         function identify() {
-          const gramps = findCharacter('Grandfather Dauphin');
+          const gramps = getCharacter('Grandfather Dauphin');
             gramps.currentRoute = 'retire';
             gramps.updateLocation();
             disk.inventory.push({
