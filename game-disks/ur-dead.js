@@ -48,7 +48,7 @@ const urDead = {
             item.desc = 'You could really have a ball with this thing.';
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
-            const skeletons = findCharacter('skeletons');
+            const skeletons = getCharacter('skeletons');
 
             skeletons.topics = [
               {
@@ -189,7 +189,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
           onSelected() {
             // unlock asking Fran about her name
-            const fran = findCharacter('fran');
+            const fran = getCharacter('fran');
             fran.chatLog = fran.chatLog || [];
             fran.chatLog.push('beard');
           },
@@ -208,7 +208,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected: () => {
             endConversation();
 
-            const skeleton = findCharacter('beard');
+            const skeleton = getCharacter('beard');
 
             // remove "I'm sure you have questions" comment
             skeleton.onTalk = () => {};
@@ -237,7 +237,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       onTalk: () => println(`"Hello there, stranger."`),
       look() {
         // now that we know her name, let's call her by it
-        const fran = findCharacter('fran');
+        const fran = getCharacter('fran');
         fran.name = ['Fran', 'skeleton in a red dress'];
 
         // update her description
@@ -250,7 +250,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           removeOnRead: true,
           onSelected: () => {
             // now that we know her name, let's call her by it
-            const fran = findCharacter('fran');
+            const fran = getCharacter('fran');
             fran.name = ['Fran', 'skeleton in a red dress'];
           },
         },
@@ -271,7 +271,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
   ],
   methods: {
     resetCourt: () => {
-      const skeletons = findCharacter('skeletons');
+      const skeletons = getCharacter('skeletons');
       const ball = disk.inventory.find(i => i.name.includes('basketball'));
       const room = getRoom('court');
       skeletons.topics = 'They look pretty busy.';
