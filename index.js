@@ -570,15 +570,20 @@ let setInput = (str) => {
 };
 
 // render output, with optional class
-// string, string -> nothing
+// (string | array | fn -> string) -> nothing
 let println = (line, className) => {
   // bail if string is null or undefined
   if (!line) {
     return;
   }
 
-  // if this is an array of lines, pick one at random
-  str = typeof line === 'object' ? pickOne(line) : line;
+  str =
+    // if this is an array of lines, pick one at random
+    Array.isArray(line) ? pickOne(line)
+    // if this is a method returning a string, evaluate it
+    : typeof line  === 'function' ? line()
+    // otherwise, line should be a string
+    : line;
 
   const output = document.querySelector('#output');
   const newLine = document.createElement('div');
