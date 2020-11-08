@@ -706,7 +706,7 @@ let enterRoom = (id) => {
   println(room.img, 'img');
 
   if (room.name) {
-    println(`${getName(room.name)}`, 'header');
+    println(`${getName(room.name)}`, 'room-name');
   }
 
   if (room.visits === 0) {
