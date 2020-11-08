@@ -7,6 +7,12 @@ const play = () => println(`You're already playing a game.`);
 const name = (arg) => {
   disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
   const nametag = disk.inventory.find(i => i.name === 'nametag');
+
+  if (!nametag) {
+    println(`You don't have a nametag.`);
+    return;
+  }
+
   nametag.desc = `It says ${disk.playerName}.`;
 
   // update Fran's greeting
