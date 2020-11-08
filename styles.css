@@ -34,10 +34,12 @@ body {
 }
 
 .room-name {
+  font-family: 'Nanum Gothic Coding', monospace;
   font-size: 3.5vh;
 }
 
 .title {
+  font-family: 'Nanum Gothic Coding', monospace;
   font-size: 18vh;
   left: -1.8vh;
   position: relative;
