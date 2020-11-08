@@ -1,44 +1,10 @@
-// Override println to add styling
-println = (line, isImg = false, isName = false, isDesc = false) => {
-  // bail if string is null or undefined
-  if (!line) {
-    return;
-  }
-
-  // if this is an array of lines, pick one at random
-  str = typeof line === 'object' ? pickOne(line) : line;
-
-  const output = document.querySelector('#output');
-  const newLine = document.createElement('div');
-
-  if (isImg) {
-    newLine.classList.add('img');
-  }
-
-  if (isName) {
-    newLine.classList.add('roomname');
-  }
-
-  if (isDesc) {
-    newLine.classList.add('desc');
-  }
-
-  // add a class for styling prior user input
-  if (line[0] === '>') {
-    newLine.classList.add('user');
-  }
-
-  output.appendChild(newLine).innerText = str;
-  window.scrollTo(0, document.body.scrollHeight);
-};
-
 // Override enterRoom to show list of characters in room
 const originalEnterRoom = enterRoom;
 enterRoom = (id) => {
   originalEnterRoom(id);
   const room = getRoom(id);
   const characters = getCharactersInRoom(room.id);
-  characters.map(c => println(`${getName(c.name)} is here.`, false, false, true));
+  characters.map(c => println(`${getName(c.name)} is here.`, 'desc'));
 };
 
 // Mark the context (item) as examined.
@@ -67,7 +33,7 @@ const updateLocation = function() {
   const reportEntrances = () => {
     const inRoom = getCharactersInRoom(disk.roomId);
     if (inRoom.map(r => r.name).includes(this.name)) {
-      println(`${this.name} is here.`, false, false, true);
+      println(`${this.name} is here.`, 'desc');
     }
   }
 
