@@ -1,8 +1,25 @@
-// override commands to include custom 'play' commands
+// override commands to include custom commands
+
+// play command
 const play = () => println(`You're already playing a game.`);
-commands[0] = Object.assign(commands[0], {play});
-commands[1] = Object.assign(commands[1], {play});
-commands[2] = Object.assign(commands[2], {play});
+
+// set player's name
+const name = (arg) => {
+  disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
+  const nametag = disk.inventory.find(i => i.name === 'nametag');
+  nametag.desc = `It says ${disk.playerName}.`;
+
+  // update Fran's greeting
+  const fran = getCharacter('fran');
+  fran.onTalk = () => println(`Hello there, ${disk.playerName}.`);
+
+  // confirm the change
+  println(`Your name is now ${disk.playerName}.`);
+};
+
+commands[0] = Object.assign(commands[0], {play, name});
+commands[1] = Object.assign(commands[1], {play, name});
+commands[2] = Object.assign(commands[2], {play, name});
 
 const urDead = {
   roomId: 'title',
@@ -265,9 +282,21 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `Can I have a NAMETAG?`,
-          line: `Sure! You'll have to choose a name for yourself. What'll it be?`,
+          line: `"Sure! You'll have to choose a name for yourself. What'll it be"?
+
+          At any time, use the NAME command to update your NAMETAG.
+
+          For instance: 'name Jane'
+          `,
           prereqs: ['name'],
           removeOnRead: true,
+          onSelected() {
+            // add nametag to player inventory
+            disk.inventory.push({
+              name: 'nametag',
+              desc: `It's blank. Choose a name by typing NAME followed by your name.`,
+            });
+          },
         }
       ],
     },
