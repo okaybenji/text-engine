@@ -190,6 +190,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected() {
             // unlock asking Fran about her name
             const fran = findCharacter('fran');
+            fran.chatLog = fran.chatLog || [];
             fran.chatLog.push('beard');
           },
         },
