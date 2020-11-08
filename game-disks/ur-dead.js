@@ -259,6 +259,12 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           removeOnRead: true,
           prereqs: ['who', 'beard'],
         },
+        {
+          option: `Can I have a NAMETAG?`,
+          line: `Sure! You'll have to choose a name for yourself. What'll it be?`,
+          prereqs: ['name'],
+          removeOnRead: true,
+        }
       ],
     },
   ],
