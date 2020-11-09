@@ -281,14 +281,14 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           },
         },
         {
-          option: `How did you find your NAME?`,
-          line: `She laughs. "You must be new here," she says, "We choose our own names."`,
+          option: `How did you find your NAME? How can I find mine?`,
+          line: `She laughs. "Oh, honey, you must be new here," she says, "No one can remember their old names. We choose new names for ourselves."`,
           removeOnRead: true,
           prereqs: ['who', 'beard'],
         },
         {
           option: `Can I have a NAMETAG?`,
-          line: `"Sure! You'll have to choose a name for yourself. What'll it be"?
+          line: `"Sure! You'll have to choose a name for yourself. What'll it be?"
 
           At any time, use the NAME command to update your NAMETAG.
 
