@@ -86,7 +86,23 @@ const urDead = {
                 onSelected: () => {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
                   disk.methods.resetCourt();
+                  if (disk.askedSkeletonNames) {
+                    println(`"I'm Ronny," the one on the left says. "That's Dirk."
+
+                    They resume their game.`);
+
+                    // now that we know theirs name, let's call them by it
+                    const skeletons = getCharacter('skeletons');
+                    skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
+                  }
                 },
+              },
+              {
+                option: 'Ask their NAMES',
+                line: `"We might tell you," the one on the left says, "If you give us our ball back."`,
+                prereqs: ['fran'],
+                removeOnRead: true,
+                onSelected: () => disk.askedSkeletonNames = true,
               },
             ];
           },
@@ -150,14 +166,14 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
   ],
   characters: [
     {
-      name: ['the skeletons', 'skeletons'],
+      name: ['the skeletons', 'skeletons', 'Ronny and Dirk'],
       desc: [`They look competitive.`, `They're still on 'H'.`],
       roomId: 'court',
       topics: `They look pretty busy.`,
       onTalk: () => println(`"Give it back," one of them says.`),
     },
     {
-      name: 'bearded skeleton',
+      name: ['bearded skeleton', 'Dave'],
       desc: `He appears to have something to say. Or at least, he keeps clearing his throat. Or, that is, if he had a throat... This is a confusing place.`,
       roomId: 'beach',
       topics: [
@@ -217,7 +233,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             // unlock asking Fran about her name
             const fran = getCharacter('fran');
             fran.chatLog = fran.chatLog || [];
-            fran.chatLog.push('beard');
+            fran.chatLog.push('dave');
           },
         },
         {
@@ -234,7 +250,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected: () => {
             endConversation();
 
-            const skeleton = getCharacter('beard');
+            const skeleton = getCharacter('dave');
 
             // remove "I'm sure you have questions" comment
             skeleton.onTalk = () => {};
@@ -252,6 +268,17 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           prereqs: ['home'],
           line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
           onSelected: endConversation,
+        },
+        {
+          option: `What is your NAME?`,
+          prereqs: ['fran'],
+          removeOnRead: true,
+          line: () => `Oh, I'm Dave. Pleasure to make your acquaintance${disk.playerName ? ', ' + disk.playerName : ''}.`,
+          onSelected: () => {
+            // now that we know his name, let's call him by it
+            const dave = getCharacter('dave');
+            dave.name = ['Dave', 'bearded skeleton'];
+          },
         },
       ],
       onTalk: () => println(`"I imagine," he begins, "you have some questions."`),
@@ -284,7 +311,17 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `How did you find your NAME? How can I find mine?`,
           line: `She laughs. "Oh, honey, you must be new here," she says, "No one can remember their old names. We choose new names for ourselves."`,
           removeOnRead: true,
-          prereqs: ['who', 'beard'],
+          prereqs: ['who', 'dave'],
+          onSelected() {
+            // unlock asking bearded skeleton and half-court skeletons about their names
+            const dave = getCharacter('dave');
+            dave.chatLog = dave.chatLog || [];
+            dave.chatLog.push('fran');
+
+            const skeletons = getCharacter('skeletons');
+            skeletons.chatLog = skeletons.chatLog || [];
+            skeletons.chatLog.push('fran');
+          },
         },
         {
           option: `Can I have a NAMETAG?`,
