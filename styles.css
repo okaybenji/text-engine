@@ -37,7 +37,7 @@ br {
   left: 50%;
   font-family: 'Nanum Gothic Coding', monospace;
   transform: translateX(-50%);
-  line-height: 3vh;
+  line-height: 1vh;
 }
 
 .room-name {
