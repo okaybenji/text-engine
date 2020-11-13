@@ -1,3 +1,6 @@
+// customize bullet character
+bullet = '•';
+
 // override commands to include custom commands
 
 // play command
@@ -35,16 +38,30 @@ const urDead = {
   rooms: [
     {
       id: 'title',
+      img: `
+      .-.
+     (o.o)
+      |=|
+     __|__
+   //.=|=.\\\\
+  // .=|=. \\\\
+  \\\\ .=|=. //
+   \\\\(_=_)//
+    (:| |:)
+     || ||
+     () ()
+     || ||
+     || ||
+    ==' '==
+      `,
       onEnter: () => {
         println('ur dead', 'title');
         enterRoom('court');
       },
     },
     {
-      name: 'Craggy Half-Court',
+      name: '🏀 Craggy Half-Court',
       id: 'court',
-      img: `🏀
-      `,
       onEnter: () => {
         const room = getRoom('court');
 
@@ -112,10 +129,8 @@ const urDead = {
       exits: [{dir: 'north', id: 'beach'}],
     },
     {
-      name: 'The "Beach"',
+      name: '🏖 The "Beach"',
       id: 'beach',
-      img: `🏖
-      `,
       desc: `There's a sign that reads DEATH'S A BEACH. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
 To the NORTH you see a yacht in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
@@ -133,7 +148,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       ],
     },
     {
-      name: 'Yacht Ramp',
+      name: '🛥 Yacht Ramp',
       id: 'ramp',
       desc: `The music is louder here. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.
 
@@ -156,10 +171,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       ],
     },
     {
-      name: 'Party On Deck',
+      name: '🛥 Party On Deck',
       id: 'deck',
-      img: `🛥
-      `,
       desc: `Several skeletons are dancing and schmoozing. The DJ looks completely lost in the music. Everyone appears to be having a great time. A SKELETON IN A RED DRESS catches your eye.`,
       exits: [{dir: 'south', id: 'ramp'}],
     },

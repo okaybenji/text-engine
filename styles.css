@@ -29,8 +29,9 @@ body {
   display: inline-block;
   position: relative;
   left: 50%;
+  font-family: 'Nanum Gothic Coding', monospace;
   transform: translateX(-50%);
-  font-size: 14vh;
+  line-height: 3vh;
 }
 
 .room-name {
@@ -40,10 +41,8 @@ body {
 
 .title {
   font-family: 'Nanum Gothic Coding', monospace;
-  font-size: 18vh;
-  left: -1.8vh;
-  position: relative;
-  margin-bottom: 16vh !important;
+  font-size: 12vh;
+  margin-bottom: 6vh !important;
 }
 
 #output {
