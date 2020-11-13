@@ -75,6 +75,7 @@ br {
   border: none;
   position: relative;
   bottom: 0.175vh;
+  margin-left: .5vw;
 }
 
 .ml-2 {
