@@ -88,7 +88,7 @@ const urDead = {
             item.desc = 'You could really have a ball with this thing.';
             item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
-            const skeletons = getCharacter('skeletons');
+            const skeletons = getCharacter('ronny');
 
             skeletons.topics = [
               {
@@ -109,7 +109,7 @@ const urDead = {
                     They resume their game.`);
 
                     // now that we know theirs name, let's call them by it
-                    const skeletons = getCharacter('skeletons');
+                    const skeletons = getCharacter('ronny');
                     skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
                   }
                 },
@@ -331,7 +331,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             dave.chatLog = dave.chatLog || [];
             dave.chatLog.push('fran');
 
-            const skeletons = getCharacter('skeletons');
+            const skeletons = getCharacter('ronny');
             skeletons.chatLog = skeletons.chatLog || [];
             skeletons.chatLog.push('fran');
           },
@@ -361,11 +361,17 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       roomId: 'deck',
       desc: `Their future looks bright.`,
       topics: `They're lost in the music.`,
-    }
+    },
+    {
+      name: ['the other skeletons', 'the skeletons', 'skeletons'],
+      roomId: 'deck',
+      desc: `They're having a wonderful time.`,
+      topics: `They don't seem to notice you.`,
+    },
   ],
   methods: {
     resetCourt: () => {
-      const skeletons = getCharacter('skeletons');
+      const skeletons = getCharacter('ronny');
       const ball = disk.inventory.find(i => i.name.includes('basketball'));
       const room = getRoom('court');
       skeletons.topics = 'They look pretty busy.';
