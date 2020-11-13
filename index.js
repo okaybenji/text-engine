@@ -351,8 +351,7 @@ let take = () => {
     return;
   }
   println(`What would you like to take? Available items are:`);
-  items
-    .forEach(item => println(getName(item.name)));
+  items.forEach(item => println(`${bullet} ${getName(item.name)}`));
 };
 
 // take the item with the given name
