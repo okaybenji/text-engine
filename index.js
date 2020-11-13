@@ -160,12 +160,12 @@ let go = () => {
     }
 
     const dir = getName(exit.dir).toUpperCase();
+    // include room name if player has been there before
+    const directionName = rm.visits > 0
+      ? `${dir} - ${rm.name}`
+      : dir
 
-    println(
-      rm.visits > 0
-        ? `${dir} - ${rm.name}`
-        : dir
-    );
+    println(`${bullet} ${directionName}`);
   });
 };
 
@@ -252,7 +252,7 @@ let talkToOrAboutX = (preposition, x) => {
       }
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
-      Object.keys(topics).forEach(topic => println(topics[topic].option));
+      Object.keys(topics).forEach(topic => println(`${bullet} ${topics[topic].option}`));
     } else {
       endConversation();
     }
