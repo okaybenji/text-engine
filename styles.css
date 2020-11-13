@@ -42,7 +42,8 @@ body {
 .title {
   font-family: 'Nanum Gothic Coding', monospace;
   font-size: 12vh;
-  margin-bottom: 6vh !important;
+  margin-bottom: 2.5vh !important;
+  line-height: 9.5vh;
 }
 
 #output {
