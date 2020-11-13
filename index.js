@@ -5,6 +5,9 @@ let disk;
 let inputs = [''];
 let inputsPos = 0;
 
+// define list style
+let bullet = '*';
+
 // reference to the input element
 let input = document.querySelector('#input');
 
@@ -92,7 +95,7 @@ let inv = () => {
   }
   println(`You have the following items in your inventory:`);
   disk.inventory.forEach(item => {
-    println(`* ${getName(item.name)}`);
+    println(`${bullet} ${getName(item.name)}`);
   });
 };
 
@@ -238,20 +241,12 @@ let talkToOrAboutX = (preposition, x) => {
     disk.conversation = topics;
 
     if (topics.length) {
-      // available topics are those which:
-      // * have no prerequistites or have had their prerequisites met
-      // * are not removed after read, or haven't been read yet
-      const availableTopics = topics.filter((topic) => {
-        const prereqsOk = !topic.prereqs || topic.prereqs.every(keyword => character.chatLog.includes(keyword));
-        const readOk = !topic.removeOnRead || !character.chatLog.includes(getKeywordFromTopic(topic));
-
-        return prereqsOk && readOk;
-      });
+      const availableTopics = topics.filter(topic => topicIsAvailable(character, topic));
 
       if (availableTopics.length) {
         println(`What would you like to discuss?`);
-        availableTopics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
-        println(`* NOTHING`);
+        availableTopics.forEach(topic => println(`${bullet} ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
+        println(`${bullet} NOTHING`);
       } else {
         endConversation();
       }
@@ -316,7 +311,8 @@ let talkToOrAboutX = (preposition, x) => {
         disk.conversation[response].onSelected();
       } else {
         const topic = disk.conversation.length && conversationIncludesTopic(disk.conversation, response);
-        if (topic) {
+        const isAvailable = topic && topicIsAvailable(character, topic);
+        if (isAvailable) {
           if (topic.line) {
             println(topic.line);
           }
@@ -355,8 +351,7 @@ let take = () => {
     return;
   }
   println(`What would you like to take? Available items are:`);
-  items
-    .forEach(item => println(getName(item.name)));
+  items.forEach(item => println(`${bullet} ${getName(item.name)}`));
 };
 
 // take the item with the given name
@@ -423,7 +418,7 @@ let items = () => {
   }
   println(`You see the following:`);
   items
-    .forEach(item => println(`* ${getName(item.name)}`));
+    .forEach(item => println(`${bullet} ${getName(item.name)}`));
 }
 
 // list characters in room
@@ -436,7 +431,7 @@ let chars = () => {
   }
   println(`You see the following:`);
   chars
-    .forEach(char => println(`* ${getName(char.name)}`));
+    .forEach(char => println(`${bullet} ${getName(char.name)}`));
 };
 
 // display help menu
@@ -780,6 +775,18 @@ let conversationIncludesTopic = (conversation, keyword) => {
   }
 
   return disk.conversation[keyword];
+};
+
+// determine whether the passed topic is available for discussion
+// available topics are those which:
+// * have no prerequistites or have had their prerequisites met
+// * are not removed after read, or haven't been read yet
+// character, topic -> boolean
+let topicIsAvailable = (character, topic) => {
+  const prereqsOk = !topic.prereqs || topic.prereqs.every(keyword => character.chatLog.includes(keyword));
+  const readOk = !topic.removeOnRead || !character.chatLog.includes(getKeywordFromTopic(topic));
+
+  return prereqsOk && readOk;
 };
 
 // end the current conversation
