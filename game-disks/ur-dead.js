@@ -356,6 +356,12 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         }
       ],
     },
+    {
+      name: 'DJ',
+      roomId: 'deck',
+      desc: `Their future looks bright.`,
+      topics: `They're lost in the music.`,
+    }
   ],
   methods: {
     resetCourt: () => {
