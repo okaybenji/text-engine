@@ -24,6 +24,12 @@ body {
   background: whitesmoke;
 }
 
+br {
+  content: '';
+  display: block;
+  margin-bottom: 2vh;
+}
+
 .img {
   white-space: pre;
   display: inline-block;
