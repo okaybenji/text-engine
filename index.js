@@ -5,6 +5,9 @@ let disk;
 let inputs = [''];
 let inputsPos = 0;
 
+// define list style
+let bullet = '*';
+
 // reference to the input element
 let input = document.querySelector('#input');
 
@@ -92,7 +95,7 @@ let inv = () => {
   }
   println(`You have the following items in your inventory:`);
   disk.inventory.forEach(item => {
-    println(`* ${getName(item.name)}`);
+    println(`${bullet} ${getName(item.name)}`);
   });
 };
 
@@ -250,8 +253,8 @@ let talkToOrAboutX = (preposition, x) => {
 
       if (availableTopics.length) {
         println(`What would you like to discuss?`);
-        availableTopics.forEach(topic => println(`* ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
-        println(`* NOTHING`);
+        availableTopics.forEach(topic => println(`${bullet} ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
+        println(`${bullet} NOTHING`);
       } else {
         endConversation();
       }
@@ -423,7 +426,7 @@ let items = () => {
   }
   println(`You see the following:`);
   items
-    .forEach(item => println(`* ${getName(item.name)}`));
+    .forEach(item => println(`${bullet} ${getName(item.name)}`));
 }
 
 // list characters in room
@@ -436,7 +439,7 @@ let chars = () => {
   }
   println(`You see the following:`);
   chars
-    .forEach(char => println(`* ${getName(char.name)}`));
+    .forEach(char => println(`${bullet} ${getName(char.name)}`));
 };
 
 // display help menu
