@@ -53,6 +53,10 @@ body {
   margin-bottom: 1vw;
 }
 
+.input {
+  display: flex;
+}
+
 #input {
   height: 4vh;
   width: 98.5vh;
