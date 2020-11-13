@@ -104,7 +104,7 @@ const urDead = {
                   println(`Feeling a bit bad, you decide to return the ball and move on.`);
                   disk.methods.resetCourt();
                   if (disk.askedSkeletonNames) {
-                    println(`"I'm Ronny," the one on the left says. "That's Dirk."
+                    println(`"I'm Ronny," says the one on the left. "That's Dirk."
 
                     They resume their game.`);
 
