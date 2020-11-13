@@ -1,3 +1,6 @@
+// Customize bullet style.
+bullet = '❦';
+
 // Override enterRoom to show list of characters in room
 const originalEnterRoom = enterRoom;
 enterRoom = (id) => {
