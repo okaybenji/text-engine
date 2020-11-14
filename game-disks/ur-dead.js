@@ -8,6 +8,11 @@ const play = () => println(`You're already playing a game.`);
 
 // set player's name
 const name = (arg) => {
+  if (!arg.length) {
+    println(`Type NAME followed by the name you wish to choose.`);
+    return;
+  }
+
   disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
   const nametag = disk.inventory.find(i => i.name === 'nametag');
 
@@ -351,6 +356,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             disk.inventory.push({
               name: 'nametag',
               desc: `It's blank. Choose a name by typing NAME followed by your name.`,
+              use: () => println(`Use the NAME command to choose a name.`),
             });
           },
         }
