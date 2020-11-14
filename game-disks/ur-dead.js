@@ -363,7 +363,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: `They're lost in the music.`,
     },
     {
-      name: ['the other skeletons', 'the skeletons', 'skeletons'],
+      name: ['the other skeletons', 'others', 'the skeletons', 'skeletons'],
       roomId: 'deck',
       desc: `They're having a wonderful time.`,
       topics: `They don't seem to notice you.`,
