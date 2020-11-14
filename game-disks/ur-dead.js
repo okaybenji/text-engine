@@ -150,7 +150,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     {
       name: '🛥 Yacht Ramp',
       id: 'ramp',
-      desc: `The music is louder here. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.
+      desc: `The music is louder here. A RAMP leads up to the yacht. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.
 
       To the SOUTH is the "beach".`,
       items: [
