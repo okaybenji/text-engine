@@ -160,12 +160,12 @@ let go = () => {
     }
 
     const dir = getName(exit.dir).toUpperCase();
+    // include room name if player has been there before
+    const directionName = rm.visits > 0
+      ? `${dir} - ${rm.name}`
+      : dir
 
-    println(
-      rm.visits > 0
-        ? `${dir} - ${rm.name}`
-        : dir
-    );
+    println(`${bullet} ${directionName}`);
   });
 };
 
@@ -252,7 +252,7 @@ let talkToOrAboutX = (preposition, x) => {
       }
     } else if (Object.keys(topics).length) {
       println(`Select a response:`);
-      Object.keys(topics).forEach(topic => println(topics[topic].option));
+      Object.keys(topics).forEach(topic => println(`${bullet} ${topics[topic].option}`));
     } else {
       endConversation();
     }
@@ -601,6 +601,7 @@ let autocomplete = () => {
   const room = getRoom(disk.roomId);
   const words = input.value.toLowerCase().trim().split(/\s+/);
   const wordsSansStub = words.slice(0, words.length - 1);
+  const itemNames = (room.items || []).concat(disk.inventory).map(item => item.name);
 
   const stub = words[words.length - 1];
   let options;
@@ -616,14 +617,14 @@ let autocomplete = () => {
   } else if (words.length === 2) {
     const optionMap = {
       talk: ['to', 'about'],
-      take: (room.items || []).map(item => item.name),
+      take: itemNames,
+      use: itemNames,
       go: (room.exits || []).map(exit => exit.dir),
       look: ['at'],
     };
     options = optionMap[words[0]];
   } else if (words.length === 3) {
     const characterNames = (getCharactersInRoom(room.id) || []).map(character => character.name);
-    const itemNames = (room.items || []).concat(disk.inventory).map(item => item.name);
     const optionMap = {
       to: characterNames,
       at: characterNames.concat(itemNames),
