@@ -157,7 +157,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       id: 'ramp',
       desc: `The music is louder here. A RAMP leads up to the yacht. Looks like there's a party on deck, and a skeletal DJ is spinning vinyl with shades on.
 
-      To the SOUTH is the "beach".`,
+      To the SOUTH is the "beach".
+
+      To the WEST, it looks like... a Blockbuster Video store?`,
       items: [
         {
           name: 'ramp',
@@ -173,6 +175,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       ],
       exits: [
         {dir: 'south', id: 'beach'},
+        {dir: 'west', id: 'parkingLot'},
       ],
     },
     {
@@ -180,6 +183,25 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       id: 'deck',
       desc: `Several skeletons are dancing and schmoozing. The DJ looks completely lost in the music. Everyone appears to be having a great time. A SKELETON IN A RED DRESS catches your eye.`,
       exits: [{dir: 'south', id: 'ramp'}],
+    },
+    {
+      name: '🎬 Blockbuster Parking Lot',
+      id: 'parkingLot',
+      desc: `Wow, I guess this is where businesses go when they die.`,
+      items: [
+        {
+          name: 'door',
+          desc: `It's locked. The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
+          use() {
+            const door = getRoom('parkingLot').items.find(item => item.name === 'door');
+            println(door.desc);
+          },
+        },
+      ],
+      onEnter() {
+        const room = getRoom('parkingLot');
+        room.desc = `It looks... exactly like a Blockbuster Video parking lot.`;
+      },
     },
   ],
   characters: [
