@@ -191,17 +191,21 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
         {
           name: 'door',
-          desc: `It's locked. The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
-          use() {
-            const door = getRoom('parkingLot').items.find(item => item.name === 'door');
-            println(door.desc);
-          },
+          desc: `The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
+          use: () => println(`It's locked.`),
+        },
+        {
+          name: ['Blockbuster', 'blockbuster', 'store'],
+          desc: `The lights are off. It looks like there are hours posted on the DOOR.`,
         },
       ],
       onEnter() {
         const room = getRoom('parkingLot');
         room.desc = `It looks... exactly like a Blockbuster Video parking lot.`;
       },
+      exits: [
+        {dir: 'east', id: 'ramp'},
+      ],
     },
   ],
   characters: [
