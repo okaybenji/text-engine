@@ -35,6 +35,7 @@ const demoDisk = {
           name: 'style-changer',
           desc: 'This is a magical item. Type USE STYLE-CHANGER to try it out!',
           isTakeable: true,
+          onTake: () => println(`You took the style-changer. Now it's in your INVENTORY, and you can use it at any time, in any room. Type INV to see a list of items in your inventory.`),
           onUse: () => {
             const currentStylesheet = document.getElementById('styles').getAttribute('href');
             const newName = currentStylesheet.includes('modern') ? 'retro' : 'modern';
@@ -51,7 +52,18 @@ const demoDisk = {
     {
       id: 'reception',
       name: 'Reception Desk',
-      desc: `BENJI is here. Type TALK to chat him up.`
+      desc: `BENJI is here. I'm sure he'd be happy to tell you more about the features available in text-engine. You can speak with characters using the TALK command.
+
+      To the SOUTH is the FOYER where you started your adventure.`
+    }
+  ],
+  characters: [
+    {
+      name: ['Benji', 'Benj', 'receptionist'],
+      roomId: 'reception',
+      desc: 'He looks... helpful!',
+      onTalk: () => println(`"Hi," he says, "How can I help you?"`),
+      topics: {},
     }
   ]
 };
