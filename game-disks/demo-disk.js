@@ -15,8 +15,10 @@ const demoDisk = {
         {
           name: 'style-changer',
           onUse: () => {
-            println(`You changed the stylesheet to RETRO.css`);
-            selectStylesheet('styles/retro.css');
+            const currentStylesheet = document.getElementById('styles').getAttribute('href');
+            const newName = currentStylesheet.includes('modern') ? 'retro' : 'modern';
+            println(`You changed the stylesheet to ${newName.toUpperCase()}.css`);
+            selectStylesheet(`styles/${newName}.css`);
           }
         }
       ]
