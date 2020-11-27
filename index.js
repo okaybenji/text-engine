@@ -389,12 +389,18 @@ let useItem = (itemName) => {
 
   if (item) {
     if (item.use) {
+      console.warn(`Warning: The "use" property for Items has been renamed to "onUse" and support for "use" has been deprecated in text-engine 2.0. Please update your disk, renaming any "use" methods to be called "onUse" instead.`);
+
+      item.onUse = item.use;
+    }
+
+    if (item.onUse) {
       // use item and give it a reference to the game
-      if (typeof item.use === 'string') {
-        const use = eval(item.use);
+      if (typeof item.onUse === 'string') {
+        const use = eval(item.onUse);
         use({disk, println, getRoom, enterRoom, item});
-      } else if (typeof item.use === 'function') {
-        item.use({disk, println, getRoom, enterRoom, item});
+      } else if (typeof item.onUse === 'function') {
+        item.onUse({disk, println, getRoom, enterRoom, item});
       }
     } else {
       println(`That item doesn't have a use.`);

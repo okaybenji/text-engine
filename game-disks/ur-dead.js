@@ -91,7 +91,7 @@ const urDead = {
 
             The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
             item.desc = 'You could really have a ball with this thing.';
-            item.use = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
+            item.onUse = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
             const skeletons = getCharacter('ronny');
 
@@ -128,7 +128,7 @@ const urDead = {
               },
             ];
           },
-          use: () => println(`You'll have to take it first.`),
+          onUse: () => println(`You'll have to take it first.`),
         }
       ],
       exits: [{dir: 'north', id: 'beach'}],
@@ -164,7 +164,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: 'ramp',
           desc: `Nothing's stopping you from having a good time but you. Type USE RAMP.`,
-          use: () => {
+          onUse: () => {
             enterRoom('deck');
 
             // add exit after player has learned the USE command
@@ -192,7 +192,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: 'door',
           desc: `The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
-          use: () => println(`It's locked.`),
+          onUse: () => println(`It's locked.`),
         },
         {
           name: ['Blockbuster', 'blockbuster', 'store'],
@@ -382,7 +382,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             disk.inventory.push({
               name: 'nametag',
               desc: `It's blank. Choose a name by typing NAME followed by your name.`,
-              use: () => println(`Use the NAME command to choose a name.`),
+              onUse: () => println(`Use the NAME command to choose a name.`),
             });
           },
         }
@@ -410,7 +410,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       endConversation();
 
       // Put the ball back in the room.
-      ball.use = () => println(`You'll have to take it first.`);
+      ball.onUse = () => println(`You'll have to take it first.`);
       room.items.push(ball);
       const itemIndex = disk.inventory.findIndex(i => i === ball);
       disk.inventory.splice(itemIndex, 1);
