@@ -398,7 +398,7 @@ let takeItem = (itemName) => {
         println(`You took the ${getName(item.name)}.`);
       }
     } else {
-      println(`You can't take that.`);
+      println(item.block || `You can't take that.`);
     }
   } else {
     itemIndex = disk.inventory.findIndex(findItem);
