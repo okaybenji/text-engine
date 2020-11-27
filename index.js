@@ -123,7 +123,7 @@ let lookAt = (args) => {
       item.onLook({disk, println, getRoom, enterRoom, item});
     }
   } else {
-    const character = getCharacter(name, getCharactersInRoom(room.id));
+    const character = getCharacter(name, getCharactersInRoom(disk.roomId));
     if (character) {
       // Look at a character.
       if (character.desc) {
