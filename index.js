@@ -110,9 +110,7 @@ let lookThusly = (str) => println(`You look ${str}.`);
 // array -> nothing
 let lookAt = (args) => {
   const [_, name] = args;
-  const room = getRoom(disk.roomId);
-  const findItem = item => item.name === name || item.name.includes(name);
-  const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
+  const item = getItemInInventory(name) || getItemInRoom(name, disk.roomId);
   if (item) {
     // Look at an item.
     if (item.desc) {
@@ -358,7 +356,7 @@ let take = () => {
 // string -> nothing
 let takeItem = (itemName) => {
   const room = getRoom(disk.roomId);
-  const findItem = item => item.name === itemName || item.name.includes(itemName);
+  const findItem = item => objectHasName(item, itemName);
   let itemIndex = room.items && room.items.findIndex(findItem);
   if (typeof itemIndex === 'number' && itemIndex > -1) {
     const item = room.items[itemIndex];
@@ -387,9 +385,7 @@ let takeItem = (itemName) => {
 // use the item with the given name
 // string -> nothing
 let useItem = (itemName) => {
-  const room = getRoom(disk.roomId);
-  const findItem = item => item.name === itemName || item.name.includes(itemName);
-  const item = (room.items && room.items.find(findItem)) || disk.inventory.find(findItem);
+  const item = getItemInInventory(itemName) || getItemInRoom(itemName, disk.roomId);
 
   if (item) {
     if (item.use) {
@@ -726,23 +722,35 @@ let enterRoom = (id) => {
   delete disk.conversant;
 };
 
+// determine whether the object has the passed name
+// item | character, string -> bool
+let objectHasName = (obj, name) => {
+  const compareNames = n => n.toLowerCase().includes(name.toLowerCase());
+
+  return Array.isArray(obj.name)
+    ? obj.name.find(compareNames)
+    : compareNames(obj.name);
+}
+
 // get a list of all characters in the passed room
 // string -> characters
 let getCharactersInRoom = (roomId) => disk.characters.filter(c => c.roomId === roomId);
 
 // get a character by name from a list of characters
 // string, characters -> character
-let getCharacter = (name, chars = disk.characters) => chars.find((c) => {
-  const hasName = n => {
-    return n.toLowerCase().includes(name.toLowerCase());
-  };
-  // search through each variation of the name in an array
-  if (typeof c.name === 'object') {
-    return c.name.find(hasName);
-  }
+let getCharacter = (name, chars = disk.characters) => chars.find(char => objectHasName(char, name));
 
-  return hasName(c.name);
-});
+// get item by name from room with ID
+// string, string -> item
+let getItemInRoom = (itemName, roomId) => {
+  const room = getRoom(disk.roomId);
+
+  return room.items && room.items.find(item => objectHasName(item, itemName))
+};
+
+// get item by name from inventory
+// string -> item
+let getItemInInventory = (name) => disk.inventory.find(item => objectHasName(item, name));
 
 // retrieves a keyword from a topic
 // topic -> string
