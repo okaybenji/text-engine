@@ -175,7 +175,7 @@ const arrive = ({room}) => {
   const door = {
     name: 'door',
     desc: `It’s a door.`,
-    use: () => {
+    onUse: () => {
       clearTimeout(room.openTimeout);
       println(`Uncharacteristically, you open the door rather than wait for assistance. As you exit the carriage, the servant, preoccupied with some tasks, looks to you with panic. "Pardon mademoiselle! I was coming just now to accomodate you. Please forgive my lateness. I was briefly kept by the coachman and had every intention of assisting you myself."`);
       adagio.volume = 1;
@@ -186,7 +186,7 @@ const arrive = ({room}) => {
 
   room.openTimeout = setTimeout(() => {
     println(`The servant opens the door.`),
-    door.use = () => {
+    door.onUse = () => {
       adagio.volume = 1;
       adagio.currentTime = (6 * 60) + 25;
       setTimeout(() =>  enterRoom('gate'),4000);
@@ -206,12 +206,12 @@ const uneBelleSoiree = {
     You feel a bit embarrassed to be preoccupied by such a thought, but you can see that it is a simple fact that you should be counted among the more handsome of debutantes. You think on OLIVIER DAUPHIN, a suitor with handsomeness to match. If only you could fulfill both your personal desires and filial duties with the same man...`,
     getNextDescription,
     examine,
-    look: function() {
+    onLook: function() {
       const room = getRoom('start');
       this.getNextDescription(room);
       this.examine();
     },
-    use: function() {
+    onUse: function() {
       println(this.desc);
       const room = getRoom('start');
       this.getNextDescription(room);
@@ -224,7 +224,7 @@ const uneBelleSoiree = {
     While ARMAND DAUPHIN may not afford the same interest as his brother, I’m certain he can afford quite a lot on nine thousand marcs per annum.`,
     getNextDescription,
     examine,
-    look: function() {
+    onLook: function() {
       const room = getRoom('start');
       this.getNextDescription(room);
       this.desc = `It was a gift from your father to your mother.`;
@@ -261,7 +261,7 @@ const uneBelleSoiree = {
 
           My sons have expressed a special interest in your presence! I know that either would be keen to dance. -Mlle. Dauphin`;
 
-          this.look = function() {
+          this.onLook = function() {
             this.getNextDescription(room);
             this.examine();
           };
@@ -359,7 +359,7 @@ const uneBelleSoiree = {
           name: ['cup','liquid','rum'],
           desc: 'Some kind of alcohol, maybe?',
           isTakeable:true,
-          use: function(){
+          onUse: function(){
             println('Rum. That was definitely some kind of strong rum.');
             disk.guilt++;
             let toBeRemovedIndex = this.items.findIndex(item => item.name[0] == 'cup');
