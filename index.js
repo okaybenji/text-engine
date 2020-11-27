@@ -108,7 +108,15 @@ let inv = () => {
 };
 
 // show room description
-let look = () => println(getRoom(disk.roomId).desc);
+let look = () => {
+  const room = getRoom(disk.roomId);
+
+  if (typeof room.onLook === 'function') {
+    room.onLook({disk, println});
+  }
+
+  println(room.desc)
+};
 
 // look in the passed way
 // string -> nothing
