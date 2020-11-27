@@ -195,7 +195,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onUse: () => println(`It's locked.`),
         },
         {
-          name: ['Blockbuster', 'blockbuster', 'store'],
+          name: ['Blockbuster', 'store'],
           desc: `The lights are off. It looks like there are hours posted on the DOOR.`,
         },
       ],
