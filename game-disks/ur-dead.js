@@ -276,7 +276,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected() {
             // unlock asking Fran about her name
             const fran = getCharacter('fran');
-            fran.chatLog = fran.chatLog || [];
             fran.chatLog.push('dave');
           },
         },
@@ -359,11 +358,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onSelected() {
             // unlock asking bearded skeleton and half-court skeletons about their names
             const dave = getCharacter('dave');
-            dave.chatLog = dave.chatLog || [];
             dave.chatLog.push('fran');
 
             const skeletons = getCharacter('ronny');
-            skeletons.chatLog = skeletons.chatLog || [];
             skeletons.chatLog.push('fran');
           },
         },

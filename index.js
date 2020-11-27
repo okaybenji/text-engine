@@ -29,6 +29,12 @@ let init = (disk) => {
     initializedDisk.characters = [];
   }
 
+  initializedDisk.characters = initializedDisk.characters.map(char => {
+    // player's conversation history with this character
+    char.chatLog = [];
+    return char;
+  });
+
   return initializedDisk;
 };
 
