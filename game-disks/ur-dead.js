@@ -332,7 +332,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       roomId: 'deck',
       desc: `She's wearing a nametag that says "Fran".`,
       onTalk: () => println(`"Hello there, stranger."`),
-      look() {
+      onLook() {
         // now that we know her name, let's call her by it
         const fran = getCharacter('fran');
         fran.name = ['Fran', 'skeleton in a red dress'];

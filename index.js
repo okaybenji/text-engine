@@ -119,8 +119,8 @@ let lookAt = (args) => {
       println(`You don\'t notice anything remarkable about it.`);
     }
 
-    if (typeof(item.look) === 'function') {
-      item.look({disk, println, getRoom, enterRoom, item});
+    if (typeof(item.onLook) === 'function') {
+      item.onLook({disk, println, getRoom, enterRoom, item});
     }
   } else {
     const character = getCharacter(name, getCharactersInRoom(room.id));
@@ -132,8 +132,8 @@ let lookAt = (args) => {
         println(`You don't notice anything remarkable about them.`);
       }
 
-      if (typeof(character.look) === 'function') {
-        character.look({disk, println, getRoom, enterRoom, item});
+      if (typeof(character.onLook) === 'function') {
+        character.onLook({disk, println, getRoom, enterRoom, item});
       }
     } else {
       println(`You don't see any such thing.`);
