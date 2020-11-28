@@ -41,14 +41,18 @@ const demoDisk = {
                   // remove the block
                   const exit = room.exits.find(exit => exit.dir === 'east');
                   delete exit.block;
+                  // this item can only be used once
+                  const key = getItemInInventory('shiny');
+                  delete key.onUse;
                 }
               },
               desc: `It's a key!`,
-              onLook({item}) {
+              onLook() {
+                const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
                 // now that we know it's a key, place that name first so the engine calls it by that name
-                item.name.unshift(`key`);
+                key.name.unshift('key');
                 // remove this method (we don't need it anymore)
-                delete item.onLook;
+                delete key.onLook;
               },
               isTakeable: true,
             })
