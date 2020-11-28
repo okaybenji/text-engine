@@ -743,7 +743,7 @@ let getRoom = (id) => disk.rooms.find(room => room.id === id);
 
 // remove punctuation marks from a string
 // string -> string
-let removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
+let removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\_`~()]/g,"");
 
 // remove extra whitespace from a string
 // string -> string
