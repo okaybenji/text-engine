@@ -105,12 +105,14 @@ const demoDisk = {
         },
       ],
       exits: [
-        {dir: 'east', id: '?', block: `The door is locked.`},
+        {dir: 'east', id: 'advanced', block: `The door is locked.`},
         {dir: 'south', id: 'foyer'},
       ],
     },
     {
-      id: '?',
+      id: 'advanced',
+      name: 'Advanced Research Lab',
+      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions.`,
     },
   ],
   characters: [
@@ -165,6 +167,115 @@ const demoDisk = {
           removeOnRead: true,
         },
       ],
-    }
+    },
+    {
+      name: 'blue robot',
+      roomId: 'advanced',
+      onTalk: () => println(`"I can tell you about making games with text-engine," they explain. "What would you like to know?"`),
+      topics: [
+        {
+          option: `What is TEXT-ENGINE?`,
+          line: `text-engine is a a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies.
+
+          The engine uses a disk metaphor for the data which represents your game, like the floppy disks of yore.
+
+          The engine's code is contained in the file called index.js. Including index.js in your index.html file adds a single function to the global namespace called loadDisk. loadDisk accepts a single argument, which is your disk -- a standard JavaScript object (JSON).`
+        },
+        {
+          option: `How do I get STARTED?`,
+          line: `To create your own adventure, you use this game disk as a template. You will find it in game-disks/demo-disk.js. There are a couple other example games included in that directory as well. You can edit these in any text editor or code editor.
+
+          Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.`
+        },
+        {
+          option: `What is a DISK?`,
+          line: `A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
+
+          roomId (string) - This is a reference to the room the player currently occupies. Set this to the ID of the room the player should start in.
+
+          rooms (array) - List of rooms in the game.
+
+          There are other properties you can choose to include if you like:
+
+          inventory (array) - List of items in the player's inventory.
+
+          characters (array) - List of characters in the game.
+
+          You can also attach any arbitrary data you wish. For instance, you could have a number called "health" that you used to keep track of your player's condition.`
+        },
+        {
+          option: `What is a ROOM?`,
+          line: `A room is a JavaScript object. You usually want a room to have the following properties:
+
+          name (string) - The name of the room will be displayed each time it is entered.
+
+          id (string) - Unique identifier for this room. Can be anything.
+
+          desc (string) - Description of the room, displayed when it is first entered, and also when the player issues the LOOK command.
+
+          exits (array) - List of paths from this room.
+
+          Rooms can have these other optional properties as well:
+
+          img (string) - Graphic to be displayed each time the room is entered. (This is intended to be ASCII art.)
+
+          items (string) - List of items in this room. Items can be interacted with by the player.
+
+          onEnter (function) - Function to be called when the player enters this room.
+
+          onLook (function) - Function to be called when the player issues the LOOK command in this room.`
+        },
+        {
+          option: `What is an EXIT?`,
+          line: `An exit is a JavaScript object with the following properties:
+
+          dir (string) - The direction the player must go to leave via this exit (e.g. "north").
+
+          id (string) - The ID of the room this exit leads to.
+
+          An exit can optionally have a BLOCK as well:
+
+          block (string) - Line to be printed if the player tries to use this exit. If this property exists, the player cannot use the exit.`
+        },
+        {
+          option: `What is an ITEM?`,
+          line: `An item is a JavaScript object with a name:
+
+          name (string or array) - How the item is referred to by the game and the player. Using an array allows you to define multiple string names for the item. You might do this if you expect the player may call it by more than one name. For instance ['basketball', 'ball']. When listing items in a room, the engine will always use the first name in the list.
+
+          Items can have these other optional properties as well:
+
+          desc (string or array) - Description. Text displayed when the player looks at the item. If multiple descriptions are provided, one will be chosen at random.
+
+          isTakeable (boolean) - Whether the player can pick up this item (if it's in a room). Defaults to false.
+
+          onUse (function) - Function to be called when the player uses the item.
+
+          onLook (function) - Function to be called when the player looks at the item.
+
+          onTake (function) - Function to be called when the player takes the item.`
+        },
+        {
+          option: `What is a CHARACTER?`,
+          line: `You're talking to one! A character is a JavaScript object with the following properties:
+
+          name (string or array) - How the character is referred to by the game and the player. Using an array allows you to define multiple string names for the character. You might do this if you expect the player may call them by more than one name. For instance ['Steve', 'waiter', 'garçon']. When characters items in a room, the engine will always use the first name in the list.
+
+          roomId (string) - The ID of the room the character is currently in. The player can only talk to characters in the room with them.
+
+          Characters can have these other optional properties as well:
+
+          desc (string) - Description. Text displayed when the player looks at the character. If multiple descriptions are provided, one will be chosen at random.
+
+          topics (string or array) - If a string is provided, it will be printed when the player talks to this character. Otherwise, this should be a list of topics for use in the conversation with the character
+
+          onTalk (function) - Function to be called when the player talks to the character.`
+        },
+        {
+          option: `What is a TOPIC?`,
+          line: `A topic is something you can talk to a character about, and is a JavaScript object with the following properties:`
+        }
+      ],
+    },
   ]
 };
