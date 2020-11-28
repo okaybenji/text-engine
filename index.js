@@ -778,6 +778,7 @@ let enterRoom = (id) => {
   }
 
   // reset any active conversation
+  delete disk.conversation;
   delete disk.conversant;
 };
 
