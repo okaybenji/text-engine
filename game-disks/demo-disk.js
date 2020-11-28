@@ -19,7 +19,7 @@ const demoDisk = {
 
         Rooms can have exits that take you to other rooms. For instance, to the NORTH is the RECEPTION DESK.
 
-        Rooms can also contain items. Type ITEMS to see a list of items in the FOYER. Or type HELP to see what else you can do!`;
+        Rooms can also contain items. Sometimes the player can TAKE or USE items. Type ITEMS to see a list of items in the FOYER. Or type HELP to see what else you can do!`;
       },
       items: [
         {
@@ -52,16 +52,34 @@ const demoDisk = {
       name: 'Reception Desk',
       desc: `BENJI is here. I'm sure he'd be happy to tell you more about the features available in text-engine. You can speak with characters using the TALK command.
 
-      To the SOUTH is the FOYER where you started your adventure.`
-    }
+      To the EAST is a closed DOOR.
+
+      To the SOUTH is the FOYER where you started your adventure.`,
+      exits: [
+        {dir: 'east', id: '?', block: `The door is locked.`},
+        {dir: 'south', id: 'foyer'},
+      ],
+    },
+    {
+      id: '?',
+    },
   ],
   characters: [
     {
       name: ['Benji', 'Benj', 'receptionist'],
       roomId: 'reception',
       desc: 'He looks... helpful!',
-      onTalk: () => println(`"Hi," he says, "What would you like to know about?"`),
+      onTalk: () => println(`"Hi," he says, "How can I help you?"`),
       topics: [
+        {
+          option: `Tell me about EXITS`,
+          line: `"Sure! It looks like you've already figured out you can type, for instance, GO NORTH to use an exit to the north. But did you know you can just type GO to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
+
+          "There are also some shortcuts to make getting where you're going easier. Instead of typing GO NORTH, you can just type NORTH instead. Actually, for cardinal directions, you can shorten it to simply N.
+
+          "Lastly, sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get out of here.`,
+          removeOnRead: true,
+        },
         {
           option: 'How can I change the LOOK of the game?',
           removeOnRead: true,
@@ -71,7 +89,7 @@ const demoDisk = {
 
             disk.inventory.push({
               name: 'style-changer',
-              desc: 'This is a magical item. Type USE STYLE-CHANGER to try it out!',
+              desc: `This is a magical item. Type USE STYLE-CHANGER to try it out!`,
               onUse: () => {
                 const currentStylesheet = document.getElementById('styles').getAttribute('href');
                 const newName = currentStylesheet.includes('modern') ? 'retro' : 'modern';
@@ -81,7 +99,22 @@ const demoDisk = {
               }
             });
           },
-        }
+        },
+        {
+          option: `Remind me what's up with that DOOR to the east...`,
+          line: `The exit currently has a "block". Specifically, the DOOR it locked. You'll need to find a KEY to open it.`,
+          prereqs: ['exits'],
+        },
+        {
+          option: `I can has AUTOCOMPLETE?`,
+          line: `"Yeah! If you type a few letters and press TAB, the engine will guess what you're trying to say."`,
+          removeOnRead: true,
+        },
+        {
+          option: `If I want to REPEAT a command, do I have to type it again?`,
+          line: `"Wow, it's almost like you're reading my mind. No, you just just press the UP ARROW to see commands you've previously entered."`,
+          removeOnRead: true,
+        },
       ],
     }
   ]
