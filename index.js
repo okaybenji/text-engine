@@ -587,11 +587,11 @@ let applyInput = () => {
 
   if (arguments.length === 1) {
     exec(commands[1][command], arguments[0]);
-  } else if (command === 'take') {
+  } else if (command === 'take' && arguments.length) {
     // support for taking items with spaces in the names
     // (just tries to match on the first word)
     takeItem(arguments[0]);
-  } else if (command === 'use') {
+  } else if (command === 'use' && arguments.length) {
     // support for using items with spaces in the names
     // (just tries to match on the first word)
     useItem(arguments[0]);
