@@ -59,7 +59,7 @@ const demoDisk = {
           },
         },
         {
-          name: 'window',
+          name: 'tall window',
           desc: `All you can see are puffy white clouds over a blue sky.`,
         },
         {
