@@ -183,7 +183,9 @@ const demoDisk = {
           option: `How do I get STARTED?`,
           line: `To create your own adventure, you use this game disk as a template. You will find it in game-disks/demo-disk.js. There are a couple other example games included in that directory as well. You can edit these in any text editor or code editor.
 
-          Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.`
+          Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.
+
+          You are welcome to ask me about any topic you like, but you might find it easier just to browse a few and then dive in to making something of your own. You can return to ask me questions at any time.`
         },
         {
           option: `What is a DISK?`,
@@ -273,9 +275,21 @@ const demoDisk = {
         },
         {
           option: `What is a TOPIC?`,
-          line: `A topic is something you can talk to a character about, and is a JavaScript object with the following properties:
+          line: `A topic is something you can talk to a character about, and as you may have guessed, is a JavaScript object. A topic requires an OPTION, and either a LINE or an ONSELECTED function, or both:
 
-          ...My apologies, Benji hasn't written this part yet.`
+          option (string) - The choice presented to the player, with a KEYWORD the player can type to select it. If the keyword is written in uppercase, the engine can identify it automatically. (Otherwise, you'll need to specify the keyword in a separate property.) The option can be just the keyword itself, or any string containing the keyword.
+
+          line (string) - The text to display when the user types the keyword to select the option.
+
+          onSelected (function) - Function to be called when the player types the keyword to select the option.
+
+          Topics can have these other optional properties as well:
+
+          removeOnRead (boolean) - Whether this option should no longer be available to the player after it has been displayed once.
+
+          prereqs (array) - Array of keyword strings representing the prerequisite topics a player must have selected before this one will appear. (When topics are selected, their keywords go into an array on the character called "chatLog".)
+
+          keyword (string) - The word the player must type to select this option. This property is only required if the option itself does not contain a keyword written in uppercase.`
         }
       ],
     },
