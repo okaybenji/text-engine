@@ -86,6 +86,24 @@ const demoDisk = {
       To the EAST is a closed door.
 
       To the SOUTH is the FOYER where you started your adventure.`,
+      items: [
+        {
+          name: 'desk',
+        },
+        {
+          name: 'door',
+          desc: `There are 4" metal letters nailed to the door. They spell out: "ADVANCED".`,
+          onUse: () => {
+            const reception = getRoom('reception');
+            const exit = reception.exits.find(exit => exit.dir === 'east');
+            if (exit.block) {
+              println(`It's locked.`);
+            } else {
+              goDir('east');
+            }
+          },
+        },
+      ],
       exits: [
         {dir: 'east', id: '?', block: `The door is locked.`},
         {dir: 'south', id: 'foyer'},
