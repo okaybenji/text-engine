@@ -83,6 +83,12 @@ let save = (name = 'save') => {
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
   const save = localStorage.getItem(name);
+
+  if (!save) {
+    println(`Save file not found.`);
+    return;
+  }
+
   disk = JSON.parse(save, (key, value) => {
     try {
       return eval(value);
@@ -108,7 +114,15 @@ let inv = () => {
 };
 
 // show room description
-let look = () => println(getRoom(disk.roomId).desc);
+let look = () => {
+  const room = getRoom(disk.roomId);
+
+  if (typeof room.onLook === 'function') {
+    room.onLook({disk, println});
+  }
+
+  println(room.desc)
+};
 
 // look in the passed way
 // string -> nothing
@@ -390,7 +404,7 @@ let takeItem = (itemName) => {
         println(`You took the ${getName(item.name)}.`);
       }
     } else {
-      println(`You can't take that.`);
+      println(item.block || `You can't take that.`);
     }
   } else {
     itemIndex = disk.inventory.findIndex(findItem);
@@ -573,6 +587,14 @@ let applyInput = () => {
 
   if (arguments.length === 1) {
     exec(commands[1][command], arguments[0]);
+  } else if (command === 'take' && arguments.length) {
+    // support for taking items with spaces in the names
+    // (just tries to match on the first word)
+    takeItem(arguments[0]);
+  } else if (command === 'use' && arguments.length) {
+    // support for using items with spaces in the names
+    // (just tries to match on the first word)
+    useItem(arguments[0]);
   } else if (arguments.length >= commands.length) {
     exec(commands[commands.length - 1][command], arguments);
   } else if (room.exits && room.exits.find(exit => exit.dir === command)) {
