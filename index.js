@@ -581,6 +581,10 @@ let applyInput = () => {
 
   if (arguments.length === 1) {
     exec(commands[1][command], arguments[0]);
+  } else if (command === 'take') {
+    // support for taking items with spaces in the names
+    // (just tries to match on the first word)
+    takeItem(arguments[0]);
   } else if (arguments.length >= commands.length) {
     exec(commands[commands.length - 1][command], arguments);
   } else if (room.exits && room.exits.find(exit => exit.dir === command)) {
