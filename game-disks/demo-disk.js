@@ -24,8 +24,35 @@ const demoDisk = {
       items: [
         {
           name: ['monstera', 'plant', 'swiss cheese'],
-          desc: `Sometimes called a Swiss Cheese plant, no office is complete without one. It has lovely, large leaves. This is the biggest you\'ve ever seen.`,
+          desc: `Sometimes called a Swiss Cheese plant, no office is complete without one. It has lovely, large leaves. This is the biggest you\'ve ever seen.
+
+          There's SOMETHING SHINY in the pot.`,
           block: `It's far too large for you to carry.`,
+          onLook() {
+            const foyer = getRoom('foyer');
+            foyer.items.push({
+              name: ['shiny thing', 'something shiny', 'pot'],
+              onUse() {
+                const room = getRoom(disk.roomId);
+                if (room.id === 'foyer') {
+                  println(`There's nothing to unlock in the foyer.`);
+                } else if (room.id === 'reception') {
+                  println(`You unlock the door to the EAST!`);
+                  // remove the block
+                  const exit = room.exits.find(exit => exit.dir === 'east');
+                  delete exit.block;
+                }
+              },
+              desc: `It's a key!`,
+              onLook({item}) {
+                // now that we know it's a key, place that name first so the engine calls it by that name
+                item.name.unshift(`key`);
+                // remove this method (we don't need it anymore)
+                delete item.onLook;
+              },
+              isTakeable: true,
+            })
+          },
         },
         {
           name: 'window',
@@ -52,7 +79,7 @@ const demoDisk = {
       name: 'Reception Desk',
       desc: `BENJI is here. I'm sure he'd be happy to tell you more about the features available in text-engine. You can speak with characters using the TALK command.
 
-      To the EAST is a closed DOOR.
+      To the EAST is a closed door.
 
       To the SOUTH is the FOYER where you started your adventure.`,
       exits: [
@@ -73,7 +100,7 @@ const demoDisk = {
       topics: [
         {
           option: `Tell me about EXITS`,
-          line: `"Sure! It looks like you've already figured out you can type, for instance, GO NORTH to use an exit to the north. But did you know you can just type GO to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
+          line: `"Sure! It looks like you've already figured out you can type GO NORTH to use an exit to the north. But did you know you can just type GO to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
 
           "There are also some shortcuts to make getting where you're going easier. Instead of typing GO NORTH, you can just type NORTH instead. Actually, for cardinal directions, you can shorten it to simply N.
 
