@@ -9,7 +9,7 @@ const demoDisk = {
       desc:  `Welcome to the TEXT-ENGINE demo disk! This disk is a text adventure game designed to introduce you to the features available to you in text-engine. Using this engine, you can make a text game of your own.
 
       Type LOOK to have a look around.`,
-      onLook() {
+      onLook: () => {
         const room = getRoom('foyer');
         room.desc = `You are currently standing in the FOYER. There's a huge MONSTERA plant to your right, and a massive WINDOW to your left bathing the room in natural light. Both the PLANT and the WINDOW stretch to the ceiling, which must be at least 25 feet high.
 
@@ -28,11 +28,11 @@ const demoDisk = {
 
           There's SOMETHING SHINY in the pot.`,
           block: `It's far too large for you to carry.`,
-          onLook() {
+          onLook: () => {
             const foyer = getRoom('foyer');
             foyer.items.push({
               name: ['shiny thing', 'something shiny', 'pot'],
-              onUse() {
+              onUse: () => {
                 const room = getRoom(disk.roomId);
                 if (room.id === 'foyer') {
                   println(`There's nothing to unlock in the foyer.`);
@@ -47,10 +47,10 @@ const demoDisk = {
                 }
               },
               desc: `It's a key!`,
-              onLook() {
+              onLook: () => {
                 const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
                 // now that we know it's a key, place that name first so the engine calls it by that name
-                key.name.unshift('key');
+                key.name.unshift('silver key');
                 // remove this method (we don't need it anymore)
                 delete key.onLook;
               },
@@ -68,7 +68,7 @@ const demoDisk = {
           isTakeable: true,
           onTake: () => println(`You bend down and pick up the tiny, shiny coin. Now it's in your INVENTORY, and you can use it at any time, in any room. (Don't spend it all in one place!)
           Type INV to see a list of items in your inventory.`),
-          onUse() {
+          onUse: () => {
             const side = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
             println(`You flip the dime. It lands on ${side}.`);
           },
