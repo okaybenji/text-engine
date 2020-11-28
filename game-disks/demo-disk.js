@@ -46,7 +46,7 @@ const demoDisk = {
                   delete key.onUse;
                 }
               },
-              desc: `It's a key!`,
+              desc: `It's a silver key!`,
               onLook: () => {
                 const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
                 // now that we know it's a key, place that name first so the engine calls it by that name
@@ -112,7 +112,7 @@ const demoDisk = {
     {
       id: 'advanced',
       name: 'Advanced Research Lab',
-      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions.`,
+      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
     },
   ],
   characters: [
@@ -128,7 +128,7 @@ const demoDisk = {
 
           "There are also some shortcuts to make getting where you're going easier. Instead of typing GO NORTH, you can just type NORTH instead. Actually, for cardinal directions, you can shorten it to simply N.
 
-          "Lastly, sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get out of here.`,
+          "Sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get out of here.`,
           removeOnRead: true,
         },
         {
@@ -144,7 +144,7 @@ const demoDisk = {
               onUse: () => {
                 const currentStylesheet = document.getElementById('styles').getAttribute('href');
                 const newName = currentStylesheet.includes('modern') ? 'retro' : 'modern';
-                println(`You changed the stylesheet to ${newName.toUpperCase()}.css
+                println(`You changed the stylesheet to ${newName.toUpperCase()}.css.
                 Since text-engine is built with HTML, you can use Cascading Stylesheets (CSS) to make your game look however you want!`);
                 selectStylesheet(`styles/${newName}.css`);
               }
@@ -153,7 +153,7 @@ const demoDisk = {
         },
         {
           option: `Remind me what's up with that DOOR to the east...`,
-          line: `The exit currently has a "block". Specifically, the DOOR it locked. You'll need to find a KEY to open it.`,
+          line: `The exit has a "block". Specifically, the DOOR it locked. You'll need to find a KEY to open it.`,
           prereqs: ['exits'],
         },
         {
@@ -163,7 +163,7 @@ const demoDisk = {
         },
         {
           option: `If I want to REPEAT a command, do I have to type it again?`,
-          line: `"Wow, it's almost like you're reading my mind. No, you just just press the UP ARROW to see commands you've previously entered."`,
+          line: `"Wow, it's almost like you're reading my mind. No, you can just press the UP ARROW to see commands you've previously entered."`,
           removeOnRead: true,
         },
       ],
@@ -175,11 +175,9 @@ const demoDisk = {
       topics: [
         {
           option: `What is TEXT-ENGINE?`,
-          line: `text-engine is a a JavaScript REPL-style text-based adventure game engine. It's small and easy to use with no dependencies.
+          line: `text-engine is a a JavaScript REPL-style, text-based adventure game engine. It's small and easy to use with no dependencies.
 
-          The engine uses a disk metaphor for the data which represents your game, like the floppy disks of yore.
-
-          The engine's code is contained in the file called index.js. Including index.js in your index.html file adds a single function to the global namespace called loadDisk. loadDisk accepts a single argument, which is your disk -- a standard JavaScript object (JSON).`
+          The engine uses a disk metaphor for the data which represents your game, like the floppy disks of yore.`
         },
         {
           option: `How do I get STARTED?`,
@@ -259,7 +257,7 @@ const demoDisk = {
           option: `What is a CHARACTER?`,
           line: `You're talking to one! A character is a JavaScript object with the following properties:
 
-          name (string or array) - How the character is referred to by the game and the player. Using an array allows you to define multiple string names for the character. You might do this if you expect the player may call them by more than one name. For instance ['Steve', 'waiter', 'garçon']. When characters items in a room, the engine will always use the first name in the list.
+          name (string or array) - How the character is referred to by the game and the player. Using an array allows you to define multiple string names for the character. You might do this if you expect the player may call them by more than one name. For instance ['Steve', 'waiter', 'garçon']. When listing characters in a room, the engine will always use the first name in the list.
 
           roomId (string) - The ID of the room the character is currently in. The player can only talk to characters in the room with them.
 
@@ -269,11 +267,15 @@ const demoDisk = {
 
           topics (string or array) - If a string is provided, it will be printed when the player talks to this character. Otherwise, this should be a list of topics for use in the conversation with the character
 
-          onTalk (function) - Function to be called when the player talks to the character.`
+          onTalk (function) - Function to be called when the player talks to the character.
+
+          onLook (function) - Function to be called when the player looks at the character.`
         },
         {
           option: `What is a TOPIC?`,
-          line: `A topic is something you can talk to a character about, and is a JavaScript object with the following properties:`
+          line: `A topic is something you can talk to a character about, and is a JavaScript object with the following properties:
+
+          ...My apologies, Benji hasn't written this part yet.`
         }
       ],
     },
