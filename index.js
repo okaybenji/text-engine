@@ -83,6 +83,12 @@ let save = (name = 'save') => {
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
   const save = localStorage.getItem(name);
+
+  if (!save) {
+    println(`Save file not found.`);
+    return;
+  }
+
   disk = JSON.parse(save, (key, value) => {
     try {
       return eval(value);
