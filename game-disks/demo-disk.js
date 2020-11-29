@@ -1,32 +1,10 @@
-// custom functions used by this disk
-// change the CSS stylesheet to the one with the passed name
-const selectStylesheet = filename => document.getElementById('styles').setAttribute('href', filename);
-
-// override commands to include custom UNLOCK command
-// create the unlock function
-const unlock = () => {
-  disk.rooms.forEach(room => {
-    if (!room.exits) {
-      return;
-    }
-
-    // unblock all blocked exits in the room
-    room.exits.forEach(exit => delete exit.block);
-  });
-
-  println(`All exits have been unblocked!`);
-};
-
-// attach it to the zero-argument commands object on the disk
-commands[0] = Object.assign(commands[0], {unlock});
-
-// the disk itself
 const demoDisk = {
-  roomId: 'foyer',
+  roomId: 'foyer', // the ID of the room the player starts in
   rooms: [
     {
-      id: 'foyer',
-      name: 'The Foyer',
+      id: 'foyer', // unique ID for this room
+      name: 'The Foyer', // room name (shown when player enters the room)
+      // room description (shown when player first enters the room)
       desc:  `Welcome to the TEXT-ENGINE demo disk! This disk is a text adventure game designed to introduce you to the features available to you in text-engine. Using this engine, you can make a text game of your own.
 
       Type LOOK to have a look around.`,
@@ -429,3 +407,25 @@ const demoDisk = {
     },
   ],
 };
+
+// custom functions used by this disk
+// change the CSS stylesheet to the one with the passed name
+const selectStylesheet = filename => document.getElementById('styles').setAttribute('href', filename);
+
+// override commands to include custom UNLOCK command
+// create the unlock function
+const unlock = () => {
+  disk.rooms.forEach(room => {
+    if (!room.exits) {
+      return;
+    }
+
+    // unblock all blocked exits in the room
+    room.exits.forEach(exit => delete exit.block);
+  });
+
+  println(`All exits have been unblocked!`);
+};
+
+// attach it to the zero-argument commands object on the disk
+commands[0] = Object.assign(commands[0], {unlock});
