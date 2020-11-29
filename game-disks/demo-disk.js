@@ -8,6 +8,8 @@ const demoDisk = {
       desc:  `Welcome to the TEXT-ENGINE demo disk! This disk is a text adventure game designed to introduce you to the features available to you in text-engine. Using this engine, you can make a text game of your own.
 
       Type LOOK to have a look around.`,
+      // optional callback when player issues the LOOK command
+      // here, we use it to change the foyer's description
       onLook: () => {
         const room = getRoom('foyer');
         room.desc = `You are currently standing in the FOYER. There's a huge MONSTERA plant to your right, and a massive WINDOW to your left bathing the room in natural light. Both the PLANT and the WINDOW stretch to the ceiling, which must be at least 25 feet high.
@@ -20,13 +22,19 @@ const demoDisk = {
 
         Rooms can also contain items. Sometimes the player can TAKE or USE items. Type ITEMS to see a list of items in the FOYER. Or type HELP to see what else you can do!`;
       },
+      // optional list of items in the room
       items: [
         {
-          name: ['monstera', 'plant', 'swiss cheese'],
+          name: 'tall window', // the item's name
+          desc: `All you can see are puffy white clouds over a blue sky.`, // description shown when player looks at the item
+        },
+        {
+          name: ['monstera', 'plant', 'swiss cheese'], // player can refer to this item by any of these names
           desc: `Sometimes called a Swiss Cheese plant, no office is complete without one. It has lovely, large leaves. This is the biggest you\'ve ever seen.
 
           There's SOMETHING SHINY in the pot.`,
-          block: `It's far too large for you to carry.`,
+          block: `It's far too large for you to carry.`, // optional reason player cannot pick up this item
+          // when player looks at the plant, they discover a shiny object which turns out to be a key
           onLook: () => {
             const foyer = getRoom('foyer');
             foyer.items.push({
@@ -50,6 +58,7 @@ const demoDisk = {
               desc: `It's a silver key!`,
               onLook: () => {
                 const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
+
                 // now that we know it's a key, place that name first so the engine calls it by that name
                 key.name.unshift('silver key');
 
@@ -64,22 +73,21 @@ const demoDisk = {
           },
         },
         {
-          name: 'tall window',
-          desc: `All you can see are puffy white clouds over a blue sky.`,
-        },
-        {
           name: 'dime',
           desc: `Wow, ten cents.`,
-          isTakeable: true,
+          isTakeable: true, // allow the player to TAKE this item
           onTake: () => println(`You bend down and pick up the tiny, shiny coin. Now it's in your INVENTORY, and you can use it at any time, in any room. (Don't spend it all in one place!)
           Type INV to see a list of items in your inventory.`),
+          // using the dime randomly prints HEADS or TAILS
           onUse: () => {
             const side = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
             println(`You flip the dime. It lands on ${side}.`);
           },
         }
       ],
+      // places the player can go from this room
       exits: [
+        // GO NORTH command leads to the Reception Desk
         {dir: 'north', id: 'reception'},
       ],
     },
@@ -121,6 +129,7 @@ const demoDisk = {
         },
       ],
       exits: [
+        // exits with a BLOCK cannot be used, but print a message instead
         {dir: 'east', id: 'lab', block: `The door is locked.`},
         {dir: ['upstairs', 'up'], id: 'advanced', block: `There's a locked gate blocking your path.`},
         {dir: 'south', id: 'foyer'},
@@ -129,7 +138,9 @@ const demoDisk = {
     {
       id: 'lab',
       name: 'Research Lab',
-      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
+      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)
+
+      To the WEST is the door to the Reception Desk.`,
       exits: [
         {dir: 'west', id: 'reception'},
       ],
@@ -137,7 +148,9 @@ const demoDisk = {
     {
       id: 'advanced',
       name: 'Advanced Research Lab',
-      desc: `There is a RED ROBOT hovering silently in the center of a black void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
+      desc: `There is a RED ROBOT hovering silently in the center of a black void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)
+
+      DOWNSTAIRS is the Reception Desk.`,
       exits: [
         {dir: ['downstairs', 'down'], id: 'reception'},
       ],
@@ -147,11 +160,14 @@ const demoDisk = {
     {
       name: ['Benji', 'Benj', 'receptionist'],
       roomId: 'reception',
-      desc: 'He looks... helpful!',
+      desc: 'He looks... helpful!', // printed when the player looks at the character
+      // optional callback, run when the player talks to this character
       onTalk: () => println(`"Hi," he says, "How can I help you?"`),
+      // things the player can discuss with the character
       topics: [
         {
           option: `Tell me about EXITS`,
+          // text printed when the player selects this option by typing the keyword (EXITS)
           line: `"Sure! It looks like you've already figured out you can type GO NORTH to use an exit to the north. But did you know you can just type GO to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
 
           "There are also some shortcuts to make getting where you're going easier. Instead of typing GO NORTH, you can just type NORTH instead. Actually, for cardinal directions, you can shorten it to simply N.
@@ -159,15 +175,18 @@ const demoDisk = {
           "Sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get inside.
 
           "These STAIRS are also blocked by a locked gate. There isn't a key, so if you want to see what's up there, you'll have to find another way to get past the gate."`,
+          // instruct the engine to remove this option once the player has selected it
           removeOnRead: true,
         },
         {
           option: 'How can I change the visual STYLE of the game?',
           removeOnRead: true,
+          // optional callback, run when the player selects this option
           onSelected() {
             println(`BENJI pulls a strange-looking ITEM out of a desk drawer.
             "Here, take this." he says. "Try typing USE STYLE-CHANGER. That should give you some ideas."`)
 
+            // add a special item to the player's inventory
             disk.inventory.push({
               name: 'style-changer',
               desc: `This is a magical item. Type USE STYLE-CHANGER to try it out!`,
@@ -184,7 +203,7 @@ const demoDisk = {
         {
           option: `Remind me what's up with that DOOR to the east...`,
           line: `The exit has a "block". Specifically, the DOOR it locked. You'll need to find a KEY to open it.`,
-          prereqs: ['exits'],
+          prereqs: ['exits'], // optional list of prerequisite topics that must be discussed before this option is available
         },
         {
           option: `Remind me what's up with these STAIRS...`,
