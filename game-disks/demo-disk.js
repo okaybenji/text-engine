@@ -212,7 +212,7 @@ const demoDisk = {
         },
         {
           option: `How do I use AUTOCOMPLETE?`,
-          line: `"Yeah! If you type a few letters and press TAB, the engine will guess what you're trying to say."`,
+          line: `"If you type a few letters and press TAB, the engine will guess what you're trying to say."`,
           removeOnRead: true,
         },
         {
