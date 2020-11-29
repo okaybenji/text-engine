@@ -357,8 +357,75 @@ const demoDisk = {
     {
       name: 'red robot',
       roomId: 'advanced',
-      onTalk: () => println(`"I can tell you about more advanced things you can do with text-engine," they explain. "What would you like to know?"`),
-      topics: []
+      onTalk: () => println(`"I can tell you about the JavaScript functions available to you when you use text-engine," they explain. "What would you like to know about?"`),
+      topics: [
+        {
+          option: `Tell me about FUNCTIONS`,
+          line: `Functions are reuseable bits of JavaScript code. text-engine provides several of these which you can use, for instance in callbacks like onUse, onLook, onEnter, etc.`
+        },
+        {
+          option: `Tell me about COMMANDS`,
+          line: `Every command a player can issue in the game has a corresponding function in text-engine. For instance, there's a function called "go" that gets called when the player types GO. You can add your own custom commands, like the UNLOCK command you used to get access to this room. And if existing commands don't work how you want them to, you can ever override them by reassigning them to your own function code.`,
+        },
+        {
+          option: `Tell me about PRINTLN`,
+          line: `println is a function you can use to print a line of text to the console. It takes up to two arguments:
+
+          line (string) - The text to be printed.
+
+          className (string) - Optional. The name of a CSS class to apply to the line. You can use this to style the text.`
+        },
+        {
+          option: `Tell me about PICKONE`,
+          line: `pickOne is a function you can use to get a random item from an array. It takes one argument:
+
+          arr (array) - The array with the items to pick from.`
+        },
+        {
+          option: `Tell me about GETROOM`,
+          line: `getRoom is a function you can use to get a reference to a room by its ID. It takes one argument:
+
+          id (string) - The unique identifier for the room.`
+        },
+        {
+          option: `Tell me about ENTERROOM`,
+          line: `enterRoom is a function you can use to move the player to particular room. It takes one argument:
+
+          id (string) - The unique identifier for the room.`
+        },
+        {
+          option: `Tell me about GETCHARACTER`,
+          line: `getCharacter is a function you can use to get a reference to a character. It takes up to two arguments:
+
+          name (string) - The character's name.
+
+          chars (array) - Optional. The array of characters to search. Defaults to searching all characters on the disk.`
+        },
+        {
+          option: `Tell me about GETCHARACTERSINROOM`,
+          line: `getCharactersInRoom is a function you can use to get an array containing references to each character in a particular room. It takes one argument:
+
+          roomId (string) - The unique identifier for the room.`
+        },
+        {
+          option: `Tell me about GETITEMINROOM`,
+          line: `getItemInRoom is a function you can use to get a reference to an item in a particular room. It takes two arguments:
+
+          itemName (string) - The name of the item.
+
+          roomId (string) - The unique identifier for the room.`
+        },
+        {
+          option: `Tell me about GETITEMININVENTORY`,
+          line: `getItemInInventory is a function you can use to get a reference to an item in the player's inventory. It takes one argument:
+
+          name (string) - The name of the item.`
+        },
+        {
+          option: `Tell me about OTHER functions`,
+          line: `There are several other functions available in the engine! Feel free to take a peek at the source code (index.js). It's designed to be open and simple to use and to customize.`
+        },
+      ],
     },
   ],
 };
