@@ -64,7 +64,9 @@ const demoDisk = {
                   delete exit.block;
                   // this item can only be used once
                   const key = getItemInInventory('shiny');
-                  delete key.onUse;
+                  key.onUse = () => println(`The lab has already been unlocked.`);
+                } else {
+                  println(`There's nothing to unlock here.`);
                 }
               },
               desc: `It's a silver key!`,
@@ -72,6 +74,10 @@ const demoDisk = {
                 const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
                 // now that we know it's a key, place that name first so the engine calls it by that name
                 key.name.unshift('silver key');
+
+                // let's also update the description
+                key.desc = `It has a blue cap with the word "LAB" printed on it.`;
+
                 // remove this method (we don't need it anymore)
                 delete key.onLook;
               },
@@ -106,14 +112,16 @@ const demoDisk = {
 
       To the EAST is a closed door.
 
-      To the SOUTH is the FOYER where you started your adventure.`,
+      To the SOUTH is the FOYER where you started your adventure.
+
+      Next to the DESK are stairs leading UP.`,
       items: [
         {
           name: 'desk',
         },
         {
           name: 'door',
-          desc: `There are 4" metal letters nailed to the door. They spell out: "ADVANCED".`,
+          desc: `There are 4" metal letters nailed to the door. They spell out: "RESEARCH LAB".`,
           onUse: () => {
             const reception = getRoom('reception');
             const exit = reception.exits.find(exit => exit.dir === 'east');
@@ -124,16 +132,37 @@ const demoDisk = {
             }
           },
         },
+        {
+          name: 'gate',
+          desc: `The guilded gate is blocking the way to the stairs.`,
+        },
+        {
+          name: 'stairs',
+          desc: `They lead up to a door. If you squint, you can make out the word "ADVANCED" on the door.`,
+          onUse: () => println(`Try typing GO UPSTAIRS (once you've unlocked the gate).`),
+        },
       ],
       exits: [
-        {dir: 'east', id: 'advanced', block: `The door is locked.`},
+        {dir: 'east', id: 'lab', block: `The door is locked.`},
+        {dir: ['upstairs', 'up'], id: 'advanced', block: `There's a locked gate blocking your path.`},
         {dir: 'south', id: 'foyer'},
+      ],
+    },
+    {
+      id: 'lab',
+      name: 'Research Lab',
+      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
+      exits: [
+        {dir: 'west', id: 'reception'},
       ],
     },
     {
       id: 'advanced',
       name: 'Advanced Research Lab',
-      desc: `There is a BLUE ROBOT hovering silently in the center of a white void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
+      desc: `There is a RED ROBOT hovering silently in the center of a black void. They appear to be awaiting instructions. (Type TALK to speak to the robot.)`,
+      exits: [
+        {dir: ['downstairs', 'down'], id: 'reception'},
+      ],
     },
   ],
   characters: [
@@ -149,11 +178,13 @@ const demoDisk = {
 
           "There are also some shortcuts to make getting where you're going easier. Instead of typing GO NORTH, you can just type NORTH instead. Actually, for cardinal directions, you can shorten it to simply N.
 
-          "Sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get out of here.`,
+          "Sometimes you'll want to temporarily prevent players from using an exit. You can use BLOCKS for this. Try going EAST from here to see what I mean. You'll find the DOOR is locked. You'll need to find the KEY to get inside.
+
+          "These STAIRS are also blocked by a locked gate. There isn't a key, so if you want to see what's up there, you'll have to find another way to get past the gate."`,
           removeOnRead: true,
         },
         {
-          option: 'How can I change the LOOK of the game?',
+          option: 'How can I change the visual STYLE of the game?',
           removeOnRead: true,
           onSelected() {
             println(`BENJI pulls a strange-looking ITEM out of a desk drawer.
@@ -178,7 +209,12 @@ const demoDisk = {
           prereqs: ['exits'],
         },
         {
-          option: `I can has AUTOCOMPLETE?`,
+          option: `Remind me what's up with these STAIRS...`,
+          line: `The STAIRS are blocked by a locked GATE. There isn't a key, so you need to find another way to unlock it.`,
+          prereqs: ['exits'],
+        },
+        {
+          option: `How do I use AUTOCOMPLETE?`,
           line: `"Yeah! If you type a few letters and press TAB, the engine will guess what you're trying to say."`,
           removeOnRead: true,
         },
@@ -191,7 +227,7 @@ const demoDisk = {
     },
     {
       name: 'blue robot',
-      roomId: 'advanced',
+      roomId: 'lab',
       onTalk: () => println(`"I can tell you about making games with text-engine," they explain. "What would you like to know?"`),
       topics: [
         {
@@ -202,7 +238,7 @@ const demoDisk = {
         },
         {
           option: `How do I get STARTED?`,
-          line: `To create your own adventure, you use this game disk as a template. You will find it in game-disks/demo-disk.js. There are a couple other example games included in that directory as well. You can edit these in any text editor or code editor.
+          line: `To create your own adventure, you can use this game disk as a template. You will find it in game-disks/demo-disk.js. There are a couple other example games included in that directory as well. You can edit these in any text editor or code editor.
 
           Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.
 
@@ -311,8 +347,18 @@ const demoDisk = {
           prereqs (array) - Array of keyword strings representing the prerequisite topics a player must have selected before this one will appear. (When topics are selected, their keywords go into an array on the character called "chatLog".)
 
           keyword (string) - The word the player must type to select this option. This property is only required if the option itself does not contain a keyword written in uppercase.`
-        }
+        },
+        {
+          option: `Can you unlock the GATE to the stairs by the reception desk?`,
+          line: `Actually, you can do that yourself! This disk happens to have a secret, custom UNLOCK command. This powerful command will remove blocks on any exit. Just type UNLOCK to use it.`,
+        },
       ],
     },
-  ]
+    {
+      name: 'red robot',
+      roomId: 'advanced',
+      onTalk: () => println(`"I can tell you about more advanced things you can do with text-engine," they explain. "What would you like to know?"`),
+      topics: []
+    },
+  ],
 };
