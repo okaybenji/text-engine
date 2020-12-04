@@ -443,6 +443,9 @@ const unlock = () => {
     room.exits.forEach(exit => delete exit.block);
   });
 
+  // update the description of the gate
+  getItemInRoom('gate', 'reception').desc = `The guilded gate leads to the staircase.`;
+
   println(`All exits have been unblocked!`);
 };
 
