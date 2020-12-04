@@ -255,7 +255,7 @@ const demoDisk = {
 
           characters (array) - List of characters in the game.
 
-          You can also attach any arbitrary data you wish. For instance, you could have a number called "health" that you used to keep track of your player's condition.`
+          You can also attach any arbitrary data you wish. For instance, you could have a number called "health" that you use to keep track of your player's condition.`
         },
         {
           option: `What is a ROOM?`,
@@ -319,9 +319,9 @@ const demoDisk = {
 
           Characters can have these other optional properties as well:
 
-          desc (string) - Description. Text displayed when the player looks at the character. If multiple descriptions are provided, one will be chosen at random.
+          desc (string or array) - Description. Text displayed when the player looks at the character. If multiple descriptions are provided, one will be chosen at random.
 
-          topics (string or array) - If a string is provided, it will be printed when the player talks to this character. Otherwise, this should be a list of topics for use in the conversation with the character
+          topics (string or array) - If a string is provided, it will be printed when the player talks to this character. Otherwise, this should be a list of topics for use in the conversation with the character.
 
           onTalk (function) - Function to be called when the player talks to the character.
 
@@ -339,7 +339,7 @@ const demoDisk = {
 
           Topics can have these other optional properties as well:
 
-          removeOnRead (boolean) - Whether this option should no longer be available to the player after it has been displayed once.
+          removeOnRead (boolean) - Whether this option should no longer be available to the player after it has been selected once.
 
           prereqs (array) - Array of keyword strings representing the prerequisite topics a player must have selected before this one will appear. (When topics are selected, their keywords go into an array on the character called "chatLog".)
 
