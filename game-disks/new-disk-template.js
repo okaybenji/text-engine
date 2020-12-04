@@ -22,7 +22,7 @@ const newDiskTemplate = {
           desc: `You could probably USE it to cut the VINES, unblocking the door.`,
           isTakeable: true,
           onUse: () => {
-            // Remove the block on the room.
+            // Remove the block on the room's only exit.
             const firstRoom = getRoom('start');
             delete firstRoom.exits[0].block;
             
