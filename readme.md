@@ -253,14 +253,20 @@ Here are a few examples of ways to override the default commands:
 // In this example, the command is called "play", and the user would type "play" to use the command.
 commands[0] = Object.assign(commands[0], {play});
 
+// Override a command's function.
+// In this example, we're overriding the "save" command.
+save = () => println(`Sorry, saving is not supported in this game.`);
+
 // Remove an existing command.
 // In this example, we're removing the "save" command.
 delete commands[0].save;
 
-// Completely override existing commands.
+// Completely replace existing commands.
 // In this example, the only two commands available in the entire game will be "walk" and "talk".
 commands = [{walk: () => println(‘you walk’), talk: () => println(‘you talk’)}];
 ```
+
+If you do remove some or all of the default commands, you'll want to override the `help` function as well so that it doesn't list commands which are not supported by your game.
 
 ### Other Functions
 There are several other functions available in the engine! Feel free to take a peek at the [source code](https://github.com/okaybenji/text-engine/blob/master/index.js). It's designed to be open and simple to use and to customize.
