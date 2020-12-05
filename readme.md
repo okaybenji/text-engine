@@ -202,6 +202,14 @@ Move the player to particular room. It takes one argument:
 | ------------ | -------- | ----------- |
 | `id`         | String   | The unique identifier for the room. |
 
+### getExit
+Get a reference to an exit by its direction name from a list of exits. It takes two argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `dir`        | String   | The name of the exit's `dir` (direction) property, e.g. "north". |
+| `exits`      | Array    | The list of exits to search. (Usually you would get a reference to a room and pass `room.exits`.) |
+
 ### getCharacter
 Get a reference to a character. It takes up to two arguments:
 
