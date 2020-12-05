@@ -314,6 +314,7 @@ If you are writing functions for your game, you'll need to keep these in mind as
 * Unlimited Adventure demo inspired by [Forgotten](https://sophiapark.itch.io/forgotten) by Sophia Park, Arielle Grimes, and Emilie Sovis and also [this screenshot](https://cdn-images-1.medium.com/max/1600/1*IRP1NLN5jQTwuWNfXXhjPA.gif), whatever it is.
 * "Ultimate Apple II Font" from [KreativeKorp](http://www.kreativekorp.com/software/fonts/apple2.shtml).
 * Some ASCII art adapted from [ASCII Art Archive](https://www.asciiart.eu/buildings-and-places/castles).
+* Special thanks to [Caleb Creed](https://github.com/thirdcreed) for helping me flesh out the features for text-engine 2.0 and for designing and writing the auto-complete functionality.
 
 ### Updates
 
