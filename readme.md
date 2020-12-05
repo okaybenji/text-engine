@@ -253,6 +253,7 @@ Here are a few examples of ways to override the default commands:
 ```
 // Add a command which takes no arguments.
 // In this example, the command is called "play", and the user would type "play" to use the command.
+const play = () => println(`You're already playing a game!`);
 commands[0] = Object.assign(commands[0], {play});
 
 // Override a command's function.
