@@ -807,7 +807,7 @@ let getCharacter = (name, chars = disk.characters) => chars.find(char => objectH
 // get item by name from room with ID
 // string, string -> item
 let getItemInRoom = (itemName, roomId) => {
-  const room = getRoom(disk.roomId);
+  const room = getRoom(roomId);
 
   return room.items && room.items.find(item => objectHasName(item, itemName))
 };
