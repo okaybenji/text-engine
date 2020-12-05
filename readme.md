@@ -12,25 +12,20 @@
 ███████ ██   ████  ██████  ██ ██   ████ ███████
 ```
 
-#### What is it?
 A JavaScript REPL-style text-based adventure game engine. Small and easy to use with no dependencies.
 
-#### How do I use it?
+### How do I use it?
 To create your own adventure, you can use one of the files in the `game-disks` folder as a template.
 
-Include your 'game disk' (JSON data) in `index.html` and load it with `loadDisk(myGameData)`.
+Include your "game disk" (JSON data) in `index.html` and load it with `loadDisk(myGameData)`.
 
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine). It's a good idea to give that game a try to get introduced to the engine.
 
 ![Demo Screenshot](screenshot.gif "Demo Screenshot")
 
-#### That was a little fast...
-You're right. Here are some more in-depth instructions...
-
-#### The loadDisk function
 `text-engine` uses a disk metaphor for the data which represents your game, like the floppy disks of yore. Including `index.js` from this repository in your `index.html` `<script>`s adds a several functions to the global namespace. One of these is called `loadDisk`. `loadDisk` accepts a single argument, which is your disk -- a standard JavaScript object (JSON).
 
-#### What's a disk?
+## Disks
 A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
 
 | Property    | Type     | Description |
