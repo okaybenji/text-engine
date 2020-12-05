@@ -17,13 +17,15 @@ A JavaScript REPL-style text-based adventure game engine. Small and easy to use 
 ### How do I use it?
 To create your own adventure, you can use one of the files in the `game-disks` folder as a template.
 
-Include your "game disk" (JSON data) in `index.html` and load it with `loadDisk(myGameData)`.
+Include your "game disk" (JSON data) in [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) and load it with `loadDisk(myGameData)`.
 
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine). It's a good idea to give that game a try to get introduced to the engine.
 
 ![Demo Screenshot](screenshot.gif "Demo Screenshot")
 
-`text-engine` uses a disk metaphor for the data which represents your game, like the floppy disks of yore. Including `index.js` from this repository in your `index.html` `<script>`s adds a several functions to the global namespace. One of these is called `loadDisk`. `loadDisk` accepts a single argument, which is your disk -- a standard JavaScript object (JSON).
+`text-engine` uses a disk metaphor for the data which represents your game, like the floppy disks of yore.
+
+Including [index.js](https://github.com/okaybenji/text-engine/blob/master/index.js) from this repository in your [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) `<script>` adds a several functions to the global namespace. One of these is called `loadDisk`. `loadDisk` accepts a single argument, which is your disk -- a standard JavaScript object (JSON).
 
 ## Disks
 A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
@@ -133,9 +135,11 @@ Topics can have these other optional properties as well:
 That's everything! If you've made a JSON object with a `roomId` and a list of `rooms` -- that is, a disk -- you've got a playable game!
 
 ### How do I play it?
-Just pass a reference to your disk to the loadDisk function. Take a look at `index.html` to see an example. I've saved my disk to a `const` variable called `demoDisk` in `game-disks/demo-disk.js`. I've included that file and `index.js` in my HTML file, and added a script tag with a single line to call `loadDisk(demoDisk)`. The game boots when `index.html` is loaded in a browser.
+Just pass a reference to your disk to the loadDisk function. Take a look at [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) to see an example.
 
-You can use the included `index.html` file in your own project, or you can create your own. If you make your own, note that you will need to add two elements:
+I've saved my disk to a `const` variable called `demoDisk` in [game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/master/game-disks/demo-disk.js). I've included that file and `index.js` in my HTML file, and added a script tag with a single line to call `loadDisk(demoDisk)`. The game boots when [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) is loaded in a web browser.
+
+You can use the included [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) file in your own project, or you can create your own. If you make your own, note that you will need to add two elements:
 
 * A `div` with ID `output`. This is where the game text will appear.
 ```
@@ -231,12 +235,12 @@ Every command a player can issue in the game has a corresponding function in tex
 
 For instance, there's a function called "go" that gets called when the player types GO.
 
-You can add your own custom commands, as well. Take a look at the "unlock" command in `game-disks/demo-disk.js` for an example.
+You can add your own custom commands, as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/demo-disk/game-disks/demo-disk.js#L434-L453) for an example.
 
 And if existing commands don't work how you want them to, you can ever override them by reassigning them to your own function code. For instance, you may wish to implement your own versions of the SAVE and LOAD commands.
 
 ### Other Functions
-There are several other functions available in the engine! Feel free to take a peek at the source code (`index.js`). It's designed to be open and simple to use and to customize.
+There are several other functions available in the engine! Feel free to take a peek at the [source code](https://github.com/okaybenji/text-engine/blob/master/index.js). It's designed to be open and simple to use and to customize.
 
 ## Etc.
 ### Useful Tools
