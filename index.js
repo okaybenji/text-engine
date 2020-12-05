@@ -194,7 +194,7 @@ let go = () => {
 
 // find the exit with the passed direction in the given list
 // string, array -> exit
-let findExit = (dir, exits) => exits.find(exit =>
+let getExit = (dir, exits) => exits.find(exit =>
   Array.isArray(exit.dir)
     ? exit.dir.includes(dir)
     : exit.dir === dir
@@ -211,7 +211,7 @@ let goDir = (dir) => {
     return;
   }
 
-  const nextRoom = findExit(dir, exits);
+  const nextRoom = getExit(dir, exits);
 
   if (!nextRoom) {
     println(`There is no exit in that direction.`);
@@ -601,7 +601,7 @@ let applyInput = () => {
     useItem(arguments[0]);
   } else if (arguments.length >= commands.length) {
     exec(commands[commands.length - 1][command], arguments);
-  } else if (room.exits && findExit(command, room.exits)) {
+  } else if (room.exits && getExit(command, room.exits)) {
     // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {

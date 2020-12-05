@@ -24,7 +24,7 @@ const newDiskTemplate = {
           onUse: () => {
             // Remove the block on the room's only exit.
             const room = getRoom('start');
-            const exit = findExit('north', room.exits);
+            const exit = getExit('north', room.exits);
 
             if (exit.block) {
               delete exit.block;
