@@ -169,7 +169,7 @@ Once your game is running, the player can use the following commands:
 ```
 
 ## Functions
-Functions are reuseable bits of JavaScript code. text-engine provides several of these which you can use, for instance in callbacks like onUse, onLook, onEnter, etc.
+Functions are reuseable bits of JavaScript code. text-engine provides several of these which you can use, for instance in callbacks like `onUse`, `onLook`, `onEnter`, etc.
 
 Writing and using functions is optional, but they give you a great deal more flexibility with the sort of game you can make.
 
@@ -242,7 +242,7 @@ You can add your own custom commands, as well. Take a look at [the "unlock" comm
 #### Overriding the default command set
 If existing commands don't work how you want them to, you can override them by reassigning them to your own function code.
 
-For instance, you may wish to implement your own versions of the SAVE and LOAD commands. Or you may not wish to include SAVE or LOAD at all.
+For instance, you may wish to implement your own versions of the "save" and "load" commands. Or you may not wish to include `save` or `load` at all.
 
 Commands are stored on a global array called `commands`. Each element in the array is a JavaScript object with methods attached. The index of the element indicates how many arguments it accepts. So, for instance, all methods attached to `commands[0]` take zero arguments.
 
@@ -273,6 +273,35 @@ If you do remove some or all of the default commands, you'll want to override th
 
 ### Other Functions
 There are several other functions available in the engine! Feel free to take a peek at the [source code](https://github.com/okaybenji/text-engine/blob/master/index.js). It's designed to be open and simple to use and to customize.
+
+### A word of caution regarding SAVE/LOAD
+The default implementation of saving and loading games in text-engine is quite simple. It converts the current state of the entire game disk to a string and saves that to your browser's Local Storage.
+
+This simplicity comes at a cost. **Here there be dragons.** There are several things you must keep in mind as you write your disk if you want the built-in save functionality to work correctly.
+
+Before we get to that list, I'd like to remind you that these commands can be removed from your game, or you can write your own save/load functions. (See *Overriding the default command set* above.)
+
+Without further ado, **here are the requirements for supporting the built-in "save" and "load" commands**:
+
+* If you publish changes to your game disk, old saves are not likely to be compatible. This is because the save contains the entire disk, and loading the save overwrites the new disk with the old one.
+* Certain keywords such as "key" and "window" must be avoided as object names (because these are reserved by JavaScript and will not survive the parse). The recommended way around this is to add adjectives to your names, such as "silver key" or "tall window".
+* Circular JSON structures are not supported (a property cannot point to its object's ancestor).
+
+If you are writing functions for your game, you'll need to keep these in mind as well:
+
+* Functions attached to the disk must not rely on [closures](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36). Closures are lost when a JSON object is converted to a string representation.
+* You cannot use the [shorthand syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions) for defining methods. That is,
+
+```
+{
+  onUse() {
+    // This version will not work.
+  },
+  onUse: () => {
+    // This one is okay!
+  },
+}
+```
 
 ## Etc.
 ### Useful Tools
