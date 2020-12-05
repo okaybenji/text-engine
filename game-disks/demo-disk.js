@@ -235,7 +235,7 @@ const demoDisk = {
         },
         {
           option: `How do I get STARTED?`,
-          line: `To create your own adventure, you can use this game disk as a template. You will find it in game-disks/demo-disk.js. There are a couple other example games included in that directory as well. You can edit these in any text editor or code editor.
+          line: `To create your own adventure, you can use an existing game disk as a template. You will find the disk you're playing now as well as others in the folder called "game-disks". You can edit these in any text or code editor.
 
           Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.
 
