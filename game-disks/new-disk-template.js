@@ -1,40 +1,40 @@
 // This simple game disk can be used as a starting point to create a new adventure.
 // Change anything you want, add new rooms, etc.
 const newDiskTemplate = {
-  roomId: 'start',
+  roomId: 'start', // Set this to the ID of the room you want the player to start in.
   rooms: [
     {
-      id: 'start',
-      name: 'The First Room',
-      desc: `There's a door to the NORTH, but it is overgrown with VINES. Type ITEMS to see a list of items in the room.`,
+      id: 'start', // Unique identifier for this room. Entering a room will set the disk's roomId to this.
+      name: 'The First Room', // Displayed each time the player enters the room.
+      desc: `There's a door to the NORTH, but it is overgrown with VINES. Type ITEMS to see a list of items in the room.`, // Displayed when the player first enters the room.
       items: [
         {
           name: 'door',
-          desc: 'It leads NORTH.',
-          onUse: () => println(`Type GO NORTH to try the door.`),
+          desc: 'It leads NORTH.', // Displayed when the player looks at the item.
+          onUse: () => println(`Type GO NORTH to try the door.`), // Called when the player uses the item.
         },
         {
-          name: ['vines', 'vine'],
+          name: ['vines', 'vine'], // The player can refer to this item by either name. The game will use the first name.
           desc: `They grew over the DOOR, blocking it from being opened.`,
         },
         {
           name: 'axe',
           desc: `You could probably USE it to cut the VINES, unblocking the door.`,
-          isTakeable: true,
+          isTakeable: true, // Allows the player to take the item.
           onUse: () => {
             // Remove the block on the room's only exit.
             const firstRoom = getRoom('start');
             delete firstRoom.exits[0].block;
-            
+
             println(`You cut through the vines, unblocking the door to the NORTH.`);
           },
         }
       ],
       exits: [
         {
-          dir: 'north',
+          dir: 'north', // "dir" can be anything. If it's north, the player will type "go north" to get to the room called "A Forest Clearing".
           id: 'clearing',
-          block: `The DOOR leading NORTH is overgrown with VINES.`,
+          block: `The DOOR leading NORTH is overgrown with VINES.`, // If an exit has a block, the player will not be able to go that direction until the block is removed.
         },
       ],
     },
