@@ -24,9 +24,13 @@ const newDiskTemplate = {
           onUse: () => {
             // Remove the block on the room's only exit.
             const firstRoom = getRoom('start');
-            delete firstRoom.exits[0].block;
 
-            println(`You cut through the vines, unblocking the door to the NORTH.`);
+            if (firstRoom.exits[0].block) {
+              delete firstRoom.exits[0].block;
+              println(`You cut through the vines, unblocking the door to the NORTH.`);
+            } else {
+              println(`There is nothing to use the axe on.`);
+            }
           },
         }
       ],
