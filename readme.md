@@ -162,6 +162,83 @@ Once your game is running, the player can use the following commands:
   HELP:   this help menu
 ```
 
+## Functions
+Functions are reuseable bits of JavaScript code. text-engine provides several of these which you can use, for instance in callbacks like onUse, onLook, onEnter, etc.
+
+Writing and using functions is optional, but they give you a great deal more flexibility with the sort of game you can make.
+
+### println
+Print a line of text to the console. It takes up to two arguments:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `line`       | String   | The text to be printed. |
+| `className`  | String   | *Optional.* The name of a CSS class to apply to the line. You can use this to style the text. |
+
+### pickOne
+Get a random item from an array. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `arr`        | Array    | The array with the items to pick from. |
+
+### getRoom
+Get a reference to a room by its ID. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `id`         | String   | The unique identifier for the room. |
+
+### enterRoom
+Move the player to particular room. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `id`         | String   | The unique identifier for the room. |
+
+### getCharacter
+Get a reference to a character. It takes up to two arguments:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `name`       | String   | The character's name. |
+| `chars`      | Array    | *Optional.* The array of characters to search. Defaults to searching all characters on the disk. |
+
+### getCharactersInRoom
+Get an array containing references to each character in a particular room. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `roomId`     | String   | The unique identifier for the room. |
+
+### getItemInRoom
+Get a reference to an item in a particular room. It takes two arguments:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `itemName`   | String   | The name of the item. |
+| `roomId`     | String   | The unique identifier for the room. |
+
+### getItemInInventory
+Get a reference to an item in the player's inventory. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `name`       | String   | The name of the item. |
+
+### Commands
+Every command a player can issue in the game has a corresponding function in text-engine.
+
+For instance, there's a function called "go" that gets called when the player types GO.
+
+You can add your own custom commands, as well. Take a look at the "unlock" command in `game-disks/demo-disk.js` for an example.
+
+And if existing commands don't work how you want them to, you can ever override them by reassigning them to your own function code. For instance, you may wish to implement your own versions of the SAVE and LOAD commands.
+
+### Other Functions
+There are several other functions available in the engine! Feel free to take a peek at the source code (`index.js`). It's designed to be open and simple to use and to customize.
+
+## Etc.
 ### Useful Tools
 * [REXPaint](https://www.gridsagegames.com/rexpaint) - Makes creating ASCII art super easy.
 * [ASCII-Code.com](http://www.ascii-code.com) - Convenient for copying and pasting ASCII characters.
@@ -175,7 +252,7 @@ Once your game is running, the player can use the following commands:
 
 ### Updates
 
-* 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `printLn` function, support for randomizing printed lines, various bug fixes & improvements.
+* 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, various bug fixes & improvements.
 * 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.
 * 1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)
