@@ -100,7 +100,7 @@ const demoDisk = {
 
       To the SOUTH is the FOYER where you started your adventure.
 
-      Next to the DESK are stairs leading UP.`,
+      Next to the DESK are STAIRS leading UP.`,
       items: [
         {
           name: 'desk',
@@ -120,10 +120,10 @@ const demoDisk = {
         },
         {
           name: 'gate',
-          desc: `The guilded gate is blocking the way to the stairs.`,
+          desc: `The guilded gate is blocking the way to the STAIRS.`,
         },
         {
-          name: 'stairs',
+          name: ['stairs', 'staircase'],
           desc: `They lead up to a door. If you squint, you can make out the word "ADVANCED" on the door.`,
           onUse: () => println(`Try typing GO UPSTAIRS (once you've unlocked the gate).`),
         },
