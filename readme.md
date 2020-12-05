@@ -237,7 +237,30 @@ For instance, there's a function called "go" that gets called when the player ty
 
 You can add your own custom commands, as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/demo-disk/game-disks/demo-disk.js#L434-L453) for an example.
 
-And if existing commands don't work how you want them to, you can ever override them by reassigning them to your own function code. For instance, you may wish to implement your own versions of the SAVE and LOAD commands.
+#### Overriding the default command set
+If existing commands don't work how you want them to, you can override them by reassigning them to your own function code.
+
+For instance, you may wish to implement your own versions of the SAVE and LOAD commands. Or you may not wish to include SAVE or LOAD at all.
+
+Commands are stored on a global array called `commands`. Each element in the array is a JavaScript object with methods attached. The index of the element indicates how many arguments it accepts. So, for instance, all methods attached to `commands[0]` take zero arguments.
+
+Methods are named according to what the player types to issue them. For instance, the player can type "go" with no arguments to see available exits in the room. This command is found at `commands[0].go`.
+
+Here are a few examples of ways to override the default commands:
+
+```
+// Add a command which takes no arguments.
+// In this example, the command is called "play", and the user would type "play" to use the command.
+commands[0] = Object.assign(commands[0], {play});
+
+// Remove an existing command.
+// In this example, we're removing the "save" command.
+delete commands[0].save;
+
+// Completely override existing commands.
+// In this example, the only two commands available in the entire game will be "walk" and "talk".
+commands = [{walk: () => println(‘you walk’), talk: () => println(‘you talk’)}];
+```
 
 ### Other Functions
 There are several other functions available in the engine! Feel free to take a peek at the [source code](https://github.com/okaybenji/text-engine/blob/master/index.js). It's designed to be open and simple to use and to customize.
