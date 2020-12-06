@@ -137,7 +137,7 @@ const demoDisk = {
       exits: [
         // exits with a BLOCK cannot be used, but print a message instead
         {dir: 'east', id: 'lab', block: `The door is locked.`},
-        {dir: ['upstairs', 'up'], id: 'advanced', block: `There's a locked gate blocking your path.`},
+        {dir: ['upstairs', 'up'], id: 'advanced', block: `There's a locked GATE blocking your path.`},
         {dir: 'south', id: 'foyer'},
       ],
     },
