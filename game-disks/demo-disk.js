@@ -222,6 +222,7 @@ const demoDisk = {
           • Double-asterisks like &ast;&ast;this&ast;&ast; will make it **bold**.
           • Triple-asterisks like &ast;&ast;&ast;this&ast;&ast;&ast; will make it ***italic bold***.
           • Double-underscores like &lowbar;_this&lowbar;_ will __underline__ it.`,
+          removeOnRead: true,
         },
         {
           option: `Remind me what's up with that **DOOR** to the east...`,
