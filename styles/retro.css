@@ -60,6 +60,10 @@ body::after {
   display: flex;
 }
 
+a {
+  color: orange;
+}
+
 #input {
   height: 4vh;
   width: 98.5vh;

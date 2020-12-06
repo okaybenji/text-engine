@@ -86,8 +86,8 @@ br {
   outline: none;
 }
 
-/* color the user's input */
-.user {
+/* color the user's input & links */
+.user, a {
   color: lightskyblue;
 }
 
