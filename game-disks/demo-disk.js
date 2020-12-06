@@ -207,6 +207,17 @@ const demoDisk = {
           },
         },
         {
+          option: 'How can I use **RICH** text?',
+          line: `The text in the game is actually HTML, so you can use tags like <code>&lt;b&gt;</code> for <b>bold</b>, <code>&lt;i&gt;</code> for <i>italic</i>, and <code>&lt;u&gt;</code> for <u>underline</u>.
+
+          There's also support for Markdown-like syntax:
+
+          • Wrapping some text in asterisks like &ast;this&ast; will *italicize* it.
+          • Double-asterisks like &ast;&ast;this&ast;&ast; will make it **bold**.
+          • Triple-asterisks like &ast;&ast;&ast;this&ast;&ast;&ast; will make it ***italic bold***.
+          • Double-underscores like &lowbar;_this&lowbar;_ will __underline__ it.`,
+        },
+        {
           option: `Remind me what's up with that **DOOR** to the east...`,
           line: `The exit has a *block*. Specifically, the **DOOR** it locked. You'll need to find a **KEY** to open it.`,
           prereqs: ['exits'], // optional list of prerequisite topics that must be discussed before this option is available
