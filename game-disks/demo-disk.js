@@ -71,6 +71,12 @@ const demoDisk = {
                 delete key.onLook;
               },
               isTakeable: true,
+              onTake: () => {
+                println(`You took it.`);
+                // update the monstera's description, removing everything starting at the line break
+                const plant = getItemInRoom('plant', 'foyer');
+                plant.desc = plant.desc.slice(0, plant.desc.indexOf('\n'));
+              },
             })
           },
         },
