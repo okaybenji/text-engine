@@ -36,7 +36,7 @@ br {
   display: inline-block;
   position: relative;
   left: 50%;
-  font-family: 'Nanum Gothic Coding', monospace;
+  font-family: monospace;
   transform: translateX(-50%);
   line-height: 1vh;
 }

@@ -12,12 +12,7 @@ const playSound = (name) => {
 playSound('boot');
 
 // Override the keypress listener to also play a typing sound.
-// Capture the original method.
-const originalOnKeyDown = document.onkeydown;
 document.onkeydown = document.onkeypress = (event) => {
-  // Call the original method.
-  originalOnKeyDown(event);
-  
   // Add the sound.
   playSound('keypress');
 };
