@@ -1,15 +1,22 @@
-<meta charset="UTF-8">
+<!-- Game content -->
 <div id="output"></div>
-<span>> </span><input id="input" spellcheck="false"><div id="caret"></div>
 
-<link rel="stylesheet" type="text/css" href="styles.css">
-<link rel="stylesheet" type="text/css" href="custom/styles.css">
+<!-- Player input -->
+<div class="input">
+  <span class="ml-2">> </span><input id="input" autofocus spellcheck="false">
+</div>
 
-<!-- Include game data ('disk') -->
-<script src="game-disks/unlimited-adventure.js"></script>
+<!-- CSS styles -->
+<link id="styles" rel="stylesheet" type="text/css" href="styles/modern.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@700&family=Work+Sans&display=swap" rel="stylesheet">
+
 <!-- Include game engine -->
 <script src="index.js"></script>
-<!-- Custom code -->
-<script src="custom/file-system.js"></script>
-<script src="custom/caret.js"></script>
-<script src="custom/audio.js"></script>
+
+<!-- Include game data ('disk') -->
+<script src="game-disks/demo-disk.js"></script>
+
+<!-- Load disk into engine -->
+<script>loadDisk(demoDisk);</script>

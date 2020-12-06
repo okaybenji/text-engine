@@ -1,6 +1,6 @@
 {
   "name": "text-engine",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "A browser-based text adventure game engine",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "repl"
   ],
   "author": "Benji Kay",
-  "license": "ISC",
+  "license": "GPL",
   "bugs": {
     "url": "https://github.com/okaybenji/text-engine/issues"
   },

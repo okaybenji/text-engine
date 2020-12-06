@@ -1,0 +1,101 @@
+@font-face{
+  font-family: 'Work Sans', sans-serif;
+  src: url('fonts/font.ttf');
+}
+
+body {
+  background: white;
+  color: #AAA;
+  font-size: 2.5vh;
+  font-family: 'Work Sans', sans-serif;
+  line-height: 4vh;
+  margin: 10vw;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 1vw;
+}
+
+::-webkit-scrollbar-track {
+  background: lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+  background: whitesmoke;
+}
+
+br {
+  content: '';
+  display: block;
+  margin-bottom: 2vh;
+}
+
+.img {
+  white-space: pre;
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  font-family: 'Nanum Gothic Coding', monospace;
+  transform: translateX(-50%);
+  line-height: 1vh;
+}
+
+.room-name {
+  margin-top: 7.5vh;
+  font-family: 'Nanum Gothic Coding', monospace;
+  font-size: 3.5vh;
+}
+
+.title {
+  font-family: 'Nanum Gothic Coding', monospace;
+  font-size: 12vh;
+  margin-bottom: 2.5vh !important;
+  line-height: 9.5vh;
+}
+
+#output {
+  padding: 2vw 2vw 0 2vw;
+}
+
+#output div {
+  margin-bottom: 1vw;
+}
+
+.input {
+  display: flex;
+}
+
+#input {
+  height: 4vh;
+  width: 98.5vh;
+  color: lightskyblue;
+  background: transparent;
+  font-size: 2.5vh;
+  font-family: 'Work Sans', sans-serif;
+  border: none;
+  position: relative;
+  bottom: 0.175vh;
+  margin-left: .5vw;
+}
+
+.ml-2 {
+  margin-left: 2vw;
+}
+
+#input:focus {
+  outline: none;
+}
+
+/* color the user's input & links */
+.user, a {
+  color: lightskyblue;
+}
+
+@keyframes blink {
+  0% {background: #AAA;}
+  49% {background: #AAA;}
+  60% {background: transparent;}
+  99% {background: transparent;}
+  100% {background: #AAA;}
+}
