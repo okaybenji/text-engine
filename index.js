@@ -6,7 +6,7 @@ let inputs = [''];
 let inputsPos = 0;
 
 // define list style
-let bullet = '*';
+let bullet = '•';
 
 // reference to the input element
 let input = document.querySelector('#input');
@@ -192,6 +192,14 @@ let go = () => {
   });
 };
 
+// find the exit with the passed direction in the given list
+// string, array -> exit
+let getExit = (dir, exits) => exits.find(exit =>
+  Array.isArray(exit.dir)
+    ? exit.dir.includes(dir)
+    : exit.dir === dir
+);
+
 // go the passed direction
 // string -> nothing
 let goDir = (dir) => {
@@ -203,11 +211,7 @@ let goDir = (dir) => {
     return;
   }
 
-  const nextRoom = exits.find(exit =>
-    typeof exit.dir === 'object'
-      ? exit.dir.includes(dir)
-      : exit.dir === dir
-  );
+  const nextRoom = getExit(dir, exits);
 
   if (!nextRoom) {
     println(`There is no exit in that direction.`);
@@ -597,7 +601,7 @@ let applyInput = () => {
     useItem(arguments[0]);
   } else if (arguments.length >= commands.length) {
     exec(commands[commands.length - 1][command], arguments);
-  } else if (room.exits && room.exits.find(exit => exit.dir === command)) {
+  } else if (room.exits && getExit(command, room.exits)) {
     // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
@@ -605,6 +609,19 @@ let applyInput = () => {
   } else {
     exec(commands[arguments.length][command], arguments);
   }
+};
+
+// allows wrapping text in special characters so println can convert them to HTML tags
+// string, string, string -> string
+let addStyleTags = (str, char, tagName) => {
+  let odd = true;
+  while (str.includes(char)) {
+    const tag = odd ? `<${tagName}>` : `</${tagName}>`;
+    str = str.replace(char, tag);
+    odd = !odd;
+  }
+
+  return str;
 };
 
 // overwrite user input
@@ -645,7 +662,19 @@ let println = (line, className) => {
     newLine.classList.add('user');
   }
 
-  output.appendChild(newLine).innerText = str;
+  // support for markdown-like bold, italic & underline tags
+  if (className !== 'img') {
+    str = addStyleTags(str, '__', 'u');
+    str = addStyleTags(str, '**', 'b');
+    str = addStyleTags(str, '*', 'i');
+  }
+
+  // maintain line breaks
+  while (str.includes('\n')) {
+    str = str.replace('\n', '<br>');
+  }
+
+  output.appendChild(newLine).innerHTML = str;
   window.scrollTo(0, document.body.scrollHeight);
 };
 
@@ -743,7 +772,7 @@ let getRoom = (id) => disk.rooms.find(room => room.id === id);
 
 // remove punctuation marks from a string
 // string -> string
-let removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\-_`~()]/g,"");
+let removePunctuation = str => str.replace(/[.,\/#?!$%\^&\*;:{}=\_`~()]/g,"");
 
 // remove extra whitespace from a string
 // string -> string
@@ -778,6 +807,7 @@ let enterRoom = (id) => {
   }
 
   // reset any active conversation
+  delete disk.conversation;
   delete disk.conversant;
 };
 
@@ -802,7 +832,7 @@ let getCharacter = (name, chars = disk.characters) => chars.find(char => objectH
 // get item by name from room with ID
 // string, string -> item
 let getItemInRoom = (itemName, roomId) => {
-  const room = getRoom(disk.roomId);
+  const room = getRoom(roomId);
 
   return room.items && room.items.find(item => objectHasName(item, itemName))
 };
