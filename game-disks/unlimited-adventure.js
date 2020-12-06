@@ -1,3 +1,6 @@
+// customize the appearance of the bullets
+bullet = '&ast;';
+
 // customize the help menu
 help = () => println(`LOOK :: repeat room description
 LOOK AT [OBJECT NAME] e.g. 'look at key'
