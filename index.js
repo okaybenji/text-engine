@@ -6,7 +6,7 @@ let inputs = [''];
 let inputsPos = 0;
 
 // define list style
-let bullet = '*';
+let bullet = '•';
 
 // reference to the input element
 let input = document.querySelector('#input');
@@ -611,6 +611,19 @@ let applyInput = () => {
   }
 };
 
+// allows wrapping text in special characters so println can convert them to HTML tags
+// string, string, string -> string
+let addStyleTags = (str, char, tagName) => {
+  let odd = true;
+  while (str.includes(char)) {
+    const tag = odd ? `<${tagName}>` : `</${tagName}>`;
+    str = str.replace(char, tag);
+    odd = !odd;
+  }
+
+  return str;
+};
+
 // overwrite user input
 // string -> nothing
 let setInput = (str) => {
@@ -649,7 +662,19 @@ let println = (line, className) => {
     newLine.classList.add('user');
   }
 
-  output.appendChild(newLine).innerText = str;
+  // support for markdown-like bold, italic & underline tags
+  if (className !== 'img') {
+    str = addStyleTags(str, '__', 'u');
+    str = addStyleTags(str, '**', 'b');
+    str = addStyleTags(str, '*', 'i');
+  }
+
+  // maintain line breaks
+  while (str.includes('\n')) {
+    str = str.replace('\n', '<br>');
+  }
+
+  output.appendChild(newLine).innerHTML = str;
   window.scrollTo(0, document.body.scrollHeight);
 };
 

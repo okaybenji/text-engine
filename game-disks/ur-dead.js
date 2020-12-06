@@ -1,8 +1,6 @@
-// customize bullet character
-bullet = '•';
+// NOTE: This game is a work in progress!
 
 // override commands to include custom commands
-
 // play command
 const play = () => println(`You're already playing a game.`);
 
@@ -25,7 +23,7 @@ const name = (arg) => {
 
   // update Fran's greeting
   const fran = getCharacter('fran');
-  fran.onTalk = () => println(`Hello there, ${disk.playerName}.`);
+  fran.onTalk = () => println(`"Hello there, ${disk.playerName}."`);
 
   // confirm the change
   println(`Your name is now ${disk.playerName}.`);
@@ -342,7 +340,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: [
         {
           option: `WHO are you?`,
-          line: `I'm Fran. Didn't you see the nametag?`,
+          line: `"I'm Fran. Didn't you see the nametag?"`,
           removeOnRead: true,
           onSelected: () => {
             // now that we know her name, let's call her by it

@@ -5,7 +5,7 @@ const demoDisk = {
       id: 'foyer', // unique ID for this room
       name: 'The Foyer', // room name (shown when player enters the room)
       // room description (shown when player first enters the room)
-      desc:  `Welcome to the TEXT-ENGINE demo disk! This disk is a text adventure game designed to introduce you to the features available to you in text-engine. Using this engine, you can make a text game of your own.
+      desc:  `Welcome to the **TEXT-ENGINE** demo disk! This disk is a text adventure game designed to introduce you to the features available to you in text-engine. Using this engine, you can make a text game of your own.
 
       Type LOOK to have a look around.`,
       // optional callback when player issues the LOOK command
