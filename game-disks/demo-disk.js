@@ -260,7 +260,7 @@ const demoDisk = {
           option: `How do I get **STARTED**?`,
           line: `To create your own adventure, you can use an existing game disk as a template. You will find the disk you're playing now as well as others in the folder called "game-disks". You can edit these in any text or code editor.
 
-          Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at the included index.html file for an example.
+          Include the 'game disk' (JSON data) in index.html and load it with loadDisk(myGameData). You can look at <a href="https://github.com/okaybenji/text-engine/blob/master/index.html" target="_blank">the included index.html file</a> for an example.
 
           You are welcome to ask me about any topic you like, but you might find it easier just to browse a few and then dive in to making something of your own. You can return to ask me questions at any time.`
         },
@@ -447,7 +447,7 @@ const demoDisk = {
         },
         {
           option: `Tell me about **OTHER** functions`,
-          line: `There are several other functions available in the engine! Feel free to take a peek at the source code (index.js). It's designed to be open and simple to use and to customize.`
+          line: `There are several other functions available in the engine! Feel free to take a peek at the source code (<a href="https://github.com/okaybenji/text-engine/blob/master/index.js" target="_blank">index.js</a>). It's designed to be open and simple to use and to customize.`
         },
       ],
     },
