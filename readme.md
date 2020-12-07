@@ -245,7 +245,7 @@ Every command a player can issue in the game has a corresponding function in tex
 
 For instance, there's a function called "go" that gets called when the player types GO.
 
-You can add your own custom commands, as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/demo-disk/game-disks/demo-disk.js#L434-L453) for an example.
+You can add your own custom commands, as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/07d5d7488ff00b9d4ceaf6e36a5e0e654b21b7ae/game-disks/demo-disk.js#L463-L482) for an example.
 
 #### Overriding the default command set
 If existing commands don't work how you want them to, you can override them by reassigning them to your own function code.
