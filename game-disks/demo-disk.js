@@ -87,6 +87,7 @@ const demoDisk = {
           onTake: () => println(`You bend down and pick up the tiny, shiny coin.
 
           *Now it's in your **inventory**, and you can use it at any time, in any room. (Don't spend it all in one place!)
+
           Type **INV** to see a list of items in your inventory.*`),
           // using the dime randomly prints HEADS or TAILS
           onUse: () => {
