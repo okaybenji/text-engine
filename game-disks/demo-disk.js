@@ -179,19 +179,6 @@ const demoDisk = {
       // things the player can discuss with the character
       topics: [
         {
-          option: `Tell me about **EXITS**`,
-          // text printed when the player selects this option by typing the keyword (EXITS)
-          line: `"Sure! It looks like you've already figured out you can type **GO NORTH** to use an exit to the north. But did you know you can just type **GO** to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
-
-          "There are also some shortcuts to make getting where you're going easier. Instead of typing **GO NORTH**, you can just type **NORTH** instead. Actually, for cardinal directions, you can shorten it to simply **N**.
-
-          "Sometimes you'll want to temporarily prevent players from using an **exit**. You can use *blocks* for this. Try going **EAST** from here to see what I mean. You'll find the **DOOR** is locked. You'll need to find the **KEY** to get inside.
-
-          "These **STAIRS** are also blocked by a locked **GATE**. There isn't a key to the gate, so if you want to see what's up there, you'll have to find another way to get past it."`,
-          // instruct the engine to remove this option once the player has selected it
-          removeOnRead: true,
-        },
-        {
           option: 'How can I change the visual **STYLE** of the game?',
           removeOnRead: true,
           // optional callback, run when the player selects this option
@@ -223,6 +210,19 @@ const demoDisk = {
           • Double-asterisks like &ast;&ast;this&ast;&ast; will make it **bold**.
           • Triple-asterisks like &ast;&ast;&ast;this&ast;&ast;&ast; will make it ***italic bold***.
           • Double-underscores like &lowbar;_this&lowbar;_ will __underline__ it.`,
+          removeOnRead: true,
+        },
+        {
+          option: `Tell me about **EXITS**`,
+          // text printed when the player selects this option by typing the keyword (EXITS)
+          line: `"Sure! It looks like you've already figured out you can type **GO NORTH** to use an exit to the north. But did you know you can just type **GO** to get a list of exits from the room? If an exit leads you to a room you've been to before, it will even tell you the room's name.
+
+          "There are also some shortcuts to make getting where you're going easier. Instead of typing **GO NORTH**, you can just type **NORTH** instead. Actually, for cardinal directions, you can shorten it to simply **N**.
+
+          "Sometimes you'll want to temporarily prevent players from using an **exit**. You can use *blocks* for this. Try going **EAST** from here to see what I mean. You'll find the **DOOR** is locked. You'll need to find the **KEY** to get inside.
+
+          "These **STAIRS** are also blocked by a locked **GATE**. There isn't a key to the gate, so if you want to see what's up there, you'll have to find another way to get past it."`,
+          // instruct the engine to remove this option once the player has selected it
           removeOnRead: true,
         },
         {
