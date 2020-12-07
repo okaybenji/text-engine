@@ -1,6 +1,6 @@
 @font-face{
   font-family: 'Apple II';
-  src: url('fonts/font.ttf');
+  src: url('../fonts/font.ttf');
 }
 
 body {
@@ -56,6 +56,14 @@ body::after {
   margin-bottom: 1vw;
 }
 
+.input {
+  display: flex;
+}
+
+a {
+  color: orange;
+}
+
 #input {
   height: 4vh;
   width: 98.5vh;
@@ -66,6 +74,7 @@ body::after {
   border: none;
   position: relative;
   bottom: 0.175vh;
+  margin-left: .5vw;
 }
 
 span {

@@ -1,3 +1,20 @@
+// customize the appearance of the bullets
+bullet = '&ast;';
+
+// customize the help menu
+help = () => println(`LOOK :: repeat room description
+LOOK AT [OBJECT NAME] e.g. 'look at key'
+TAKE [OBJECT NAME] e.g. 'take book'
+GO [DIRECTION] e.g. 'go north'
+USE [OBJECT NAME] e.g. 'use door'
+INV :: list inventory items
+HELP :: this help menu`);
+
+commands[0].help = help;
+
+// switch to the retro style
+document.getElementById('styles').setAttribute('href', 'styles/retro.css');
+
 const unlimitedAdventure = {
   roomId: 'gameOver',        // The room the player is currently in. Set this to the room you want the player to start in.
   inventory: [],             // You can add any items you want the player to start with here.
