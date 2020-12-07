@@ -10,6 +10,8 @@ body {
   font-family: 'Work Sans', sans-serif;
   line-height: 4vh;
   margin: 10vw;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* scrollbar */
