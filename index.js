@@ -385,7 +385,7 @@ let take = () => {
     return;
   }
 
-  println(`What would you like to take? Available items are:`);
+  println(`The following items can be taken:`);
   items.forEach(item => println(`${bullet} ${getName(item.name)}`));
 };
 
@@ -418,6 +418,25 @@ let takeItem = (itemName) => {
       println(`You don't see any such thing.`);
     }
   }
+};
+
+// list useable items in room and inventory
+let use = () => {
+  const room = getRoom(disk.roomId);
+
+  const useableItems = (room.items || [])
+    .concat(disk.inventory)
+    .filter(item => item.onUse);
+
+  if (!useableItems.length) {
+    println(`There's nothing to use.`);
+    return;
+  }
+
+  println(`The following items can be used:`);
+  useableItems.forEach((item) => {
+    println(`${bullet} ${getName(item.name)}`)
+  });
 };
 
 // use the item with the given name
@@ -532,6 +551,7 @@ let commands = [
     talk,
     take,
     items,
+    use,
     chars,
     help,
     say,
