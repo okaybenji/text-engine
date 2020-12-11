@@ -925,6 +925,9 @@ let loadDisk = (uninitializedDisk) => {
 
   // start listening for user input
   setup();
+
+  // focus on the input
+  input.focus();
 };
 
 // npm support
