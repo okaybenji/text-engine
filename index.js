@@ -67,7 +67,7 @@ let setup = () => {
   });
 
   input.addEventListener('focusout', () => {
-    input.focus();
+    input.focus({preventScroll: true});
   });
 };
 
