@@ -326,7 +326,7 @@ If you are writing functions for your game, you'll need to keep these in mind as
 
 ### Updates
 
-* 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, various bug fixes & improvements.
+* 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, bold/italic/underline text, various bug fixes & improvements.
 * 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.
 * 1.1.1: Now supports use in other operating environments besides the DOM. See [text-engine-node](https://github.com/okaybenji/text-engine-node) for example usage. (Planning to add documentation later.)

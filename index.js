@@ -67,7 +67,7 @@ let setup = () => {
   });
 
   input.addEventListener('focusout', () => {
-    input.focus();
+    input.focus({preventScroll: true});
   });
 };
 
@@ -385,7 +385,7 @@ let take = () => {
     return;
   }
 
-  println(`What would you like to take? Available items are:`);
+  println(`The following items can be taken:`);
   items.forEach(item => println(`${bullet} ${getName(item.name)}`));
 };
 
@@ -418,6 +418,25 @@ let takeItem = (itemName) => {
       println(`You don't see any such thing.`);
     }
   }
+};
+
+// list useable items in room and inventory
+let use = () => {
+  const room = getRoom(disk.roomId);
+
+  const useableItems = (room.items || [])
+    .concat(disk.inventory)
+    .filter(item => item.onUse);
+
+  if (!useableItems.length) {
+    println(`There's nothing to use.`);
+    return;
+  }
+
+  println(`The following items can be used:`);
+  useableItems.forEach((item) => {
+    println(`${bullet} ${getName(item.name)}`)
+  });
 };
 
 // use the item with the given name
@@ -532,6 +551,7 @@ let commands = [
     talk,
     take,
     items,
+    use,
     chars,
     help,
     say,
@@ -688,8 +708,10 @@ let autocomplete = () => {
   const stub = words[words.length - 1];
   let options;
 
-  if (words.length === 1){
-    options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items', 'chars'];
+  if (words.length === 1) {
+    // get the list of options from the commands array
+    const allCommands = commands.reduce((acc, cur) => acc.concat(Object.keys(cur)), []);
+    options = [...new Set(allCommands)];
     if (disk.conversation) {
       options = Array.isArray(disk.conversation)
         ? options.concat(disk.conversation.map(getKeywordFromTopic))
@@ -903,6 +925,9 @@ let loadDisk = (uninitializedDisk) => {
 
   // start listening for user input
   setup();
+
+  // focus on the input
+  input.focus();
 };
 
 // npm support
