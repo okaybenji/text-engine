@@ -25,6 +25,7 @@ body::after {
   width: 100vw;
   height: 100vh;
   background: repeating-linear-gradient(rgba(237, 237, 237, 0.03) 0.5vh, rgba(0, 0, 0, 0.05) 0.8vh);
+  z-index: -1;
 }
 
 /* highlight color */
