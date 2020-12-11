@@ -688,8 +688,10 @@ let autocomplete = () => {
   const stub = words[words.length - 1];
   let options;
 
-  if (words.length === 1){
-    options = ['look', 'take', 'talk', 'go', 'inv', 'help', 'exits', 'items', 'chars'];
+  if (words.length === 1) {
+    // get the list of options from the commands array
+    const allCommands = commands.reduce((acc, cur) => acc.concat(Object.keys(cur)), []);
+    options = [...new Set(allCommands)];
     if (disk.conversation) {
       options = Array.isArray(disk.conversation)
         ? options.concat(disk.conversation.map(getKeywordFromTopic))
