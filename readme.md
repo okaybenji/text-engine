@@ -17,7 +17,7 @@ An HTML-based text adventure game engine. Small and easy to use with no dependen
 Very little programming is required, but several JavaScript hooks are provided if you are inclined to use them!
 
 ### How do I use it?
-To create your own adventure, you can use one of the files in the [game-disks](https://github.com/okaybenji/text-engine/blob/master/game-disks) folder as a template.
+To create your own adventure, you can use one of the files in the [game-disks](https://github.com/okaybenji/text-engine/blob/master/game-disks) folder as a template. For example, take a look at [the disk called newDiskTemplate](https://github.com/okaybenji/text-engine/blob/master/game-disks/new-disk-template.js).
 
 Include your "game disk" (JSON data) in [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) and load it with `loadDisk(myGameData)`.
 
