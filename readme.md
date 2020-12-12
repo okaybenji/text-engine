@@ -141,7 +141,11 @@ Just pass a reference to your disk to the loadDisk function. Take a look at [ind
 
 I've saved my disk to a `const` variable called `demoDisk` in [game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/master/game-disks/demo-disk.js). I've included that file and `index.js` in my HTML file, and added a script tag with a single line to call `loadDisk(demoDisk)`. The game boots when [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) is loaded in a web browser.
 
-You can use the included [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) file in your own project, or you can create your own. If you make your own, note that you will need to add two elements:
+You can use the included [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) file in your own project, or you can create your own.
+
+#### Making your own HTML file
+
+Sometimes you just want to start from scratch. If you wish to make your own HTML file, just be sure it contains the following two elements:
 
 * A `div` with ID `output`. This is where the game text will appear.
 ```
