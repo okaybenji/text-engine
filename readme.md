@@ -164,7 +164,6 @@ Once your game is running, the player can use the following commands:
   GO:     'go north'
   USE:    'use door'
   TALK:   'talk to mary'
-  CHARS:  list characters in the room
   ITEMS:  list items in the room
   INV:    list inventory items
   SAVE:   save the current game
