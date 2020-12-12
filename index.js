@@ -537,7 +537,9 @@ let commands = [
   // no arguments (e.g. "help", "chars", "inv")
   {
     inv,
+    i: inv, // shortcut for inventory
     look,
+    l: look, // shortcut for look
     go,
     n,
     s,
@@ -548,7 +550,9 @@ let commands = [
     sw,
     nw,
     talk,
+    t: talk, // shortcut for talk
     take,
+    get: take,
     items,
     use,
     chars,
@@ -556,16 +560,21 @@ let commands = [
     say,
     save,
     load,
+    restore: load,
   },
   // one argument (e.g. "go north", "take book")
   {
     look: lookThusly,
     go: goDir,
     take: takeItem,
+    get: takeItem,
     use: useItem,
     say: sayString,
     save: x => save(x),
     load: x => load(x),
+    restore: x => load(x),
+    x: (x) => lookAt([null, x]), // IF standard shortcut for look at
+    t: (x) => talkToOrAboutX('to', x), // IF standard shortcut for talk
   },
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
