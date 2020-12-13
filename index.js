@@ -573,8 +573,8 @@ let commands = [
     save: x => save(x),
     load: x => load(x),
     restore: x => load(x),
-    x: (x) => lookAt([null, x]), // IF standard shortcut for look at
-    t: (x) => talkToOrAboutX('to', x), // IF standard shortcut for talk
+    x: x => lookAt([null, x]), // IF standard shortcut for look at
+    t: x => talkToOrAboutX('to', x), // IF standard shortcut for talk
   },
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
@@ -584,6 +584,7 @@ let commands = [
       sayString(str);
     },
     talk: args => talkToOrAboutX(args[0], args[1]),
+    x: args => lookAt([null, ...args]),
   },
 ];
 
