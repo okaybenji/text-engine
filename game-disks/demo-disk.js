@@ -38,7 +38,14 @@ const demoDisk = {
           block: `It's far too large for you to carry.`, // optional reason player cannot pick up this item
           // when player looks at the plant, they discover a shiny object which turns out to be a key
           onLook: () => {
+            if (getItemInRoom('shiny', 'foyer') || getItemInInventory('shiny')) {
+              // the key is already in the pot or the player's inventory
+              return;
+            }
+
             const foyer = getRoom('foyer');
+
+            // put the silver key in the pot
             foyer.items.push({
               name: ['shiny thing', 'something shiny', 'pot'],
               onUse: () => {
@@ -77,7 +84,7 @@ const demoDisk = {
                 const plant = getItemInRoom('plant', 'foyer');
                 plant.desc = plant.desc.slice(0, plant.desc.indexOf('\n'));
               },
-            })
+            });
           },
         },
         {
