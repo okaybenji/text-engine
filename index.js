@@ -718,7 +718,11 @@ let autocomplete = () => {
 
   if (words.length === 1) {
     // get the list of options from the commands array
-    const allCommands = commands.reduce((acc, cur) => acc.concat(Object.keys(cur)), []);
+    // (exclude one-character commands from auto-completion)
+    const allCommands = commands
+      .reduce((acc, cur) => acc.concat(Object.keys(cur)), [])
+      .filter(cmd => cmd.length > 1);
+
     options = [...new Set(allCommands)];
     if (disk.conversation) {
       options = Array.isArray(disk.conversation)
