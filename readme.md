@@ -19,7 +19,7 @@ Very little programming is required, but several JavaScript hooks are provided i
 ### How do I use it?
 To create your own adventure, you can use one of the files in the [game-disks](https://github.com/okaybenji/text-engine/blob/master/game-disks) folder as a template. For example, take a look at [the disk called newDiskTemplate](https://github.com/okaybenji/text-engine/blob/master/game-disks/new-disk-template.js).
 
-Include your "game disk" (JSON data) in [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) and load it with `loadDisk(myGameData)`.
+Include your "game disk" (JSON data) in index.html and load it with `loadDisk(myGameData)`. (Look at [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) in the repo for an example.)
 
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine). It's a good idea to give that game a try to get introduced to the engine.
 
