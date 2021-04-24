@@ -1,6 +1,40 @@
 // NOTE: This game is a work in progress!
 
 // override commands to include custom commands
+
+// overridden save command stores player input history
+// (optionally accepts a name for the save)
+save = (name = 'save') => {
+  localStorage.setItem(name, JSON.stringify(inputs));
+  const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
+  println(line);
+};
+
+// overridden load command reapplies inputs from saved game
+// (optionally accepts a name for the save)
+load = (name = 'save') => {
+  if (inputs.length > 2) {
+    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
+  const save = JSON.parse(localStorage.getItem(name))
+    // filter out the save/load commands & empty strings
+    .filter(cmd => !cmd.startsWith('save') && !cmd.startsWith('load') && cmd !== '');
+
+  if (!save) {
+    println(`Save file not found.`);
+    return;
+  }
+
+  while (save.length) {
+    applyInput(save.shift());
+  }
+
+  const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
+  println(line);
+};
+
 // play command
 const play = () => println(`You're already playing a game.`);
 
@@ -29,8 +63,8 @@ const name = (arg) => {
   println(`Your name is now ${disk.playerName}.`);
 };
 
-commands[0] = Object.assign(commands[0], {play, name});
-commands[1] = Object.assign(commands[1], {play, name});
+commands[0] = Object.assign(commands[0], {save, load, play, name});
+commands[1] = Object.assign(commands[1], {save, load, play, name});
 commands[2] = Object.assign(commands[2], {play, name});
 
 const urDead = {
@@ -78,6 +112,10 @@ const urDead = {
         {
           name: 'hoop',
           desc: [`It's a hoot. [Not a typo. --ED]`],
+        },
+        {
+          name: 'gate',
+          desc: `If these are the gates of hell, this place was really oversold.`,
         },
         {
           name: ['basketball', 'ball'],
@@ -144,6 +182,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
         {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
         {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
+        {name: 'sand', desc: `Just regular old beach sand.`, block: `You try to take it, but it slips through your fingers.`},
+        {name: 'water', desc: `Didn't I say there wasn't any water?`},
+        {name: 'void', desc: `I wonder if that's the soul-sucking void everyone's always talking about.`},
       ],
       exits: [
         {dir: 'north', id: 'ramp'},
@@ -170,6 +211,10 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             room.exits.push({dir: 'north', id: 'deck'});
           },
         },
+        {name: ['glasses', 'sunglasses', 'shades'], desc: `You'll need to use the ramp to get closer.`},
+        {name: 'party', desc: `You'll need to use the ramp to get closer.`},
+        {name: 'dj', desc: `You'll need to use the ramp to get closer.`},
+        {name: 'yacht', desc: `It looks hard to spell.`},
       ],
       exits: [
         {dir: 'south', id: 'beach'},
@@ -180,6 +225,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       name: '🛥 Party On Deck',
       id: 'deck',
       desc: `Several skeletons are dancing and schmoozing. The DJ looks completely lost in the music. Everyone appears to be having a great time. A SKELETON IN A RED DRESS catches your eye.`,
+      items: [
+        {name: ['glasses', 'sunglasses', 'shades'], desc: `Oakley's? You have to wonder where this stuff comes from. Maybe there's an outlet mall around here.`},
+        {name: 'yacht', desc: `It looks hard to spell.`},
+        {name: 'deck', desc: `It's... teak? I guess?`},
+      ],
       exits: [{dir: 'south', id: 'ramp'}],
     },
     {
@@ -196,6 +246,10 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           name: ['Blockbuster', 'store'],
           desc: `The lights are off. It looks like there are hours posted on the DOOR.`,
         },
+        {
+          name: ['parking', 'lot', 'parking lot'],
+          onLook: () => println(getRoom('parkingLot').desc),
+        }
       ],
       onEnter() {
         const room = getRoom('parkingLot');
