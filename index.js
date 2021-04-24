@@ -411,7 +411,11 @@ let takeItem = (itemName) => {
         println(`You took the ${getName(item.name)}.`);
       }
     } else {
-      println(item.block || `You can't take that.`);
+      if (typeof item.onTake === 'function') {
+        item.onTake({disk, println, room, getRoom, enterRoom, item});
+      } else {
+        println(item.block || `You can't take that.`);
+      }
     }
   } else {
     itemIndex = disk.inventory.findIndex(findItem);
