@@ -96,7 +96,7 @@ let load = (name = 'save') => {
       return value;
     }
   });
-  println(`Game loaded.`)
+  println(`Game loaded.`);
   enterRoom(disk.roomId);
 };
 
@@ -589,8 +589,9 @@ let commands = [
 ];
 
 // process user input & update game state (bulk of the engine)
-let applyInput = () => {
-  const input = getInput();
+// accepts optional string input; otherwise grabs it from the input element
+let applyInput = (input) => {
+  input = input || getInput();
   inputs.push(input);
   inputsPos = inputs.length;
   println(`> ${input}`);
