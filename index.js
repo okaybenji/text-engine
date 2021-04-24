@@ -73,15 +73,16 @@ let setup = () => {
 
 // convert the disk to JSON and store it
 // (optionally accepts a name for the save)
-let save = (name = 'save') => {
+let save = (name) => {
   const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
   localStorage.setItem(name, save);
-  println(`Game saved.`)
+  const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
+  println(line);
 };
 
 // restore the disk from storage
 // (optionally accepts a name for the save)
-let load = (name = 'save') => {
+let load = (name) => {
   const save = localStorage.getItem(name);
 
   if (!save) {
@@ -96,7 +97,9 @@ let load = (name = 'save') => {
       return value;
     }
   });
-  println(`Game loaded.`);
+
+  const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
+  println(line);
   enterRoom(disk.roomId);
 };
 
