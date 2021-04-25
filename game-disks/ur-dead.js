@@ -13,19 +13,21 @@ save = (name = 'save') => {
 // overridden load command reapplies inputs from saved game
 // (optionally accepts a name for the save)
 load = (name = 'save') => {
-  if (inputs.length > 2) {
+  if (inputs.filter(cmd => !cmd.startsWith('load')).length > 2) {
     println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
     return;
   }
 
-  const save = JSON.parse(localStorage.getItem(name))
-    // filter out the save/load commands & empty strings
-    .filter(cmd => !cmd.startsWith('save') && !cmd.startsWith('load') && cmd !== '');
+  let save = JSON.parse(localStorage.getItem(name));
 
   if (!save) {
     println(`Save file not found.`);
     return;
   }
+
+  // filter out the save/load commands & empty strings
+  save = save
+    .filter(cmd => !cmd.startsWith('save') && !cmd.startsWith('load') && cmd !== '');
 
   while (save.length) {
     applyInput(save.shift());
@@ -67,10 +69,37 @@ commands[0] = Object.assign(commands[0], {save, load, play, name});
 commands[1] = Object.assign(commands[1], {save, load, play, name});
 commands[2] = Object.assign(commands[2], {play, name});
 
+const todo = [{id: 0, desc: `Figure out where you are.`}];
+const crossOff = (id) => {
+  todo.find(item => item.id === id).done = true;
+};
+
 const urDead = {
   roomId: 'title',
   inventory: [
-    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`}
+    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`},
+    {
+      name: ['to-do list', 'todo list'],
+      desc: `The list contains the following to-do items:`,
+      onLook: ({disk}) => {
+        // sort to-do list by done or not
+        const list = todo
+          .sort((a, b) => {
+            return a.done && b.done ? 0
+              : a.done ? 1
+              : -1;
+          })
+          // cross off completed items
+          .map(item => item.done ? `~~• ${item.desc}~~` : `• ${item.desc}`);
+
+        list.forEach(println);
+      },
+      onUse: ({item, disk}) => {
+        // Using the list is the same as looking at it.
+        println(item.desc);
+        item.onLook({disk});
+      },
+    },
   ],
   rooms: [
     {
@@ -274,8 +303,14 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       roomId: 'beach',
       topics: [
         {
+          option: `WHERE am I?`,
+          line: `"This is the UNDERWORLD. Welcome!"`,
+          removeOnRead: true,
+          onSelected: () => crossOff(0),
+        },
+        {
           option: `How did I get HERE?`,
-          line: `"You're dead," he says in a scratchy voice, "You must've gathered that much."`,
+          line: `"You died," he says in a scratchy voice, "You must've gathered that much."`,
           removeOnRead: true,
         },
         {
@@ -329,6 +364,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             // unlock asking Fran about her name
             const fran = getCharacter('fran');
             fran.chatLog.push('dave');
+
+            todo.push({id: 1, desc: `Find out your name.`});
+            todo.push({id: 2, desc: `Learn how you died.`});
           },
         },
         {
