@@ -704,6 +704,7 @@ let println = (line, className) => {
     str = addStyleTags(str, '__', 'u');
     str = addStyleTags(str, '**', 'b');
     str = addStyleTags(str, '*', 'i');
+    str = addStyleTags(str, '~~', 'strike');
   }
 
   // maintain line breaks
