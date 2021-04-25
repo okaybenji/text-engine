@@ -699,7 +699,7 @@ let println = (line, className) => {
     newLine.classList.add('user');
   }
 
-  // support for markdown-like bold, italic & underline tags
+  // support for markdown-like bold, italic, underline & strikethrough tags
   if (className !== 'img') {
     str = addStyleTags(str, '__', 'u');
     str = addStyleTags(str, '**', 'b');
