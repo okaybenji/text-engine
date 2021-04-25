@@ -269,7 +269,27 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: 'door',
           desc: `The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
-          onUse: () => println(`It's locked.`),
+          onUse: ({item}) => {
+            const exit = getRoom('parkingLot').exits.find(exit => exit.id === 'blockbuster');
+            if (exit.block) {
+              println(`It's locked.`);
+              return;
+            }
+
+            enterRoom('blockbuster');
+          },
+          locked: true,
+          onLook: ({item}) => {
+            const exit = getRoom('parkingLot').exits.find(exit => exit.id === 'blockbuster');
+
+            if (!exit.block) {
+              return;
+            }
+
+            println(`Suddenly the lights turn on. A clerk with a colorful mohawk opens the door, says "Come on in," and heads back inside without waiting for you to comply.`)
+
+            delete exit.block;
+          },
         },
         {
           name: ['Blockbuster', 'store'],
@@ -286,8 +306,14 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       },
       exits: [
         {dir: 'east', id: 'ramp'},
+        {dir: 'north', id: 'blockbuster', block: `The door is locked.`},
       ],
     },
+    {
+      name: '🎬 Blockbuster Video',
+      id: 'blockbuster',
+      desc: [`I guess we're making it a Blockbuster night.`, `Wow! What a difference.`],
+    }
   ],
   characters: [
     {
