@@ -82,10 +82,10 @@ const urDead = {
       name: ['to-do list', 'todo list'],
       desc: `The list contains the following to-do items:`,
       onLook: ({disk}) => {
-        // sort to-do list by done or not
+        // sort to-do list by done or not, then by id descending
         const list = todo
           .sort((a, b) => {
-            return a.done && b.done ? 0
+            return (a.done && b.done) || (!a.done && !b.done) ? b.id - a.id
               : a.done ? 1
               : -1;
           })
@@ -528,6 +528,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `Can I RENT a movie?`,
           line: `Yeah, sure, if you have a membership card.`,
           removeOnRead: true,
+          onSelected() {
+            todo.push({id: 3, desc: `Find a Blockbuster membership card.`})
+          },
         },
         {
           option: `Can I, uh, get a membership CARD?`,
