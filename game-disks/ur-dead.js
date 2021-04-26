@@ -504,6 +504,17 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
               onUse: () => println(`Use the NAME command to choose a name.`),
             });
           },
+        },
+        {
+          option: `Do you have a Blockbuster CARD?`,
+          line: `"Why do you ask?" She seems to be thinking.`,
+          prereqs: ['blockbuster'],
+          removeOnRead: true,
+        },
+        {
+          option: `I want to RENT a movie.`,
+          line: `"You can have my card, but I don't know if it will help you," she explains.
+          "The prior owner has racked up some hefty late fees. Apparently they never returned their copy of *Romancing the Stone*."`
         }
       ],
     },
@@ -526,27 +537,31 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: [
         {
           option: `Can I RENT a movie?`,
-          line: `Yeah, sure, if you have a membership card.`,
+          line: `"Yeah, sure," he says, "If you have a membership card."`,
           removeOnRead: true,
           onSelected() {
             todo.push({id: 3, desc: `Find a Blockbuster membership card.`})
+            getCharacter('fran').chatLog.push('blockbuster');
+            getCharacter('dave').chatLog.push('blockbuster');
+            getCharacter('dirk').chatLog.push('blockbuster');
           },
         },
         {
           option: `Can I, uh, get a membership CARD?`,
-          line: `Sorry, printer's busted.`,
+          line: `"Sorry," comes a quick reply, "printer's busted."`,
           prereqs: ['rent'],
           removeOnRead: true,
         },
         {
           option: `When is the printer going to be FIXED?`,
-          line: `It came that way, my dude. It's always been busted, and it will always be busted. You basically either have a card or you don't.`,
+          line: `"It came that way, my dude," he tells you matter-of-factly. "It's always been busted, and it will always be busted. You basically either have a card or you don't."`,
           prereqs: ['card'],
           removeOnRead: true,
         },
         {
           option: `I met a guy named RONNY at a b-ball court`,
-          line: `Oh, yeah, I'm Ron.`,
+          line: `"Oh, yeah, I'm Ron."
+                  He doesn't seem to know what to do with this information.`,
           prereqs: ['rons'],
           removeOnRead: true,
         },
