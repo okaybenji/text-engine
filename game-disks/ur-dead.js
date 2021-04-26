@@ -188,6 +188,24 @@ const urDead = {
                 removeOnRead: true,
                 onSelected: () => disk.askedSkeletonNames = true,
               },
+              {
+                option: `Do you have a Blockbuster CARD?`,
+                line: `"Nah, not anymore," he tells you with a little remorse. "We had one... but Dirk wouldn't let me return his video. He kept wanting to watch it again.
+                "We ended up with so much in late fees we can't afford to go back. No clue where the card ended up."`,
+                prereqs: ['blockbuster'],
+                removeOnRead: true,
+              },
+              {
+                option: `What was so GREAT about the movie?`,
+                line: `"It's just a really solid film," he explains. "One of those you can watch over and over and you never get tired of it."`,
+                prereqs: ['card'],
+                removeOnRead: true,
+              },
+              {
+                option: `Are you SURE it was really Dirk's fault you kept the movie?`,
+                line: `"Oh, yeah," he says, eyes shifting, "Totally."`,
+                prereqs: ['great'],
+              },
             ];
           },
           onUse: () => println(`You'll have to take it first.`),
