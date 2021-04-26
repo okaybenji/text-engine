@@ -209,7 +209,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
         {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
         {name: 'sand', desc: `Just regular old beach sand.`, block: `You try to take it, but it slips through your fingers.`},
-        {name: 'water', desc: `Didn't I say there wasn't any water?`},
+        {name: 'no water', desc: `Didn't I say there wasn't any water?`},
         {name: 'void', desc: `I wonder if that's the soul-sucking void everyone's always talking about.`},
       ],
       exits: [
@@ -311,7 +311,18 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     {
       name: '🎬 Blockbuster Video',
       id: 'blockbuster',
-      desc: [`I guess we're making it a Blockbuster night.`, `Wow! What a difference.`],
+      desc: 'Most of the shelves are empty. The clerk is watching *Mallrats*.',
+      onLook() {
+        const log = getCharacter('clerk').chatLog;
+        if (!log.includes('sawMallrats')) {
+          log.push('sawMallrats');
+        }
+      },
+      items: [
+        {name: ['shelf', 'shelves'], desc: `There are surprisingly few movie cases on the shelves. Actually, there are just three.`},
+        {name: ['movies', 'cases'], desc: `The only titles they seem to have are *Toxic Avenger*, *The Bodyguard* and *Purple Rain*.`},
+        {name: ['tv', 'mallrats'], desc: `Kevin Smith is dressed like Batman.`},
+      ],
       exits: [
         {dir: 'south', id: 'parkingLot'},
       ],
@@ -584,19 +595,34 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           removeOnRead: true,
         },
         {
-          option: `I want to rent BLADE Runner`,
+          option: `I want to rent *TOXIC Avenger*`,
           onSelected: () => disk.methods.checkCard(),
           prereqs: ['card'],
         },
         {
-          option: `I want to rent The BODYGUARD`,
+          option: `I want to rent *The BODYGUARD*`,
           onSelected: () => disk.methods.checkCard(),
           prereqs: ['card'],
         },
         {
-          option: `I want to rent TITANIC`,
+          option: `I want to rent *PURPLE Rain*`,
           onSelected: () => disk.methods.checkCard(),
           prereqs: ['card'],
+        },
+        {
+          option: `Can I rent MALLRATS?`,
+          onSelected: () => () => disk.methods.checkCard(),
+          prereqs: ['card', 'sawMallrats'],
+        },
+        {
+          option: `Can't you just WAIVE the late fee?`,
+          line: `"Look, I don't know if you've noticed," he begins with a serious expression, "But our selection is a little lacking these days.
+          "We don't get new movies in, so when a customer doesn't bring one back, that's one less film on the shelves.
+          "All that to say, I'll be happy to waive your late fee — __if__ you bring back *Romancing the Stone*."`,
+          prereqs: ['card'],
+          onSelected() {
+            disk.todo.push({id: 4, desc: `Return *Romancing the Stone*.`})
+          },
         },
       ],
     },
