@@ -69,21 +69,17 @@ commands[0] = Object.assign(commands[0], {save, load, play, name});
 commands[1] = Object.assign(commands[1], {save, load, play, name});
 commands[2] = Object.assign(commands[2], {play, name});
 
-const todo = [{id: 0, desc: `Figure out where you are.`}];
-const crossOff = (id) => {
-  todo.find(item => item.id === id).done = true;
-};
-
 const urDead = {
   roomId: 'title',
+  todo: [{id: 0, desc: `Figure out where you are.`}],
   inventory: [
     {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`},
     {
       name: ['to-do list', 'todo list'],
       desc: `The list contains the following to-do items:`,
-      onLook: ({disk}) => {
+      onLook: () => {
         // sort to-do list by done or not, then by id descending
-        const list = todo
+        const list = disk.todo
           .sort((a, b) => {
             return (a.done && b.done) || (!a.done && !b.done) ? b.id - a.id
               : a.done ? 1
@@ -338,7 +334,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `WHERE am I?`,
           line: `"This is the UNDERWORLD. Welcome!"`,
           removeOnRead: true,
-          onSelected: () => crossOff(0),
+          onSelected: () => disk.methods.crossOff(0),
         },
         {
           option: `How did I get HERE?`,
@@ -397,8 +393,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             const fran = getCharacter('fran');
             fran.chatLog.push('dave');
 
-            todo.push({id: 1, desc: `Find out your name.`});
-            todo.push({id: 2, desc: `Learn how you died.`});
+            disk.todo.push({id: 1, desc: `Find out your name.`});
+            disk.todo.push({id: 2, desc: `Learn how you died.`});
           },
         },
         {
@@ -513,8 +509,24 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `I want to RENT a movie.`,
-          line: `"You can have my card, but I don't know if it will help you," she explains.
-          "The prior owner has racked up some hefty late fees. Apparently they never returned their copy of *Romancing the Stone*."`
+          line: `"You can have my card, but I don't know if it will help you," she explains, handing you the membership card.
+          "The prior owner has racked up some hefty late fees. Apparently they never returned their copy of *Romancing the Stone*."`,
+          onSelected() {
+            disk.inventory.push({
+              name: ['Blockbuster card', 'membership card'],
+              desc: `The Blockbuster logo is on one side. The other side has a barcode.`,
+              onUse: () => println(`You'll need to take it to Ron at the video store.`),
+            });
+
+            // remove the option to ask for a card
+            getCharacter('clerk').chatLog.push('membership');
+            // enable the option to present your card
+            getCharacter('clerk').chatLog.push('gotCard');
+
+            // check this off the to-do list
+            disk.methods.crossOff(3);
+          },
+          removeOnRead: true,
         }
       ],
     },
@@ -540,14 +552,14 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           line: `"Yeah, sure," he says, "If you have a membership card."`,
           removeOnRead: true,
           onSelected() {
-            todo.push({id: 3, desc: `Find a Blockbuster membership card.`})
+            disk.todo.push({id: 3, desc: `Find a Blockbuster membership card.`})
             getCharacter('fran').chatLog.push('blockbuster');
             getCharacter('dave').chatLog.push('blockbuster');
             getCharacter('dirk').chatLog.push('blockbuster');
           },
         },
         {
-          option: `Can I, uh, get a membership CARD?`,
+          option: `Can I, uh, get a MEMBERSHIP card?`,
           line: `"Sorry," comes a quick reply, "printer's busted."`,
           prereqs: ['rent'],
           removeOnRead: true,
@@ -555,7 +567,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           option: `When is the printer going to be FIXED?`,
           line: `"It came that way, my dude," he tells you matter-of-factly. "It's always been busted, and it will always be busted. You basically either have a card or you don't."`,
-          prereqs: ['card'],
+          prereqs: ['membership'],
           removeOnRead: true,
         },
         {
@@ -565,10 +577,36 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           prereqs: ['rons'],
           removeOnRead: true,
         },
-      ]
-    }
+        {
+          option: `I got a membership CARD`,
+          line: `"Cool," he says, "What did you wanna rent?"`,
+          prereqs: ['gotCard'],
+          removeOnRead: true,
+        },
+        {
+          option: `I want to rent BLADE Runner`,
+          onSelected: () => disk.methods.checkCard(),
+          prereqs: ['card'],
+        },
+        {
+          option: `I want to rent The BODYGUARD`,
+          onSelected: () => disk.methods.checkCard(),
+          prereqs: ['card'],
+        },
+        {
+          option: `I want to rent TITANIC`,
+          onSelected: () => disk.methods.checkCard(),
+          prereqs: ['card'],
+        },
+      ],
+    },
   ],
   methods: {
+    // cross an item off player's to-do list
+    crossOff: (id) => {
+      disk.todo.find(item => item.id === id).done = true;
+    },
+    // reset the state of the basketball court
     resetCourt: () => {
       const skeletons = getCharacter('ronny');
       const ball = disk.inventory.find(i => i.name.includes('basketball'));
@@ -581,6 +619,21 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       room.items.push(ball);
       const itemIndex = disk.inventory.findIndex(i => i === ball);
       disk.inventory.splice(itemIndex, 1);
+    },
+    // check the player's blockbuster membership card
+    checkCard: () => {
+      const numberWithCommas = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      // late fees increase with each command; cents are randomized
+      const fee = '$' + numberWithCommas(1000000 + (inputs.length * 99) + '.' + Math.random().toString().substring(2, 4));
+      println(`Ron takes your membership card and scans the barcode on the back.
+        "Looks like you've got ${fee} in late fees. I can't rent you a movie until that's paid."
+      `);
+
+      const log = getCharacter('clerk').chatLog;
+      if (!log.includes('fee')) {
+        log.push('fee');
+      }
     },
   },
 };
