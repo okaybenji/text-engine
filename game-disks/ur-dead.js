@@ -181,6 +181,7 @@ const urDead = {
                     // now that we know theirs name, let's call them by it
                     const skeletons = getCharacter('ronny');
                     skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
+                    getCharacter('clerk').chatLog.push('rons');
                   }
                 },
               },
@@ -289,6 +290,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             println(`Suddenly the lights turn on. A clerk with a colorful mohawk opens the door, says "Come on in," and heads back inside without waiting for you to comply.`)
 
             delete exit.block;
+
+            getItemInRoom('store', 'parkingLot').desc = `It's open for business. Let's make it a Blockbuster night.`;
           },
         },
         {
@@ -313,7 +316,10 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       name: '🎬 Blockbuster Video',
       id: 'blockbuster',
       desc: [`I guess we're making it a Blockbuster night.`, `Wow! What a difference.`],
-    }
+      exits: [
+        {dir: 'south', id: 'parkingLot'},
+      ],
+    },
   ],
   characters: [
     {
@@ -513,6 +519,36 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       desc: `They're having a wonderful time.`,
       topics: `They don't seem to notice you.`,
     },
+    {
+      name: ['clerk', 'Ron'],
+      desc: `His hair is a rainbow of pink, turquoise, and seafoam with incredible rigidity. His nametag says "Ron". It's decorated with a smiley face sticker.`,
+      roomId: 'blockbuster',
+      topics: [
+        {
+          option: `Can I RENT a movie?`,
+          line: `Yeah, sure, if you have a membership card.`,
+          removeOnRead: true,
+        },
+        {
+          option: `Can I, uh, get a membership CARD?`,
+          line: `Sorry, printer's busted.`,
+          prereqs: ['rent'],
+          removeOnRead: true,
+        },
+        {
+          option: `When is the printer going to be FIXED?`,
+          line: `It came that way, my dude. It's always been busted, and it will always be busted. You basically either have a card or you don't.`,
+          prereqs: ['card'],
+          removeOnRead: true,
+        },
+        {
+          option: `I met a guy named RONNY at a b-ball court`,
+          line: `Oh, yeah, I'm Ron.`,
+          prereqs: ['rons'],
+          removeOnRead: true,
+        },
+      ]
+    }
   ],
   methods: {
     resetCourt: () => {
