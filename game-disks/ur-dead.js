@@ -611,7 +611,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `Can I rent MALLRATS?`,
-          onSelected: () => () => disk.methods.checkCard(),
+          line: `"Nah," says Ron, "I'm watching that one."`,
           prereqs: ['card', 'sawMallrats'],
         },
         {
