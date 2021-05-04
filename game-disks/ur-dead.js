@@ -519,7 +519,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `Can I have a NAMETAG?`,
-          line: `"Sure! You'll have to choose a name for yourself. What'll it be?"
+          line: `"Sure!" she says, digging a stack out of a hidden pocket in her dress. "You'll have to choose a name for yourself. What'll it be?"
 
           At any time, use the NAME command to update your NAMETAG.
 
