@@ -172,7 +172,7 @@ const urDead = {
           onUse: () => println(`You'll have to take it first.`),
         }
       ],
-      exits: [{dir: 'north', id: 'beach'}],
+      exits: [{dir: 'north', id: 'beach'}, {dir: 'south', id: 'yard'}],
     },
     {
       name: '🏖 The "Beach"',
@@ -309,6 +309,29 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       ],
       exits: [
         {dir: 'south', id: 'parkingLot'},
+      ],
+    },
+    {
+      name: '🏡 Front Yard',
+      id: 'yard',
+      desc: `You're in the yard of a normal-looking tan-brick house. It doesn't seem especially new or old, kempt or overgrown. The front of the house has a WINDOW and a wooden DOOR. There's a plum tree in the yard. A fence surrounds the sides and back.`,
+      items: [
+        {name: 'yard'},
+        {name: 'house', desc: `Nothing irregular about this house. You've seen many like it, you're sure.`},
+        {name: 'fence', desc: `A plain, wooden fence. It's too tall to see over, but peeking between the pickets you're pretty sure you see a normal back yard.`},
+        {name: 'plum tree', desc: `It's a mature tree. You'd need a ladder to reach the fruit.`},
+        {name: ['fruit', 'plums'], desc: `All you can tell is that they're plums.`},
+        {
+          name: 'window',
+          desc: `You can see the living room through the window. There's a couch and a tube TV with a VCR. It looks like there's a Blockbuster video case on the floor in front of the TV.`,
+          onUse: () => println(`It appears to be inoperable. You'll have to use the door.`),
+        },
+        {
+          name: 'door',
+          desc: `It's about as plain as everything else around here.`,
+          onUse: () => println(`It's locked.`),
+          // TODO: Make the door unlockable with the key.
+        },
       ],
     },
   ],
