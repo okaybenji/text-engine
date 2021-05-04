@@ -546,6 +546,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `I want to RENT a movie.`,
           line: `"You can have my card, but I don't know if it will help you," she explains, handing you the membership card.
           "The prior owner has racked up some hefty late fees. Apparently they never returned their copy of *Romancing the Stone*."`,
+          prereqs: ['card'],
           onSelected() {
             disk.inventory.push({
               name: ['Blockbuster card', 'membership card'],
