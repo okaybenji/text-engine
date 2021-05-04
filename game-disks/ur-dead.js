@@ -480,6 +480,18 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             room.desc = room.desc.replace(`There's a bearded skeleton by the sign`, `Dave, the bearded skeleton, stands by the sign`);
           },
         },
+        {
+          option: `Do you have a Blockbuster CARD?`,
+          line: `"What's a blockbuster card?" he asks, showing no hints of humor or irony of any kind.`,
+          prereqs: ['blockbuster'],
+          removeOnRead: true,
+        },
+        {
+          option: `Y'know, Blockbuster? The BUILDING right over there (point northwest)`,
+          line: `"No, sorry," he smiles vaguely. "I pretty much just hang out right here on the beach. In case someone new shows up."`,
+          prereqs: ['card'],
+          removeOnRead: true,
+        },
       ],
       onTalk: () => println(`"I imagine," he begins, "you have some questions."`),
     },
