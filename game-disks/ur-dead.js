@@ -179,6 +179,9 @@ const urDead = {
                     const skeletons = getCharacter('ronny');
                     skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
                     getCharacter('clerk').chatLog.push('rons');
+
+                    // update room description
+                    getRoom('court').desc = `Ronny and Dirk are still here playing HORSE.`;
                   }
                 },
               },
