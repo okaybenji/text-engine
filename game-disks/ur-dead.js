@@ -13,7 +13,7 @@ save = (name = 'save') => {
 // overridden load command reapplies inputs from saved game
 // (optionally accepts a name for the save)
 load = (name = 'save') => {
-  if (inputs.filter(cmd => !cmd.startsWith('load')).length > 2) {
+  if (inputs.filter(cmd => !cmd.toLowerCase().startsWith('load')).length > 2) {
     println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
     return;
   }
@@ -27,7 +27,7 @@ load = (name = 'save') => {
 
   // filter out the save/load commands & empty strings
   save = save
-    .filter(cmd => !cmd.startsWith('save') && !cmd.startsWith('load') && cmd !== '');
+    .filter(cmd => !cmd.toLowerCase().startsWith('save') && !cmd.toLowerCase().startsWith('load') && cmd !== '');
 
   while (save.length) {
     applyInput(save.shift());
