@@ -172,7 +172,7 @@ const urDead = {
           onUse: () => println(`You'll have to take it first.`),
         }
       ],
-      exits: [{dir: 'north', id: 'beach'}, {dir: 'south', id: 'yard'}],
+      exits: [{dir: 'north', id: 'beach'}, {dir: 'southwest', id: 'yard'}],
     },
     {
       name: '🏖 The "Beach"',
@@ -314,24 +314,41 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     {
       name: '🏡 Front Yard',
       id: 'yard',
-      desc: `You're in the yard of a normal-looking tan-brick house. It doesn't seem especially new or old, kempt or overgrown. The front of the house has a WINDOW and a wooden DOOR. There's a plum tree in the yard. A fence surrounds the sides and back.`,
+      onEnter () {
+        const room = getRoom('yard');
+
+        if (room.visits === 1) {
+          getCharacter('dirk').chatLog.push('sawHouse');
+        }
+      },
+      desc: `You're in the yard of an unusual-looking one-story house. It's been painted to look like a boat. There's an anchor fixed to one side, a small sail attached to the chimney, and a balcony stretching out from the roof with a helm at the front, presumably there to prop up fantasies of steering the home about these parts.
+
+      The front of the house has a WINDOW and a wooden DOOR. There's a elderberry TREE in the yard. A fence surrounds the sides and back.`,
       items: [
-        {name: 'yard'},
-        {name: 'house', desc: `Nothing irregular about this house. You've seen many like it, you're sure.`},
+        {name: 'yard', isHidden: true},
+        {name: 'house', desc: `It's painted white, with red and navy stripes wrapping it about two feet from the ground. It has a distinct maritime aura.`},
         {name: 'fence', desc: `A plain, wooden fence. It's too tall to see over, but peeking between the pickets you're pretty sure you see a normal back yard.`},
-        {name: 'plum tree', desc: `It's a mature tree. You'd need a ladder to reach the fruit.`},
-        {name: ['fruit', 'plums'], desc: `All you can tell is that they're plums.`},
+        {name: 'elderberry tree', desc: `It's a mature tree. You'd need a ladder to reach the fruit.`},
+        {name: ['fruit', 'elderberries'], desc: `All you can tell is that they're elderberries.`, isHidden: true},
+        {name: 'anchor', desc: `With or without it, I don't think the house is going anywhere.`},
+        {name: 'sail', desc: `It's chimney-sized.`},
+        {name: 'balcony', desc: `It's not clear from here how the balcony is accessed.`},
+        {name: 'helm', desc: `It seems a bit strange for a house to have a steering wheel, but then again, you're new here.`},
         {
           name: 'window',
           desc: `You can see the living room through the window. There's a couch and a tube TV with a VCR. It looks like there's a Blockbuster video case on the floor in front of the TV.`,
           onUse: () => println(`It appears to be inoperable. You'll have to use the door.`),
         },
+        {name: ['couch', 'tv', 'vcr', 'Blockbuster video case'] , desc: `You'll need to get inside for a better look.`, isHidden: true},
         {
           name: 'door',
-          desc: `It's about as plain as everything else around here.`,
+          desc: `The door looks pretty normal, aside from being attached to the odd house.`,
           onUse: () => println(`It's locked.`),
           // TODO: Make the door unlockable with the key.
         },
+      ],
+      exits: [
+        {dir: 'northeast', id: 'court'},
       ],
     },
   ],
@@ -408,6 +425,12 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.`,
           prereqs: ['great'],
           onSelected: () => disk.inventory.push({name: 'key', desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`}),
+          removeOnRead: true,
+        },
+        {
+          option: `Your HOUSE looks like a boat..?`,
+          line: `Yeah, we were kind of inspired by the yacht just NORTH from here. To be honest, I think we've got it better than they do. Ours is a real house, and their yacht's not going anywhere.`,
+          prereqs: ['borrow', 'sawHouse'],
           removeOnRead: true,
         },
       ],
