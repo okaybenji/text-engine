@@ -229,7 +229,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
         {name: 'sand', desc: `Just regular old beach sand.`, block: `You try to take it, but it slips through your fingers.`},
         {name: 'no water', desc: `Didn't I say there wasn't any water?`},
-        {name: 'void', desc: `I wonder if that's the soul-sucking void everyone's always talking about.`},
+        {name: ['void', 'sky'], desc: `I wonder if that's the soul-sucking void everyone's always talking about.`},
         {
           name: 'gate',
           desc: `It's the gate back to the half-court.`,
