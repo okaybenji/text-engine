@@ -474,6 +474,10 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             // now that we know his name, let's call him by it
             const dave = getCharacter('dave');
             dave.name = ['Dave', 'bearded skeleton'];
+
+            // update room description
+            const room = getRoom('beach');
+            room.desc = room.desc.replace(`There's a bearded skeleton by the sign`, `Dave, the bearded skeleton, stands by the sign`);
           },
         },
       ],
@@ -647,7 +651,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `Can't you just WAIVE the late fee?`,
           line: `"Look, I don't know if you've noticed," he begins with a serious expression, "But our selection is a little lacking these days.
           "We don't get new movies in, so when a customer doesn't bring one back, that's one less film on the shelves.
-          "All that to say, I'll be happy to waive your late fee — __if__ you bring back *Romancing the Stone*."`,
+          "All that to say, I'll be happy to waive your late fee — *if* you bring back *Romancing the Stone*."`,
           prereqs: ['fee'],
           onSelected() {
             disk.todo.push({id: 4, desc: `Return *Romancing the Stone*.`})
