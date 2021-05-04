@@ -178,7 +178,10 @@ const urDead = {
                     // now that we know theirs name, let's call them by it
                     const skeletons = getCharacter('ronny');
                     skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
+
+                    // update conversation options
                     getCharacter('clerk').chatLog.push('rons');
+                    skeletons.chatLog.push('gotNames');
 
                     // update room description
                     getRoom('court').desc = `Ronny and Dirk are still here playing HORSE.`;
@@ -196,7 +199,8 @@ const urDead = {
                 option: `Do you have a Blockbuster CARD?`,
                 line: `"Nah, not anymore," he tells you with a little remorse. "We had one... but Dirk wouldn't let me return his video. He kept wanting to watch it again.
                 "We ended up with so much in late fees we can't afford to go back. No clue where the card ended up."`,
-                prereqs: ['blockbuster'],
+                // this option only becomes available if you've gotten the skeletons to tell you their names
+                prereqs: ['blockbuster', 'gotNames'],
                 removeOnRead: true,
               },
               {
@@ -209,6 +213,14 @@ const urDead = {
                 option: `Are you SURE it was really Dirk's fault you kept the movie?`,
                 line: `"Oh, yeah," he says, eyes shifting, "Totally."`,
                 prereqs: ['great'],
+                removeOnRead: true,
+              },
+              {
+                option: `That movie really does sound great. Any chance I could BORROW it?`,
+                line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.`,
+                prereqs: ['great'],
+                onSelected: () => disk.inventory.push({name: 'key', desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`}),
+                removeOnRead: true,
               },
             ];
           },
