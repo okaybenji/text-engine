@@ -491,6 +491,10 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
         // update her description
         fran.desc = `She has a warm presence. She's holding a nearly-empty piña colada and munching on the pineapple wedge.`;
+
+        // update room description
+        const room = getRoom('deck');
+        room.desc = room.desc.replace(`A SKELETON IN A RED DRESS catches your eye`, `Fran is nearby`);
       },
       topics: [
         {
