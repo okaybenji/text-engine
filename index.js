@@ -105,13 +105,15 @@ let load = (name) => {
 
 // list player inventory
 let inv = () => {
-  if (!disk.inventory.length) {
+  const items = disk.inventory.filter(item => !item.isHidden);
+
+  if (!items.length) {
     println(`You don't have any items in your inventory.`);
     return;
   }
 
   println(`You have the following items in your inventory:`);
-  disk.inventory.forEach(item => {
+  items.forEach(item => {
     println(`${bullet} ${getName(item.name)}`);
   });
 };
@@ -170,7 +172,7 @@ let lookAt = (args) => {
 // list available exits
 let go = () => {
   const room = getRoom(disk.roomId);
-  const exits = room.exits;
+  const exits = room.exits.filter(exit => !exit.isHidden);
 
   if (!exits) {
     println(`There's nowhere to go.`);
@@ -381,7 +383,7 @@ let talkToOrAboutX = (preposition, x) => {
 // list takeable items in room
 let take = () => {
   const room = getRoom(disk.roomId);
-  const items = (room.items || []).filter(item => item.isTakeable);
+  const items = (room.items || []).filter(item => item.isTakeable && !item.isHidden);
 
   if (!items.length) {
     println(`There's nothing to take.`);
@@ -433,7 +435,7 @@ let use = () => {
 
   const useableItems = (room.items || [])
     .concat(disk.inventory)
-    .filter(item => item.onUse);
+    .filter(item => item.onUse && !item.isHidden);
 
   if (!useableItems.length) {
     println(`There's nothing to use.`);
@@ -479,7 +481,7 @@ let useItem = (itemName) => {
 // list items in room
 let items = () => {
   const room = getRoom(disk.roomId);
-  const items = (room.items || []);
+  const items = (room.items || []).filter(item => !item.isHidden);
 
   if (!items.length) {
     println(`There's nothing here.`);
@@ -494,7 +496,7 @@ let items = () => {
 // list characters in room
 let chars = () => {
   const room = getRoom(disk.roomId);
-  const chars = getCharactersInRoom(room.id);
+  const chars = getCharactersInRoom(room.id).filter(char => !char.isHidden)
 
   if (!chars.length) {
     println(`There's no one here.`);
