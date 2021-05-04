@@ -148,15 +148,26 @@ const urDead = {
           desc: 'You could really have a ball with that thing.',
           isTakeable: true,
           onTake: ({item, room}) => {
-            room.desc = `You see a couple of skeletons. You get the feeling they don't care for you.`;
-            println(`One of the skeletons performs an elaborate dance to set up their shot, dribbling out a steady beat. They are clearly banking on the other forgetting one of the many the steps, and thus adding an 'O' to their 'H'. They're so swept up in their routine that you're able to step in and swipe the ball on a down beat.
+            const skeletons = getCharacter('dirk');
+            skeletons.topics = skeletons.tookBallTopics;
 
-            The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
             item.desc = 'You could really have a ball with this thing.';
             item.onUse = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
-            const skeletons = getCharacter('Dirk');
-            skeletons.topics = skeletons.tookBallTopics;
+            if (skeletons.chatLog.includes('gotNames')) {
+              // after you know their names
+              room.desc = `Ronny and Dirk are still here playing HORSE.`;
+              const activePlayer = Math.random() > 0.5 ? 'Ronny' : 'Dirk';
+              println(`You swipe the ball again as ${activePlayer} dribbles up for a shot.`);
+            } else {
+              // when you take the ball before you know their names
+              room.desc = `You see a couple of skeletons. You get the feeling they don't care for you.`;
+              println(`One of the skeletons performs an elaborate dance to set up their shot, dribbling out a steady beat. They are clearly banking on the other forgetting one of the many the steps, and thus adding an 'O' to their 'H'. They're so swept up in their routine that you're able to step in and swipe the ball on a down beat.
+
+              The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
+
+              item.onUse = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
+            }
           },
           onUse: () => println(`You'll have to take it first.`),
         }
@@ -378,7 +389,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
       ],
       onTalk() {
-        println(`"Give it back," one of them says.`);
+        const gotNames = getCharacter('dirk').chatLog.includes('gotNames');
+        println(`"Give it back," ${gotNames ? 'Ronny' : 'one of them'} says.`);
       },
     },
     {
