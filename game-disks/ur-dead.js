@@ -155,74 +155,8 @@ const urDead = {
             item.desc = 'You could really have a ball with this thing.';
             item.onUse = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
 
-            const skeletons = getCharacter('ronny');
-
-            skeletons.topics = [
-              {
-                option: 'Use the leverage to get INFO',
-                onSelected: () => {
-                  println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
-                  disk.methods.resetCourt();
-                },
-              },
-              {
-                option: 'GIVE the ball back',
-                onSelected: () => {
-                  println(`Feeling a bit bad, you decide to return the ball and move on.`);
-                  disk.methods.resetCourt();
-                  if (disk.askedSkeletonNames) {
-                    println(`"I'm Ronny," says the one on the left. "That's Dirk."
-
-                    They resume their game.`);
-
-                    // now that we know theirs name, let's call them by it
-                    const skeletons = getCharacter('ronny');
-                    skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
-
-                    // update conversation options
-                    getCharacter('clerk').chatLog.push('rons');
-                    skeletons.chatLog.push('gotNames');
-
-                    // update room description
-                    getRoom('court').desc = `Ronny and Dirk are still here playing HORSE.`;
-                  }
-                },
-              },
-              {
-                option: 'Ask their NAMES',
-                line: `"We might tell you," the one on the left says, "If you give us our ball back."`,
-                prereqs: ['fran'],
-                removeOnRead: true,
-                onSelected: () => disk.askedSkeletonNames = true,
-              },
-              {
-                option: `Do you have a Blockbuster CARD?`,
-                line: `"Nah, not anymore," he tells you with a little remorse. "We had one... but Dirk wouldn't let me return his video. He kept wanting to watch it again.
-                "We ended up with so much in late fees we can't afford to go back. No clue where the card ended up."`,
-                // this option only becomes available if you've gotten the skeletons to tell you their names
-                prereqs: ['blockbuster', 'gotNames'],
-                removeOnRead: true,
-              },
-              {
-                option: `What was so GREAT about the movie?`,
-                line: `"It's just a really solid film," he explains. "One of those you can watch over and over and you never get tired of it."`,
-                prereqs: ['card'],
-                removeOnRead: true,
-              },
-              {
-                option: `Are you SURE it was really Dirk's fault you kept the movie?`,
-                line: `"Oh, yeah," he says, eyes shifting, "Totally."`,
-                prereqs: ['great'],
-                removeOnRead: true,
-              },
-              {
-                option: `That movie really does sound great. Any chance I could BORROW it?`,
-                line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.`,
-                prereqs: ['great'],
-                onSelected: () => disk.inventory.push({name: 'key', desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`}),
-                removeOnRead: true,
-              },
-            ];
+            const skeletons = getCharacter('Dirk');
+            skeletons.topics = skeletons.tookBallTopics;
           },
           onUse: () => println(`You'll have to take it first.`),
         }
@@ -373,7 +307,76 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       desc: [`They look competitive.`, `They're still on 'H'.`],
       roomId: 'court',
       topics: `They look pretty busy.`,
-      onTalk: () => println(`"Give it back," one of them says.`),
+      // these topics become available when you interrupt their game
+      tookBallTopics: [
+        {
+          option: 'Use the leverage to get INFO',
+          onSelected: () => {
+            println(`You offer to return the ball if they'll just answer some questions. They beat you up and take the ball back.`);
+            disk.methods.resetCourt();
+          },
+        },
+        {
+          option: 'GIVE the ball back',
+          onSelected: () => {
+            println(`Feeling a bit bad, you decide to return the ball and move on.`);
+            disk.methods.resetCourt();
+            if (disk.askedSkeletonNames) {
+              println(`"I'm Ronny," says the one on the left. "That's Dirk."
+
+              They resume their game.`);
+
+              // now that we know theirs name, let's call them by it
+              const skeletons = getCharacter('ronny');
+              skeletons.name = ['Ronny and Dirk', 'skeletons', 'the skeletons'];
+
+              // update conversation options
+              getCharacter('clerk').chatLog.push('rons');
+              skeletons.chatLog.push('gotNames');
+
+              // update room description
+              getRoom('court').desc = `Ronny and Dirk are still here playing HORSE.`;
+            }
+          },
+        },
+        {
+          option: 'Ask their NAMES',
+          line: `"We might tell you," the one on the left says, "If you give us our ball back."`,
+          prereqs: ['fran'],
+          removeOnRead: true,
+          onSelected: () => disk.askedSkeletonNames = true,
+        },
+        {
+          option: `Do you have a Blockbuster CARD?`,
+          line: `"Nah, not anymore," he tells you with a little remorse. "We had one... but Dirk wouldn't let me return his video. He kept wanting to watch it again.
+          "We ended up with so much in late fees we can't afford to go back. No clue where the card ended up."`,
+          // this option only becomes available if you've gotten the skeletons to tell you their names
+          prereqs: ['blockbuster', 'gotNames'],
+          removeOnRead: true,
+        },
+        {
+          option: `What was so GREAT about the movie?`,
+          line: `"It's just a really solid film," he explains. "One of those you can watch over and over and you never get tired of it."`,
+          prereqs: ['card'],
+          removeOnRead: true,
+        },
+        {
+          option: `Are you SURE it was really Dirk's fault you kept the movie?`,
+          line: `"Oh, yeah," he says, eyes shifting, "Totally."`,
+          prereqs: ['great'],
+          removeOnRead: true,
+        },
+        {
+          option: `That movie really does sound great. Any chance I could BORROW it?`,
+          line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.`,
+          prereqs: ['great'],
+          onSelected: () => disk.inventory.push({name: 'key', desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`}),
+          removeOnRead: true,
+        },
+      ],
+      onTalk() {
+        println(`"Give it back," one of them says.`);
+      },
     },
     {
       name: ['bearded skeleton', 'Dave'],
@@ -694,10 +697,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     },
     // reset the state of the basketball court
     resetCourt: () => {
-      const skeletons = getCharacter('ronny');
+      const skeletons = getCharacter('dirk');
+      skeletons.topics = `They look pretty busy.`;
+
       const ball = disk.inventory.find(i => i.name.includes('basketball'));
       const room = getRoom('court');
-      skeletons.topics = 'They look pretty busy.';
       endConversation();
 
       // Put the ball back in the room.
