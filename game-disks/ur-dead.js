@@ -325,28 +325,115 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
         {name: 'yard', isHidden: true},
         {name: 'house', desc: `It's painted white, with red and navy stripes wrapping it about two feet from the ground. It has a distinct maritime aura.`},
-        {name: 'fence', desc: `A plain, wooden fence. It's too tall to see over, but peeking between the pickets you're pretty sure you see a normal back yard.`},
+        {name: 'fence', desc: `A plain, wooden fence. It's too tall to see over, but peeking between the pickets you're pretty sure you see a normal back yard.`, isHidden: true},
         {name: 'elderberry tree', desc: `It's a mature tree. You'd need a ladder to reach the fruit.`},
         {name: ['fruit', 'elderberries'], desc: `All you can tell is that they're elderberries.`, isHidden: true},
         {name: 'anchor', desc: `With or without it, I don't think the house is going anywhere.`},
-        {name: 'sail', desc: `It's chimney-sized.`},
+        {name: 'sail', desc: `It's chimney-sized.`, isHidden: true},
         {name: 'balcony', desc: `It's not clear from here how the balcony is accessed.`},
-        {name: 'helm', desc: `It seems a bit strange for a house to have a steering wheel, but then again, you're new here.`},
+        {name: 'helm', desc: `It seems a bit strange for a house to have a steering wheel, but then again, you're new here.`, isHidden: true},
+        {name: 'fake rock', desc: `It's really not very convincing. It's plastic and someone's stuck googly eyes to it with a hot glue gun.`, isHidden: true},
         {
           name: 'window',
           desc: `You can see the living room through the window. There's a couch and a tube TV with a VCR. It looks like there's a Blockbuster video case on the floor in front of the TV.`,
           onUse: () => println(`It appears to be inoperable. You'll have to use the door.`),
         },
-        {name: ['couch', 'tv', 'vcr', 'Blockbuster video case'] , desc: `You'll need to get inside for a better look.`, isHidden: true},
+        {name: ['couch', 'sofa', 'tv', 'television', 'tube', 'vcr', 'Blockbuster video case'] , desc: `You'll need to get inside for a better look.`, isHidden: true},
         {
           name: 'door',
-          desc: `The door looks pretty normal, aside from being attached to the odd house.`,
-          onUse: () => println(`It's locked.`),
-          // TODO: Make the door unlockable with the key.
+          isLocked: true,
+          desc: `The door looks pretty normal, aside from being attached to the odd house. There's a fake rock next to it.`,
+          onUse() {
+            const door = getItemInRoom('door', 'yard');
+            if (door.isLocked) {
+              // if the player has the key, unlock the door and enter the room
+              const key = getItemInInventory('key');
+              if (key) {
+                key.onUse();
+              } else {
+                println(`It's locked.`);
+              }
+            } else {
+              enterRoom('livingRoom');
+            }
+          },
         },
       ],
       exits: [
         {dir: 'northeast', id: 'court'},
+      ],
+    },
+    {
+      name: `📺 Dirk & Ronny's Living Room`,
+      id: 'livingRoom',
+      desc: `You see Dirk & Ronny's COUCH, TV, and VCR, plus a Blockbuster video case on the floor.
+      Further south appears to be a kitchen. Just before the kitchen to the southwest is a hallway.`,
+      items: [
+        {
+          name: ['lightswitch', 'lights'],
+          isOn: true,
+          onUse() {
+            // toggle the light
+            const lightswitch = getItemInRoom('lights', 'livingRoom');
+            println(`You switch ${lightswitch.isOn ? 'off' : 'on'} the light.`)
+            lightswitch.isOn = !lightswitch.isOn;
+
+            const room = getRoom('livingRoom');
+            room.desc = lightswitch.isOn
+              ? `You see Dirk & Ronny's COUCH, TV, and VCR, plus a Blockbuster video case on the floor.
+      Further south appears to be a kitchen. Just before the kitchen to the southwest is a hallway.`
+              : `The room is dark. Better flip the switch.`;
+
+            // when the lights are off, hide items other than the lightswitch
+            room.items
+              .filter(item => item !== lightswitch)
+              .forEach(item => item.isHidden = !lightswitch.isOn);
+          },
+        },
+        {
+          name: ['couch', 'sofa'],
+          onUse() {
+            println(`You plop down on the couch.`);
+            disk.onCouch = true;
+          },
+          desc: `It doesn't look like much, but it's almost certainly the best spot in the house for watching movies.`,
+          onLook() {
+            if (disk.onCouch) {
+              println(`You dig around a bit in the cushions. Amongst crumbs and hairs you find a 1965 Roosevelt dime.`);
+              disk.inventory.push({
+                name: 'dime',
+                desc: `Wow, ten cents.`,
+                // using the dime randomly prints HEADS or TAILS
+                onUse: () => {
+                  const side = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
+                  println(`You flip the dime. It lands on ${side}.`);
+                },
+              });
+            }
+          },
+        },
+        {
+          name: ['TV', 'television', 'tube'],
+          desc: `It's a Zenith tube television with a dial and antenna.`,
+        },
+        {
+          name: 'VCR',
+          desc: `It's a Panasonic top-loading, programmable VCR with a digital clock.`,
+          // TODO: set up interactions to play, rewind, and eject tapes
+        },
+        {
+          name: 'Blockbuster video case',
+          desc: `The case is empty. Looks like it once held *Romancing the Stone*.`,
+        },
+        {
+          name: ['kitchen', 'hallway'],
+          desc: `It's dark and you're not hungry.`,
+          isHidden: true,
+        },
+      ],
+      exits: [
+        {dir: 'north', id: 'yard'},
+        {dir: 'south', block: `It's dark and you're not hungry.`},
       ],
     },
   ],
@@ -420,9 +507,31 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `That movie really does sound great. Any chance I could BORROW it?`,
-          line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.`,
+          line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.
+          "You can leave it unlocked. Just slide the key under the fake rock.`,
           prereqs: ['great'],
-          onSelected: () => disk.inventory.push({name: 'key', desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`}),
+          onSelected() {
+            disk.inventory.push({
+              name: 'key',
+              desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`,
+              onUse() {
+                const door = getItemInRoom('door', 'yard');
+                if (disk.roomId === 'yard') {
+                  delete door.isLocked;
+                  println(`You use Dirk's key to open the door, placing it under the fake rock before entering into the living room.`);
+                  enterRoom('livingRoom');
+                  // leave the door unlocked
+                  getRoom('yard').exits.push({dir: 'south', id: 'livingRoom'});
+                  // remove the key from inventory
+                  const key = getItemInInventory('key');
+                  const itemIndex = disk.inventory.findIndex(i => i === key);
+                  disk.inventory.splice(itemIndex, 1);
+                } else {
+                  println(`This is the key to Ronny & Dirk's house. You have to go there to use it.`);
+                }
+              },
+            });
+          },
           removeOnRead: true,
         },
         {
@@ -704,7 +813,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           removeOnRead: true,
         },
         {
-          option: `I met a guy named RONNY at a b-ball court`,
+          option: `I met a skeleton named RONNY at a b-ball court`,
           line: `"Oh, yeah, I'm Ron."
                   He doesn't seem to know what to do with this information.`,
           prereqs: ['rons'],
