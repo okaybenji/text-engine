@@ -141,6 +141,7 @@ const urDead = {
         {
           name: 'gate',
           desc: `If these are the gates of hell, this place was really oversold.`,
+          onUse: () => enterRoom('beach')
         },
         {
           name: ['basketball', 'ball'],
@@ -229,6 +230,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: 'sand', desc: `Just regular old beach sand.`, block: `You try to take it, but it slips through your fingers.`},
         {name: 'no water', desc: `Didn't I say there wasn't any water?`},
         {name: 'void', desc: `I wonder if that's the soul-sucking void everyone's always talking about.`},
+        {
+          name: 'gate',
+          desc: `It's the gate back to the half-court.`,
+          onUse: () => enterRoom('court')
+        },
       ],
       exits: [
         {dir: 'north', id: 'ramp'},
