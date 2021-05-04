@@ -648,7 +648,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           line: `"Look, I don't know if you've noticed," he begins with a serious expression, "But our selection is a little lacking these days.
           "We don't get new movies in, so when a customer doesn't bring one back, that's one less film on the shelves.
           "All that to say, I'll be happy to waive your late fee — __if__ you bring back *Romancing the Stone*."`,
-          prereqs: ['card'],
+          prereqs: ['fee'],
           onSelected() {
             disk.todo.push({id: 4, desc: `Return *Romancing the Stone*.`})
           },
