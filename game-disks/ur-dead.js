@@ -221,9 +221,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             room.exits.push({dir: 'north', id: 'deck'});
           },
         },
-        {name: ['glasses', 'sunglasses', 'shades'], desc: `You'll need to use the ramp to get closer.`},
-        {name: 'party', desc: `You'll need to use the ramp to get closer.`},
-        {name: 'dj', desc: `You'll need to use the ramp to get closer.`},
+        {name: ['glasses', 'sunglasses', 'shades', 'party', 'dj'], desc: `You'll need to use the ramp to get closer.`, isHidden: true},
         {name: 'yacht', desc: `It looks hard to spell.`},
       ],
       exits: [
@@ -236,7 +234,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       id: 'deck',
       desc: `Several skeletons are dancing and schmoozing. The DJ looks completely lost in the music. Everyone appears to be having a great time. A SKELETON IN A RED DRESS catches your eye.`,
       items: [
-        {name: ['glasses', 'sunglasses', 'shades'], desc: `Oakley's? You have to wonder where this stuff comes from. Maybe there's an outlet mall around here.`},
+        {name: ['glasses', 'sunglasses', 'shades'], desc: `Oakley's? You have to wonder where this stuff comes from. Maybe there's an outlet mall around here.`, isHidden: true},
         {name: 'yacht', desc: `It looks hard to spell.`},
         {name: 'deck', desc: `It's... teak? I guess?`},
       ],
@@ -248,7 +246,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       desc: `Wow, I guess this is where businesses go when they die.`,
       items: [
         {
-          name: 'door',
+          name: ['Blockbuster', 'store'],
+          desc: `The lights are off. It looks like there are hours posted on the DOOR.`,
+        },
+        {
+          name: ['entrance', 'door'],
           desc: `The operating hours are posted, but the... times?.. are all written in arcane shapes you've never seen before.`,
           onUse: ({item}) => {
             const exit = getRoom('parkingLot').exits.find(exit => exit.id === 'blockbuster');
@@ -275,11 +277,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           },
         },
         {
-          name: ['Blockbuster', 'store'],
-          desc: `The lights are off. It looks like there are hours posted on the DOOR.`,
-        },
-        {
-          name: ['parking', 'lot', 'parking lot'],
+          name: 'parking lot',
           onLook: () => println(getRoom('parkingLot').desc),
         }
       ],
