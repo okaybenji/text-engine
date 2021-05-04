@@ -336,6 +336,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
               // update room description
               getRoom('court').desc = `Ronny and Dirk are still here playing HORSE.`;
+
+              // make sure we only do this once!
+              delete disk.askedSkeletonNames;
             }
           },
         },
