@@ -139,6 +139,11 @@ const urDead = {
           desc: [`It's a hoot. [Not a typo. --ED]`],
         },
         {
+          name: 'horse',
+          desc: `Uh, no, it's a game. You can't look at it, but you can look at the SKELETONS playing it.`,
+          isHidden: true,
+        },
+        {
           name: 'gate',
           desc: `If these are the gates of hell, this place was really oversold.`,
           onUse: () => enterRoom('beach')
@@ -310,7 +315,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       ],
     },
     {
-      name: '🏡 Front Yard',
+      name: '⚓️ Front Yard',
       id: 'yard',
       onEnter () {
         const room = getRoom('yard');
