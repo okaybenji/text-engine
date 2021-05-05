@@ -318,6 +318,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         if (room.visits === 1) {
           getCharacter('dirk').chatLog.push('sawHouse');
         }
+
+        // reset onCouch in case player is leaving the living room
+        delete disk.onCouch;
       },
       desc: `You're in the yard of an unusual-looking one-story house. It's been painted to look like a boat. There's an anchor fixed to one side, a small sail attached to the chimney, and a balcony stretching out from the roof with a helm at the front, presumably there to prop up fantasies of steering the home about these parts.
 
