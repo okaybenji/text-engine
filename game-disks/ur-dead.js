@@ -343,9 +343,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           name: 'door',
           isLocked: true,
           desc: `The door looks pretty normal, aside from being attached to the odd house. There's a fake rock next to it.`,
-          onUse() {
-            const door = getItemInRoom('door', 'yard');
-            if (door.isLocked) {
+          onUse({item}) {
+            if (item.isLocked) {
               // if the player has the key, unlock the door and enter the room
               const key = getItemInInventory('key');
               if (key) {
