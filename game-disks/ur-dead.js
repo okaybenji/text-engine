@@ -398,11 +398,56 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: 'VCR',
           desc: `It's a Panasonic top-loading, programmable VCR with a digital clock.`,
-          // TODO: set up interactions to play, rewind, and eject tapes
+          cassette: 'Romancing the Stone',
+          onUse({item}) {
+            // video strategy pattern
+            const movies = {
+              'Romancing the Stone': () => {
+                println(`You hit PLAY and watch the cassette. You see trailers for *Rhinestone*, *Give My Regards to Broad Street*, and *Muppets Take Manhattan*, and finally, our feature presentation, *Romancing the Stone*. The movie is... fine.`);
+
+                const videoCase = getItemInRoom('case', 'livingRoom');
+                if (videoCase.wasSeen) {
+                  println(`You comply with the case's instructions to BE KIND and REWIND.`);
+                }
+
+                // eject the video
+                item.cassette = null;
+                println(`You eject the video, put it in its case, and add it to your INVENTORY.`);
+                disk.inventory.push({
+                  name: [`*Romancing the Stone*`, 'video', 'vhs', 'tape'],
+                  desc: `It's in a case with the Blockbuster logo, the name of the film, and a BE KIND, REWIND sticker.`,
+                });
+
+                // remove the video case from the room
+                const room = getRoom('livingRoom');
+                const caseIndex = room.items.findIndex(item => item === videoCase);
+                room.items.splice(caseIndex, 1);
+              },
+              'Purple Rain': () => {
+                // TODO!
+              },
+              'The Bodyguard': () => {
+                // TODO!
+              },
+              'Toxic Avenger': () => {
+                // TODO!
+              },
+            };
+
+            if (movies[item.cassette]) {
+              movies[item.cassette]();
+            } else {
+              println(`There's nothing in the VCR. You'll have to rent something from the local Blockbuster.`);
+            }
+          },
         },
         {
           name: 'Blockbuster video case',
-          desc: `The case is empty. Looks like it once held *Romancing the Stone*.`,
+          desc: `The case is empty. Looks like it once held *Romancing the Stone*. A sticker says BE KIND, REWIND.`,
+          onLook() {
+            const videoCase = getItemInRoom('case', 'livingRoom');
+            videoCase.wasSeen = true;
+          },
         },
         {
           name: ['kitchen', 'hallway'],
