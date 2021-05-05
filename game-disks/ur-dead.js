@@ -370,27 +370,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       Further south appears to be a kitchen. Just before the kitchen to the southwest is a hallway.`,
       items: [
         {
-          name: ['lightswitch', 'lights'],
-          isOn: true,
-          onUse() {
-            // toggle the light
-            const lightswitch = getItemInRoom('lights', 'livingRoom');
-            println(`You switch ${lightswitch.isOn ? 'off' : 'on'} the light.`)
-            lightswitch.isOn = !lightswitch.isOn;
-
-            const room = getRoom('livingRoom');
-            room.desc = lightswitch.isOn
-              ? `You see Dirk & Ronny's COUCH, TV, and VCR, plus a Blockbuster video case on the floor.
-      Further south appears to be a kitchen. Just before the kitchen to the southwest is a hallway.`
-              : `The room is dark. Better flip the switch.`;
-
-            // when the lights are off, hide items other than the lightswitch
-            room.items
-              .filter(item => item !== lightswitch)
-              .forEach(item => item.isHidden = !lightswitch.isOn);
-          },
-        },
-        {
           name: ['couch', 'sofa'],
           onUse() {
             println(`You plop down on the couch.`);
