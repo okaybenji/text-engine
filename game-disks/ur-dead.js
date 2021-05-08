@@ -1,74 +1,5 @@
 // NOTE: This game is a work in progress!
 
-// override commands to include custom commands
-
-// overridden save command stores player input history
-// (optionally accepts a name for the save)
-save = (name = 'save') => {
-  localStorage.setItem(name, JSON.stringify(inputs));
-  const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
-  println(line);
-};
-
-// overridden load command reapplies inputs from saved game
-// (optionally accepts a name for the save)
-load = (name = 'save') => {
-  if (inputs.filter(cmd => !cmd.toLowerCase().startsWith('load')).length > 2) {
-    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
-    return;
-  }
-
-  let save = JSON.parse(localStorage.getItem(name));
-
-  if (!save) {
-    println(`Save file not found.`);
-    return;
-  }
-
-  // filter out the save/load commands & empty strings
-  save = save
-    .filter(cmd => !cmd.toLowerCase().startsWith('save') && !cmd.toLowerCase().startsWith('load') && cmd !== '');
-
-  while (save.length) {
-    applyInput(save.shift());
-  }
-
-  const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
-  println(line);
-};
-
-// play command
-const play = () => println(`You're already playing a game.`);
-
-// set player's name
-const name = (arg) => {
-  if (!arg.length) {
-    println(`Type NAME followed by the name you wish to choose.`);
-    return;
-  }
-
-  disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
-  const nametag = disk.inventory.find(i => i.name === 'nametag');
-
-  if (!nametag) {
-    println(`You don't have a nametag.`);
-    return;
-  }
-
-  nametag.desc = `It says ${disk.playerName}.`;
-
-  // update Fran's greeting
-  const fran = getCharacter('fran');
-  fran.onTalk = () => println(`"Hello there, ${disk.playerName}."`);
-
-  // confirm the change
-  println(`Your name is now ${disk.playerName}.`);
-};
-
-commands[0] = Object.assign(commands[0], {save, load, play, name});
-commands[1] = Object.assign(commands[1], {save, load, play, name});
-commands[2] = Object.assign(commands[2], {play, name});
-
 const urDead = {
   roomId: 'title',
   todo: [{id: 0, desc: `Figure out where you are.`}],
@@ -292,7 +223,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       },
       exits: [
         {dir: 'east', id: 'ramp'},
-        {dir: 'north', id: 'blockbuster', block: `The door is locked.`},
+        {dir: ['north', 'in', 'inside'], id: 'blockbuster', block: `The door is locked.`},
       ],
     },
     {
@@ -311,7 +242,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: ['tv', 'mallrats'], desc: `Kevin Smith is dressed like Batman.`},
       ],
       exits: [
-        {dir: 'south', id: 'parkingLot'},
+        {dir: ['south', 'out', 'outside'], id: 'parkingLot'},
       ],
     },
     {
@@ -340,7 +271,19 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {name: 'sail', desc: `It's chimney-sized.`, isHidden: true},
         {name: 'balcony', desc: `It's not clear from here how the balcony is accessed.`},
         {name: 'helm', desc: `It seems a bit strange for a house to have a steering wheel, but then again, you're new here.`, isHidden: true},
-        {name: 'fake rock', desc: `It's really not very convincing. It's plastic and someone's stuck googly eyes to it with a hot glue gun.`, isHidden: true},
+        {
+          name: 'fake rock',
+          desc: `It's really not very convincing. It's plastic and someone's stuck googly eyes to it with a hot glue gun.`,
+          isHidden: true,
+          onTake() {
+            // if the player doesn't have the key and the door is locked, show a message
+            if (!getItemInInventory('key') && getItemInRoom('door', 'yard').isLocked) {
+              println(`There's no key under it, if that's what you're thinking. This is its home. Better leave it be.`);
+            } else {
+              println(`This is its home. Better leave it be.`);
+            }
+          },
+        },
         {
           name: 'window',
           desc: `You can see the living room through the window. There's a couch and a tube TV with a VCR. It looks like there's a Blockbuster video case on the floor in front of the TV.`,
@@ -455,6 +398,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             const videoCase = getItemInRoom('case', 'livingRoom');
             videoCase.wasSeen = true;
           },
+          onTake() {
+            println(`Better find the movie first...`);
+          },
         },
         {
           name: ['kitchen', 'hallway'],
@@ -463,7 +409,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
       ],
       exits: [
-        {dir: 'north', id: 'yard'},
+        {dir: ['north', 'out', 'outside'], id: 'yard'},
         {dir: 'south', block: `It's dark and you're not hungry.`},
       ],
     },
@@ -539,7 +485,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           option: `That movie really does sound great. Any chance I could BORROW it?`,
           line: `"Woah, you haven't seen *Romancing the Stone*?" he asks, wide-eyed. "Oh, man, yeah, you need to watch it. We're sort of in the middle of something, but you can grab it from our pad over there," he says, nodding his head to the SOUTHWEST as Dirk tosses you a key.
-          "You can leave it unlocked. Just slide the key under the fake rock.`,
+          "You can leave it unlocked. Just slide the key under the fake rock."`,
           prereqs: ['great'],
           onSelected() {
             disk.inventory.push({
@@ -552,7 +498,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
                   println(`You use Dirk's key to open the door, placing it under the fake rock before entering into the living room.`);
                   enterRoom('livingRoom');
                   // leave the door unlocked
-                  getRoom('yard').exits.push({dir: 'south', id: 'livingRoom'});
+                  getRoom('yard').exits.push({dir: ['south', 'in', 'inside'], id: 'livingRoom'});
                   // remove the key from inventory
                   const key = getItemInInventory('key');
                   const itemIndex = disk.inventory.findIndex(i => i === key);
@@ -567,7 +513,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `Your HOUSE looks like a boat..?`,
-          line: `Yeah, we were kind of inspired by the yacht just NORTH from here. To be honest, I think we've got it better than they do. Ours is a real house, and their yacht's not going anywhere.`,
+          line: `"Yeah," he smiles bashfully, "We were kind of inspired by the yacht just NORTH from here.
+          "To be honest, I think we've got it better than they do. After all, ours is a *real* house instead of a boat that *wants* to be a house. Plus, their yacht's not going anywhere, either."`,
           prereqs: ['borrow', 'sawHouse'],
           removeOnRead: true,
         },
@@ -776,7 +723,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           option: `Do you have a Blockbuster CARD?`,
           line: `"Why do you ask?" She seems to be thinking.`,
-          prereqs: ['blockbuster'],
+          prereqs: ['nametag', 'blockbuster'],
           removeOnRead: true,
         },
         {
@@ -816,13 +763,13 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: `They don't seem to notice you.`,
     },
     {
-      name: ['clerk', 'Ron'],
-      desc: `His hair is a rainbow of pink, turquoise, and seafoam with incredible rigidity. His nametag says "Ron". It's decorated with a smiley face sticker.`,
+      name: ['Ron', 'clerk'],
+      desc: `Their hair is a rainbow of pink, turquoise, and seafoam with incredible rigidity. Their nametag says "Ron". It's decorated with a smiley face sticker.`,
       roomId: 'blockbuster',
       topics: [
         {
           option: `Can I RENT a movie?`,
-          line: `"Yeah, sure," he says, "If you have a membership card."`,
+          line: `"Yeah, sure," they say, "If you have a membership card."`,
           removeOnRead: true,
           onSelected() {
             disk.todo.push({id: 3, desc: `Find a Blockbuster membership card.`})
@@ -839,20 +786,20 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `When is the printer going to be FIXED?`,
-          line: `"It came that way, my dude," he tells you matter-of-factly. "It's always been busted, and it will always be busted. You basically either have a card or you don't."`,
+          line: `"It came that way, my dude," they tell you matter-of-factly. "It's always been busted, and it will always be busted. You basically either have a card or you don't."`,
           prereqs: ['membership'],
           removeOnRead: true,
         },
         {
           option: `I met a skeleton named RONNY at a b-ball court`,
           line: `"Oh, yeah, I'm Ron."
-                  He doesn't seem to know what to do with this information.`,
+                  They don't seem to know what to do with this information.`,
           prereqs: ['rons'],
           removeOnRead: true,
         },
         {
           option: `I got a membership CARD`,
-          line: `"Cool," he says, "What did you wanna rent?"`,
+          line: `"Cool," they say, "What did you wanna rent?"`,
           prereqs: ['gotCard'],
           removeOnRead: true,
         },
@@ -878,7 +825,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: `Can't you just WAIVE the late fee?`,
-          line: `"Look, I don't know if you've noticed," he begins with a serious expression, "But our selection is a little lacking these days.
+          line: `"Look, I don't know if you've noticed," they begin with a serious expression, "But our selection is a little lacking these days.
           "We don't get new movies in, so when a customer doesn't bring one back, that's one less film on the shelves.
           "All that to say, I'll be happy to waive your late fee — *if* you bring back *Romancing the Stone*."`,
           prereqs: ['fee'],
@@ -890,6 +837,66 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     },
   ],
   methods: {
+    commands: {
+      // overridden save command stores player input history
+      // (optionally accepts a name for the save)
+      save: (name = 'save') => {
+        localStorage.setItem(name, JSON.stringify(inputs));
+        const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
+        println(line);
+      },
+      // overridden load command reapplies inputs from saved game
+      // (optionally accepts a name for the save)
+      load: (name = 'save') => {
+        if (inputs.filter(cmd => !cmd.toLowerCase().startsWith('load')).length > 2) {
+          println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+          return;
+        }
+
+        let save = JSON.parse(localStorage.getItem(name));
+
+        if (!save) {
+          println(`Save file not found.`);
+          return;
+        }
+
+        // filter out the save/load commands & empty strings
+        save = save
+          .filter(cmd => !cmd.toLowerCase().startsWith('save') && !cmd.toLowerCase().startsWith('load') && cmd !== '');
+
+        while (save.length) {
+          applyInput(save.shift());
+        }
+
+        const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
+        println(line);
+      },
+      play: () => println(`You're already playing a game.`),
+      // set player's name
+      name: (arg) => {
+        if (!arg.length) {
+          println(`Type NAME followed by the name you wish to choose.`);
+          return;
+        }
+
+        disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
+        const nametag = disk.inventory.find(i => i.name === 'nametag');
+
+        if (!nametag) {
+          println(`You don't have a nametag.`);
+          return;
+        }
+
+        nametag.desc = `It says ${disk.playerName}.`;
+
+        // update Fran's greeting
+        const fran = getCharacter('fran');
+        fran.onTalk = () => println(`"Hello there, ${disk.playerName}."`);
+
+        // confirm the change
+        println(`Your name is now ${disk.playerName}.`);
+      },
+    },
     // cross an item off player's to-do list
     crossOff: (id) => {
       disk.todo.find(item => item.id === id).done = true;
@@ -926,3 +933,8 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     },
   },
 };
+
+// override commands to include custom commands
+commands[0] = Object.assign(commands[0], urDead.methods.commands);
+commands[1] = Object.assign(commands[1], urDead.methods.commands);
+commands[2] = Object.assign(commands[2], {play: urDead.methods.commands.play, name: urDead.methods.commands.name});
