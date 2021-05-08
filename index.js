@@ -286,6 +286,10 @@ let talkToOrAboutX = (preposition, x) => {
         availableTopics.forEach(topic => println(`${bullet} ${topic.option ? topic.option : topic.keyword.toUpperCase()}`));
         println(`${bullet} NOTHING`);
       } else {
+        // if character isn't handling onTalk, let the player know they are out of topics
+        if (!character.onTalk) {
+          println(`You have nothing to discuss with ${getName(character.name)} at this time.`);
+        }
         endConversation();
       }
     } else if (Object.keys(topics).length) {
