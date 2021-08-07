@@ -1,15 +1,15 @@
 ```
-   ████████ ███████ ██   ██ ████████               
-      ██    ██       ██ ██     ██                  
-      ██    █████     ███      ██     █████            
-      ██    ██       ██ ██     ██                  
-      ██    ███████ ██   ██    ██                  
-                                                
-███████ ███    ██  ██████  ██ ███    ██ ███████ 
-██      ████   ██ ██       ██ ████   ██ ██      
-█████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   
-██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      
-███████ ██   ████  ██████  ██ ██   ████ ███████
+   ████████ ███████ ██   ██ ████████               
+      ██    ██       ██ ██     ██                  
+      ██    █████     ███      ██     █████            
+      ██    ██       ██ ██     ██                  
+      ██    ███████ ██   ██    ██                  
+                                                
+███████ ███    ██  ██████  ██ ███    ██ ███████ 
+██      ████   ██ ██       ██ ████   ██ ██      
+█████   ██ ██  ██ ██   ███ ██ ██ ██  ██ █████   
+██      ██  ██ ██ ██    ██ ██ ██  ██ ██ ██      
+███████ ██   ████  ██████  ██ ██   ████ ███████
 ```
 
 An HTML-based text adventure game engine. Small and easy to use with no dependencies. Highly customizable.
@@ -148,11 +148,11 @@ You can use the included [index.html](https://github.com/okaybenji/text-engine/b
 Sometimes you just want to start from scratch. If you wish to make your own HTML file, just be sure it contains the following two elements:
 
 * A `div` with ID `output`. This is where the game text will appear.
-```
+```html
 <div id="output"></div>
 ```
 * An `input` with ID `input`. This is where the player will enter commands.
-```
+```html
 <input id="input" autofocus>
 ```
 
@@ -261,7 +261,7 @@ Methods are named according to what the player types to issue them. For instance
 
 Here are a few examples of ways to override the default commands:
 
-```
+```js
 // Add a command which takes no arguments.
 // In this example, the command is called "play", and the user would type "play" to use the command.
 const play = () => println(`You're already playing a game!`);
@@ -303,7 +303,7 @@ If you are writing functions for your game, you'll need to keep these in mind as
 * Functions attached to the disk must not rely on [closures](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36). Closures are lost when a JSON object is converted to a string representation.
 * You cannot use the [shorthand syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions) for defining methods. That is,
 
-```
+```js
 {
   onUse() {
     // This version will not work.
