@@ -74,7 +74,7 @@ let setup = () => {
 // store player input history
 // (optionally accepts a name for the save)
 let save = (name = 'save') => {
-  localStorage.setItem(name, JSON.stringify(inputs));
+  localStorage.setItem(name, JSON.stringify(inputs.filter(isNotMeta)));
   const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
   println(line);
 };
@@ -103,7 +103,7 @@ let load = (name = 'save') => {
 // export current game to disk (optionally accepts a filename)
 let exportSave = (name) => {
   const filename = `${name.length ? name : 'text-engine-save'}.txt`;
-  saveFile(JSON.stringify(inputs), filename);
+  saveFile(JSON.stringify(inputs.filter(isNotMeta)), filename);
   println(`Game exported to "${filename}".`);
 };
 
