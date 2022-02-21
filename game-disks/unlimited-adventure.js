@@ -79,7 +79,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
         console.log('Entered', disk.roomId); // Logs "Entered endOfTheWorld"
       },
       items: [
-        { name: 'key', desc: 'It looks like a key.', isTakeable: true, use: ({disk, println, getRoom}) => {
+        { name: 'key', desc: 'It looks like a key.', isTakeable: true, onUse: ({disk, println, getRoom}) => {
           // This method gets run when the user types "use key".
           const room = getRoom(disk.roomId);
           const door = room.items.find(item => item.name === 'door');
@@ -91,7 +91,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
             println('There\'s nothing to use the key on.');
           }
         }},
-        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, use: ({disk, println, getRoom}) => {
+        { name: 'book', desc: 'It appears to contain some sort of encantation, or perhaps... code.', isTakeable: true, onUse: ({disk, println, getRoom}) => {
           const room = getRoom(disk.roomId);
           const door = room.items.find(item => item.name === 'door');
 
@@ -101,7 +101,7 @@ WWWWW/\\| /   \\|'/\\|/"\\
           }
 
           println('A door has appeared from nothing! It seems to go nowhere...');
-          room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, use: ({disk, println, enterRoom}) => {
+          room.items.push({ name: 'door', desc: 'It seems to go nowhere...', isOpen: false, onUse: ({disk, println, enterRoom}) => {
             const door = room.items.find(item => item.name === 'door');
             if (door.isOpen) {
               enterRoom('gameReallyOver');
