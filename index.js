@@ -71,36 +71,121 @@ let setup = () => {
   });
 };
 
-// convert the disk to JSON and store it
+// store player input history
 // (optionally accepts a name for the save)
-let save = (name) => {
-  const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
-  localStorage.setItem(name, save);
+let save = (name = 'save') => {
+  localStorage.setItem(name, JSON.stringify(inputs));
   const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
   println(line);
 };
 
-// restore the disk from storage
+// reapply inputs from saved game
 // (optionally accepts a name for the save)
-let load = (name) => {
-  const save = localStorage.getItem(name);
+let load = (name = 'save') => {
+  if (inputs.filter(isNotMeta).length > 2) {
+    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
+  let save = localStorage.getItem(name);
 
   if (!save) {
     println(`Save file not found.`);
     return;
   }
 
-  disk = JSON.parse(save, (key, value) => {
-    try {
-      return eval(value);
-    } catch (error) {
-      return value;
-    }
-  });
+  applyInputs(save);
 
   const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
   println(line);
-  enterRoom(disk.roomId);
+};
+
+// export current game to disk (optionally accepts a filename)
+let exportSave = (name) => {
+  const filename = `${name.length ? name : 'text-engine-save'}.txt`;
+  saveFile(JSON.stringify(inputs), filename);
+  println(`Game exported to "${filename}".`);
+};
+
+// import a previously exported game from disk
+let importSave = () => {
+  if (inputs.filter(isNotMeta).length > 2) {
+    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **IMPORT** command again.`);
+    return;
+  }
+
+  const input = openFile();
+  input.onchange = () => {
+    const fr = new FileReader();
+    const file = input.files[0];
+
+    // register file loaded callback
+    fr.onload = () => {
+      // load the game
+      applyInputs(fr.result);
+      println(`Game "${file.name}" was loaded.`);
+      input.remove();
+    };
+
+    // register error handling
+    fr.onerror = (event) => {
+      println(`An error occured loading ${file.name}. See console for more information.`);
+      console.error(`Reader error: ${fr.error}
+        Reader error event: ${event}`);
+      input.remove();
+    };
+
+    // attempt to load the text from the selected file
+    fr.readAsText(file);
+  };
+};
+
+// saves text from memory to disk
+let saveFile = (content, filename) => {
+  const a = document.createElement('a');
+  const file = new Blob([content], {type: 'text/plain'});
+
+  a.href = URL.createObjectURL(file);
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+};
+
+// creates input element to open file prompt (allows user to load exported game from disk)
+let openFile = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.click();
+
+  return input;
+};
+
+// asserts the command is not save, load, import or export, nor blank (could use a better name...)
+let isNotMeta = (cmd) => !cmd.toLowerCase().startsWith('save')
+  && !cmd.toLowerCase().startsWith('load')
+  && !cmd.toLowerCase().startsWith('export')
+  && !cmd.toLowerCase().startsWith('import')
+  && cmd !== '';
+
+// applies string representing an array of input strings (used for loading saved games)
+let applyInputs = (string) => {
+  let ins = [];
+
+  // parse, filtering out the save/load commands & empty strings
+  try {
+    ins = JSON.parse(string).filter(isNotMeta);
+  } catch(err) {
+    println(`An error occurred. See error console for more details.`);
+    console.error(`An error occurred while attempting to parse text-engine inputs.
+      Inputs: ${string}
+      Error: ${err}`);
+    return;
+  }
+
+  while (ins.length) {
+    applyInput(ins.shift());
+  }
 };
 
 // list player inventory
@@ -515,15 +600,15 @@ let chars = () => {
 // display help menu
 let help = () => {
   const instructions = `The following commands are available:
-    LOOK:   'look at key'
-    TAKE:   'take book'
-    GO:     'go north'
-    USE:    'use door'
-    TALK:   'talk to mary'
-    ITEMS:  list items in the room
-    INV:    list inventory items
-    SAVE:   save the current game
-    LOAD:   load the last saved game
+    LOOK:           'look at key'
+    TAKE:           'take book'
+    GO:             'go north'
+    USE:            'use door'
+    TALK:           'talk to mary'
+    ITEMS:          list items in the room
+    INV:            list inventory items
+    SAVE/LOAD:      save current game, or load a saved game (in memory)
+    IMPORT/EXPORT:  save current game, or load a saved game (on disk)
     HELP:   this help menu
   `;
   println(instructions);
@@ -574,6 +659,8 @@ let commands = [
     save,
     load,
     restore: load,
+    export: exportSave,
+    import: importSave,
   },
   // one argument (e.g. "go north", "take book")
   {
@@ -588,6 +675,8 @@ let commands = [
     restore: x => load(x),
     x: x => lookAt([null, x]), // IF standard shortcut for look at
     t: x => talkToOrAboutX('to', x), // IF standard shortcut for talk
+    export: exportSave,
+    import: importSave, // (ignores the argument)
   },
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
