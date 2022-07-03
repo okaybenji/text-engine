@@ -905,4 +905,4 @@ const customCommands = {
 // override commands to include custom commands
 commands[0] = Object.assign(commands[0], customCommands);
 commands[1] = Object.assign(commands[1], customCommands);
-commands[2] = Object.assign(commands[2], {play: customCommands.play, name: customCommands.name});
+commands[2] = Object.assign(commands[2], customCommands);
