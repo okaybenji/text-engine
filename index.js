@@ -84,7 +84,7 @@ let save = (name = 'save') => {
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
   // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
-  if (typeof diskFactory !== 'function' && inputs.length > 2) {
+  if (typeof diskFactory !== 'function' && inputs.length) {
     println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
     return;
   }
@@ -115,6 +115,12 @@ let exportSave = (name) => {
 
 // import a previously exported game from disk
 let importSave = () => {
+  // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
+  if (typeof diskFactory !== 'function' && inputs.length) {
+    println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
   const input = openFile();
   input.onchange = () => {
     const fr = new FileReader();
@@ -123,6 +129,9 @@ let importSave = () => {
     // register file loaded callback
     fr.onload = () => {
       // load the game
+      inputs = [];
+      inputsPos = 0;
+      loadDisk();
       applyInputs(fr.result);
       println(`Game "${file.name}" was loaded.`);
       input.remove();
@@ -982,6 +991,10 @@ let getItemInRoom = (itemName, roomId) => {
 // string -> item
 let getItemInInventory = (name) => disk.inventory.find(item => objectHasName(item, name));
 
+// get item by name
+// string -> item
+let getItem = (name) => getItemInInventory(name) || getItemInRoom(name, disk.roomId)
+
 // retrieves a keyword from a topic
 // topic -> string
 let getKeywordFromTopic = (topic) => {
@@ -1053,6 +1066,8 @@ let loadDisk = (uninitializedDisk) => {
   input.focus();
 };
 
+// get the active disk from memory
+// nothing -> disk
 let getDisk = () => disk;
 
 // npm support
