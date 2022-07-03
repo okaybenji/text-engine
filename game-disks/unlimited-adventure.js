@@ -15,7 +15,7 @@ commands[0].help = help;
 // switch to the retro style
 document.getElementById('styles').setAttribute('href', 'styles/retro.css');
 
-const unlimitedAdventure = {
+const unlimitedAdventure = () => ({
   roomId: 'gameOver',        // The room the player is currently in. Set this to the room you want the player to start in.
   inventory: [],             // You can add any items you want the player to start with here.
   rooms: [
@@ -122,4 +122,4 @@ WWWWW/\\| /   \\|'/\\|/"\\
       `,
     },
   ],
-};
+});
