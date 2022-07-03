@@ -1066,10 +1066,6 @@ let loadDisk = (uninitializedDisk) => {
   input.focus();
 };
 
-// get the active disk from memory
-// nothing -> disk
-let getDisk = () => disk;
-
 // npm support
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = loadDisk;
