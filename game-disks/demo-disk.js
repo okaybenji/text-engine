@@ -48,7 +48,7 @@ const demoDisk = () => ({
             // put the silver key in the pot
             foyer.items.push({
               name: ['shiny thing', 'something shiny', 'pot'],
-              onUse: () => {
+              onUse() {
                 const room = getRoom(disk.roomId);
                 if (room.id === 'foyer') {
                   println(`There's nothing to unlock in the foyer.`);
@@ -65,7 +65,7 @@ const demoDisk = () => ({
                 }
               },
               desc: `It's a silver **KEY**!`,
-              onLook: () => {
+              onLook() {
                 const key = getItem('shiny');
 
                 // now that we know it's a key, place that name first so the engine calls it by that name
@@ -78,7 +78,7 @@ const demoDisk = () => ({
                 delete key.onLook;
               },
               isTakeable: true,
-              onTake: () => {
+              onTake() {
                 println(`You took it.`);
                 // update the monstera's description, removing everything starting at the line break
                 const plant = getItem('plant');
@@ -97,7 +97,7 @@ const demoDisk = () => ({
 
           Type **INV** to see a list of items in your inventory.*`),
           // using the dime randomly prints HEADS or TAILS
-          onUse: () => {
+          onUse() {
             const side = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
             println(`You flip the dime. It lands on ${side}.`);
           },
@@ -128,7 +128,7 @@ const demoDisk = () => ({
         {
           name: 'door',
           desc: `There are 4" metal letters nailed to the door. They spell out: "RESEARCH LAB".`,
-          onUse: () => {
+          onUse() {
             const reception = getRoom('reception');
             const exit = getExit('east', reception.exits);
             if (exit.block) {

@@ -8,7 +8,7 @@ const urDead = () => ({
     {
       name: ['to-do list', 'todo list'],
       desc: `The list contains the following to-do items:`,
-      onLook: () => {
+      onLook() {
         // sort to-do list by done or not, then by id descending
         const list = disk.todo
           .sort((a, b) => {
@@ -21,7 +21,7 @@ const urDead = () => ({
 
         list.forEach(println);
       },
-      onUse: ({item, disk}) => {
+      onUse({item, disk}) {
         // Using the list is the same as looking at it.
         println(item.desc);
         item.onLook({disk});
@@ -47,7 +47,7 @@ const urDead = () => ({
      || ||
     ==' '==
       `,
-      onEnter: () => {
+      onEnter() {
         println('ur dead', 'title');
         enterRoom('court');
       },
@@ -55,7 +55,7 @@ const urDead = () => ({
     {
       name: '🏀 Craggy Half-Court',
       id: 'court',
-      onEnter: () => {
+      onEnter() {
         const room = getRoom('court');
 
         if (room.visits === 1) {
@@ -83,7 +83,7 @@ const urDead = () => ({
           name: ['basketball', 'ball'],
           desc: 'You could really have a ball with that thing.',
           isTakeable: true,
-          onTake: ({item, room}) => {
+          onTake({item, room}) {
             const skeletons = getCharacter('dirk');
             skeletons.topics = skeletons.tookBallTopics;
 
@@ -149,7 +149,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: 'ramp',
           desc: `Nothing's stopping you from having a good time but you. Type USE RAMP.`,
-          onUse: () => {
+          onUse() {
             enterRoom('deck');
 
             // add exit after player has learned the USE command
@@ -248,7 +248,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     {
       name: '⚓️ Front Yard',
       id: 'yard',
-      onEnter () {
+      onEnter() {
         const room = getRoom('yard');
 
         if (room.visits === 1) {
@@ -431,7 +431,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         },
         {
           option: 'GIVE the ball back',
-          onSelected: () => {
+          onSelected() {
             println(`Feeling a bit bad, you decide to return the ball and move on.`);
             disk.methods.resetCourt();
             if (disk.askedSkeletonNames) {
@@ -607,7 +607,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           "Anyhow, I've said my spiel. I'll be here if you need me."
 
           You thank him and end the conversation.`,
-          onSelected: () => {
+          onSelected() {
             endConversation();
 
             const skeleton = getCharacter('dave');
@@ -634,7 +634,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           prereqs: ['fran'],
           removeOnRead: true,
           line: () => `Oh, I'm Dave. Pleasure to make your acquaintance${disk.playerName ? ', ' + disk.playerName : ''}.`,
-          onSelected: () => {
+          onSelected() {
             // now that we know his name, let's call him by it
             const dave = getCharacter('dave');
             dave.name = ['Dave', 'bearded skeleton'];
@@ -681,7 +681,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `WHO are you?`,
           line: `"I'm Fran. Didn't you see the nametag?"`,
           removeOnRead: true,
-          onSelected: () => {
+          onSelected() {
             // now that we know her name, let's call her by it
             const fran = getCharacter('fran');
             fran.name = ['Fran', 'skeleton in a red dress'];
@@ -838,11 +838,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
   ],
   methods: {
     // cross an item off player's to-do list
-    crossOff: (id) => {
+    crossOff(id) {
       disk.todo.find(item => item.id === id).done = true;
     },
     // reset the state of the basketball court
-    resetCourt: () => {
+    resetCourt() {
       const skeletons = getCharacter('dirk');
       skeletons.topics = `They look pretty busy.`;
 
@@ -857,7 +857,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       disk.inventory.splice(itemIndex, 1);
     },
     // check the player's blockbuster membership card
-    checkCard: () => {
+    checkCard() {
       const numberWithCommas = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
       // late fees increase with each command; cents are randomized
@@ -877,7 +877,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 const customCommands = {
   play: () => println(`You're already playing a game.`),
   // set player's name
-  name: (arg) => {
+  name(arg) {
     if (!arg.length) {
       println(`Type NAME followed by the name you wish to choose.`);
       return;

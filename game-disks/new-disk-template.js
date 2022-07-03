@@ -21,7 +21,7 @@ const newDiskTemplate = () => ({
           name: 'axe',
           desc: `You could probably USE it to cut the VINES, unblocking the door.`,
           isTakeable: true, // Allows the player to take the item.
-          onUse: () => {
+          onUse() {
             // Remove the block on the room's only exit.
             const room = getRoom('start');
             const exit = getExit('north', room.exits);
