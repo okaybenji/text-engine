@@ -71,7 +71,7 @@ An exit is an object with the following properties:
 
 | Property | Type   | Description |
 | -------- | ------ | ----------- | 
-| `dir`    | String | The direction the player must go to leave via this exit (e.g. "north". |
+| `dir`    | String | The direction the player must go to leave via this exit (e.g. "north", but can be anything). |
 | `id`     | String | The ID of the room this exit leads to. |
 
 An exit can optionally have a `block` as well:
