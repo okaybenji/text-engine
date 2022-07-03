@@ -1,6 +1,6 @@
 // NOTE: This game is a work in progress!
 
-const urDead = {
+const urDead = () => ({
   roomId: 'title',
   todo: [{id: 0, desc: `Figure out where you are.`}],
   inventory: [
@@ -100,7 +100,7 @@ const urDead = {
               room.desc = `You see a couple of skeletons. You get the feeling they don't care for you.`;
               println(`One of the skeletons performs an elaborate dance to set up their shot, dribbling out a steady beat. They are clearly banking on the other forgetting one of the many the steps, and thus adding an 'O' to their 'H'. They're so swept up in their routine that you're able to step in and swipe the ball on a down beat.
 
-              The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked uphappy.)`);
+              The skeletons don't look happy. (Later, you will confoundedly try to remember how you could TELL they looked unhappy.)`);
 
               item.onUse = () => println(`It's a bit hard to dribble on the uneven floor, but you manage to do so awkwardly.`);
             }
@@ -837,33 +837,6 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
     },
   ],
   methods: {
-    commands: {
-      play: () => println(`You're already playing a game.`),
-      // set player's name
-      name: (arg) => {
-        if (!arg.length) {
-          println(`Type NAME followed by the name you wish to choose.`);
-          return;
-        }
-
-        disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
-        const nametag = disk.inventory.find(i => i.name === 'nametag');
-
-        if (!nametag) {
-          println(`You don't have a nametag.`);
-          return;
-        }
-
-        nametag.desc = `It says ${disk.playerName}.`;
-
-        // update Fran's greeting
-        const fran = getCharacter('fran');
-        fran.onTalk = () => println(`"Hello there, ${disk.playerName}."`);
-
-        // confirm the change
-        println(`Your name is now ${disk.playerName}.`);
-      },
-    },
     // cross an item off player's to-do list
     crossOff: (id) => {
       disk.todo.find(item => item.id === id).done = true;
@@ -899,9 +872,37 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       }
     },
   },
+});
+
+const customCommands = {
+  play: () => println(`You're already playing a game.`),
+  // set player's name
+  name: (arg) => {
+    if (!arg.length) {
+      println(`Type NAME followed by the name you wish to choose.`);
+      return;
+    }
+
+    disk.playerName = (Array.isArray(arg) ? arg.join(' ') : arg).toUpperCase();
+    const nametag = disk.inventory.find(i => i.name === 'nametag');
+
+    if (!nametag) {
+      println(`You don't have a nametag.`);
+      return;
+    }
+
+    nametag.desc = `It says ${disk.playerName}.`;
+
+    // update Fran's greeting
+    const fran = getCharacter('fran');
+    fran.onTalk = () => println(`"Hello there, ${disk.playerName}."`);
+
+    // confirm the change
+    println(`Your name is now ${disk.playerName}.`);
+  },
 };
 
 // override commands to include custom commands
-commands[0] = Object.assign(commands[0], urDead.methods.commands);
-commands[1] = Object.assign(commands[1], urDead.methods.commands);
-commands[2] = Object.assign(commands[2], {play: urDead.methods.commands.play, name: urDead.methods.commands.name});
+commands[0] = Object.assign(commands[0], customCommands);
+commands[1] = Object.assign(commands[1], customCommands);
+commands[2] = Object.assign(commands[2], {play: customCommands.play, name: customCommands.name});
