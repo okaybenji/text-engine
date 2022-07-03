@@ -441,6 +441,12 @@ const demoDisk = () => ({
           **roomId** (*string*) - The unique identifier for the room.`
         },
         {
+          option: `Tell me about **GETITEM**`,
+          line: `<code>getItem</code> is a function you can use to get a reference to an item in the player's inventory or in the current room. It takes one argument:
+
+          **name** (*string*) - The name of the item.`
+        },
+        {
           option: `Tell me about **GETITEMINROOM**`,
           line: `<code>getItemInRoom</code> is a function you can use to get a reference to an item in any room. It takes two arguments:
 
@@ -451,12 +457,6 @@ const demoDisk = () => ({
         {
           option: `Tell me about **GETITEMININVENTORY**`,
           line: `<code>getItemInInventory</code> is a function you can use to get a reference to an item in the player's inventory. It takes one argument:
-
-          **name** (*string*) - The name of the item.`
-        },
-        {
-          option: `Tell me about **GETITEM**`,
-          line: `<code>getItem</code> is a function you can use to get a reference to an item in the player's inventory or in the current room. It takes one argument:
 
           **name** (*string*) - The name of the item.`
         },
