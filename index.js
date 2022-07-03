@@ -83,6 +83,12 @@ let save = (name = 'save') => {
 // reapply inputs from saved game
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
+  // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
+  if (typeof diskFactory !== 'function' && inputs.length > 2) {
+    println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
   inputs = [];
   inputsPos = 0;
   loadDisk();
@@ -1038,7 +1044,8 @@ let loadDisk = (uninitializedDisk) => {
   }
 
   // initialize the disk
-  disk = init(diskFactory());
+  // (although we expect the disk to be a factory function, we still support the old object format)
+  disk = init(typeof diskFactory === 'function' ? diskFactory() : diskFactory);
 
   // start the game
   enterRoom(disk.roomId);
@@ -1046,6 +1053,8 @@ let loadDisk = (uninitializedDisk) => {
   // focus on the input
   input.focus();
 };
+
+let getDisk = () => disk;
 
 // npm support
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {

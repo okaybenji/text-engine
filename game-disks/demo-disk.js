@@ -50,7 +50,7 @@ const demoDisk = () => {
               foyer.items.push({
                 name: ['shiny thing', 'something shiny', 'pot'],
                 onUse: () => {
-                  const room = getRoom(disk.roomId);
+                  const room = getRoom(getDisk().roomId);
                   if (room.id === 'foyer') {
                     println(`There's nothing to unlock in the foyer.`);
                   } else if (room.id === 'reception') {
@@ -195,7 +195,7 @@ const demoDisk = () => {
               "Here, take this." he says. "Try typing **USE STYLE-CHANGER**. That should give you some ideas."`)
 
               // add a special item to the player's inventory
-              disk.inventory.push({
+              getDisk().inventory.push({
                 name: 'style-changer',
                 desc: `This is a magical item. Type **USE STYLE-CHANGER** to try it out!`,
                 onUse: () => {
@@ -471,7 +471,7 @@ const demoDisk = () => {
   // override commands to include custom UNLOCK command
   // create the unlock function
   const unlock = () => {
-    disk.rooms.forEach(room => {
+    getDisk().rooms.forEach(room => {
       if (!room.exits) {
         return;
       }
