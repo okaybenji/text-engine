@@ -1,8 +1,9 @@
 // global properties, assigned with let for easy overriding by the user
+let diskFactory;
 let disk;
 
 // store user input history
-let inputs = [''];
+let inputs = [];
 let inputsPos = 0;
 
 // define list style
@@ -74,7 +75,7 @@ let setup = () => {
 // store player input history
 // (optionally accepts a name for the save)
 let save = (name = 'save') => {
-  localStorage.setItem(name, JSON.stringify(inputs.filter(isNotMeta)));
+  localStorage.setItem(name, JSON.stringify(inputs));
   const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
   println(line);
 };
@@ -82,10 +83,9 @@ let save = (name = 'save') => {
 // reapply inputs from saved game
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
-  if (inputs.filter(isNotMeta).length > 2) {
-    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
-    return;
-  }
+  inputs = [];
+  inputsPos = 0;
+  loadDisk();
 
   let save = localStorage.getItem(name);
 
@@ -103,17 +103,12 @@ let load = (name = 'save') => {
 // export current game to disk (optionally accepts a filename)
 let exportSave = (name) => {
   const filename = `${name.length ? name : 'text-engine-save'}.txt`;
-  saveFile(JSON.stringify(inputs.filter(isNotMeta)), filename);
+  saveFile(JSON.stringify(inputs), filename);
   println(`Game exported to "${filename}".`);
 };
 
 // import a previously exported game from disk
 let importSave = () => {
-  if (inputs.filter(isNotMeta).length > 2) {
-    println(`At present, you cannot load in the middle of the game. Please reload the browser, then run the **IMPORT** command again.`);
-    return;
-  }
-
   const input = openFile();
   input.onchange = () => {
     const fr = new FileReader();
@@ -161,20 +156,13 @@ let openFile = () => {
   return input;
 };
 
-// asserts the command is not save, load, import or export, nor blank (could use a better name...)
-let isNotMeta = (cmd) => !cmd.toLowerCase().startsWith('save')
-  && !cmd.toLowerCase().startsWith('load')
-  && !cmd.toLowerCase().startsWith('export')
-  && !cmd.toLowerCase().startsWith('import')
-  && cmd !== '';
-
 // applies string representing an array of input strings (used for loading saved games)
 let applyInputs = (string) => {
   let ins = [];
 
   // parse, filtering out the save/load commands & empty strings
   try {
-    ins = JSON.parse(string).filter(isNotMeta);
+    ins = JSON.parse(string);
   } catch(err) {
     println(`An error occurred. See error console for more details.`);
     console.error(`An error occurred while attempting to parse text-engine inputs.
@@ -693,8 +681,16 @@ let commands = [
 // process user input & update game state (bulk of the engine)
 // accepts optional string input; otherwise grabs it from the input element
 let applyInput = (input) => {
+  // asserts the command is not save, load, import or export, nor blank (could use a better name...)
+  let isNotMeta = (cmd) => !cmd.toLowerCase().startsWith('save')
+    && !cmd.toLowerCase().startsWith('load')
+    && !cmd.toLowerCase().startsWith('export')
+    && !cmd.toLowerCase().startsWith('import')
+    && cmd !== '';
+
   input = input || getInput();
   inputs.push(input);
+  inputs = ['', ...inputs.filter(isNotMeta)];
   inputsPos = inputs.length;
   println(`> ${input}`);
 
@@ -882,6 +878,7 @@ let autocomplete = () => {
 // select previously entered commands
 // string -> nothing
 let navigateHistory = (dir) => {
+  console.log('navigate', dir);
   if (dir === 'prev') {
     inputsPos--;
     if (inputsPos < 0) {
@@ -1034,14 +1031,17 @@ let endConversation = () => {
 // load the passed disk and start the game
 // disk -> nothing
 let loadDisk = (uninitializedDisk) => {
+  if (uninitializedDisk) {
+    diskFactory = uninitializedDisk;
+    // start listening for user input
+    setup();
+  }
+
   // initialize the disk
-  disk = init(uninitializedDisk);
+  disk = init(diskFactory());
 
   // start the game
   enterRoom(disk.roomId);
-
-  // start listening for user input
-  setup();
 
   // focus on the input
   input.focus();
