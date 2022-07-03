@@ -29,6 +29,9 @@ const newDiskTemplate = () => ({
             if (exit.block) {
               delete exit.block;
               println(`You cut through the vines, unblocking the door to the NORTH.`);
+
+              // Update the axe's description.
+              getItem('axe').desc = `You USED it to cut the VINES, unblocking the door.`;
             } else {
               println(`There is nothing to use the axe on.`);
             }
