@@ -687,16 +687,15 @@ let commands = [
 // process user input & update game state (bulk of the engine)
 // accepts optional string input; otherwise grabs it from the input element
 let applyInput = (input) => {
-  // asserts the command is not save, load, import or export, nor blank (could use a better name...)
+  // asserts the command is not save, load, import or export (could use a better name...)
   let isNotMeta = (cmd) => !cmd.toLowerCase().startsWith('save')
     && !cmd.toLowerCase().startsWith('load')
     && !cmd.toLowerCase().startsWith('export')
-    && !cmd.toLowerCase().startsWith('import')
-    && cmd !== '';
+    && !cmd.toLowerCase().startsWith('import');
 
   input = input || getInput();
   inputs.push(input);
-  inputs = ['', ...inputs.filter(isNotMeta)];
+  inputs = inputs.filter(isNotMeta);
   inputsPos = inputs.length;
   println(`> ${input}`);
 
