@@ -38,7 +38,7 @@ const demoDisk = () => ({
           block: `It's far too large for you to carry.`, // optional reason player cannot pick up this item
           // when player looks at the plant, they discover a shiny object which turns out to be a key
           onLook: () => {
-            if (getItemInRoom('shiny', 'foyer') || getItemInInventory('shiny')) {
+            if (getItem('shiny')) {
               // the key is already in the pot or the player's inventory
               return;
             }
@@ -58,7 +58,7 @@ const demoDisk = () => ({
                   const exit = getExit('east', room.exits);
                   delete exit.block;
                   // this item can only be used once
-                  const key = getItemInInventory('shiny');
+                  const key = getItem('shiny');
                   key.onUse = () => println(`The lab has already been unlocked.`);
                 } else {
                   println(`There's nothing to unlock here.`);
@@ -66,7 +66,7 @@ const demoDisk = () => ({
               },
               desc: `It's a silver **KEY**!`,
               onLook: () => {
-                const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
+                const key = getItem('shiny');
 
                 // now that we know it's a key, place that name first so the engine calls it by that name
                 key.name.unshift('silver key');
@@ -81,7 +81,7 @@ const demoDisk = () => ({
               onTake: () => {
                 println(`You took it.`);
                 // update the monstera's description, removing everything starting at the line break
-                const plant = getItemInRoom('plant', 'foyer');
+                const plant = getItem('plant');
                 plant.desc = plant.desc.slice(0, plant.desc.indexOf('\n'));
               },
             });
@@ -442,7 +442,7 @@ const demoDisk = () => ({
         },
         {
           option: `Tell me about **GETITEMINROOM**`,
-          line: `<code>getItemInRoom</code> is a function you can use to get a reference to an item in a particular room. It takes two arguments:
+          line: `<code>getItemInRoom</code> is a function you can use to get a reference to an item in any room. It takes two arguments:
 
           **itemName** (*string*) - The name of the item.
 
@@ -451,6 +451,12 @@ const demoDisk = () => ({
         {
           option: `Tell me about **GETITEMININVENTORY**`,
           line: `<code>getItemInInventory</code> is a function you can use to get a reference to an item in the player's inventory. It takes one argument:
+
+          **name** (*string*) - The name of the item.`
+        },
+        {
+          option: `Tell me about **GETITEM**`,
+          line: `<code>getItem</code> is a function you can use to get a reference to an item in the player's inventory or in the current room. It takes one argument:
 
           **name** (*string*) - The name of the item.`
         },

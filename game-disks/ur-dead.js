@@ -209,7 +209,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
             delete exit.block;
 
-            getItemInRoom('store', 'parkingLot').desc = `It's open for business. Let's make it a Blockbuster night.`;
+            getItem('store').desc = `It's open for business. Let's make it a Blockbuster night.`;
           },
         },
         {
@@ -277,7 +277,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           isHidden: true,
           onTake() {
             // if the player doesn't have the key and the door is locked, show a message
-            if (!getItemInInventory('key') && getItemInRoom('door', 'yard').isLocked) {
+            if (!getItem('key') && getItem('door').isLocked) {
               println(`There's no key under it, if that's what you're thinking. This is its home. Better leave it be.`);
             } else {
               println(`This is its home. Better leave it be.`);
@@ -297,7 +297,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           onUse({item}) {
             if (item.isLocked) {
               // if the player has the key, unlock the door and enter the room
-              const key = getItemInInventory('key');
+              const key = getItem('key');
               if (key) {
                 key.onUse();
               } else {
@@ -355,7 +355,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
               'Romancing the Stone': () => {
                 println(`You hit PLAY and watch the cassette. You see trailers for *Rhinestone*, *Give My Regards to Broad Street*, and *Muppets Take Manhattan*, and finally, our feature presentation, *Romancing the Stone*. The movie is... fine.`);
 
-                const videoCase = getItemInRoom('case', 'livingRoom');
+                const videoCase = getItem('case');
                 if (videoCase.wasSeen) {
                   println(`You comply with the case's instructions to BE KIND and REWIND.`);
                 }
@@ -395,7 +395,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           name: 'Blockbuster video case',
           desc: `The case is empty. Looks like it once held *Romancing the Stone*. A sticker says BE KIND, REWIND.`,
           onLook() {
-            const videoCase = getItemInRoom('case', 'livingRoom');
+            const videoCase = getItem('case');
             videoCase.wasSeen = true;
           },
           onTake() {
@@ -492,7 +492,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
               name: 'key',
               desc: `It's not a skeleton key, but it is a skeleton's key. Dirk's, to be specific.`,
               onUse() {
-                const door = getItemInRoom('door', 'yard');
+                const door = getItem('door');
                 if (disk.roomId === 'yard') {
                   delete door.isLocked;
                   println(`You use Dirk's key to open the door, placing it under the fake rock before entering into the living room.`);
@@ -500,7 +500,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
                   // leave the door unlocked
                   getRoom('yard').exits.push({dir: ['south', 'in', 'inside'], id: 'livingRoom'});
                   // remove the key from inventory
-                  const key = getItemInInventory('key');
+                  const key = getItem('key');
                   const itemIndex = disk.inventory.findIndex(i => i === key);
                   disk.inventory.splice(itemIndex, 1);
                 } else {
