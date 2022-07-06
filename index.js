@@ -892,7 +892,6 @@ let autocomplete = () => {
 // select previously entered commands
 // string -> nothing
 let navigateHistory = (dir) => {
-  console.log('navigate', dir);
   if (dir === 'prev') {
     inputsPos--;
     if (inputsPos < 0) {
