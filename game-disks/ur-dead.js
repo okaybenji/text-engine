@@ -357,6 +357,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           name: ['TV', 'television', 'tube'],
           desc: `It's a Zenith tube television with a dial and antenna.`,
+          onUse: () => useItem('vcr'),
         },
         {
           name: 'VCR',
