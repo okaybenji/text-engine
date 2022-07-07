@@ -905,7 +905,7 @@ const customCommands = {
     // confirm the change
     println(`Your name is now ${disk.playerName}.`);
   },
-  pet (arg) {
+  pet(arg) {
     if (!arg.length) {
       println(`Pet?`);
     } else if (arg === 'rock' && getItem('rock')) {
@@ -913,7 +913,16 @@ const customCommands = {
     } else {
       println(`You can't pet that.`);
     }
-  }
+  },
+  open(arg) {
+    if (!arg.length) {
+      println(`Sesame?`);
+    } else if (arg === 'door' && getItem('door')) {
+      useItem('door');
+    } else {
+      println(`You can't open that.`);
+    }
+  },
 };
 
 // override commands to include custom commands
