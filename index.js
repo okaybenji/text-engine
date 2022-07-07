@@ -9,6 +9,9 @@ let inputsPos = 0;
 // define list style
 let bullet = '•';
 
+// queue output for improved performance
+let printQueue = [];
+
 // reference to the input element
 let input = document.querySelector('#input');
 
@@ -820,8 +823,10 @@ let println = (line, className) => {
     str = str.replace('\n', '<br>');
   }
 
-  output.appendChild(newLine).innerHTML = str;
-  window.scrollTo(0, document.body.scrollHeight);
+  newLine.innerHTML = str;
+
+  // push into the queue to print to the DOM
+  printQueue.push(newLine);
 };
 
 // predict what the user is trying to type
@@ -1067,6 +1072,22 @@ let loadDisk = (uninitializedDisk) => {
   // focus on the input
   input.focus();
 };
+
+// append any pending lines to the DOM each frame
+let print = () => {
+  if (printQueue.length) {
+    while (printQueue.length) {
+      output.appendChild(printQueue.shift());
+    }
+
+    // scroll to the most recent output at the bottom of the page
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  requestAnimationFrame(print);
+}
+
+requestAnimationFrame(print);
 
 // npm support
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
