@@ -210,7 +210,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
               return;
             }
 
-            println(`Suddenly the lights turn on. A clerk with a colorful mohawk opens the door, says "Come on in," and heads back inside without waiting for you to comply.`)
+            println(`Suddenly the lights turn on. Wow! What a difference.
+
+            A clerk with a colorful mohawk opens the door, says "Come on in," and heads back inside without waiting for you to comply.`)
 
             delete exit.block;
 
