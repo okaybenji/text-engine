@@ -296,6 +296,19 @@ let getExit = (dir, exits) => exits.find(exit =>
     : exit.dir === dir
 );
 
+// shortcuts for cardinal directions
+// (allows player to type e.g. 'go n')
+let shortcuts = {
+  n: 'north',
+  s: 'south',
+  e: 'east',
+  w: 'west',
+  ne: 'northeast',
+  nw: 'northwest',
+  se: 'southeast',
+  sw: 'southwest',
+};
+
 // go the passed direction
 // string -> nothing
 let goDir = (dir) => {
@@ -310,7 +323,12 @@ let goDir = (dir) => {
   const nextRoom = getExit(dir, exits);
 
   if (!nextRoom) {
-    println(`There is no exit in that direction.`);
+    // check if the dir is a shortcut
+    if (shortcuts[dir]) {
+      goDir(shortcuts[dir]);
+    } else {
+      println(`There is no exit in that direction.`);
+    }
     return;
   }
 
@@ -323,6 +341,7 @@ let goDir = (dir) => {
 };
 
 // shortcuts for cardinal directions
+// (allows player to type just e.g. 'n')
 let n = () => goDir('north');
 let s = () => goDir('south');
 let e = () => goDir('east');
