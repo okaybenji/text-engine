@@ -245,7 +245,13 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       },
       items: [
         {name: ['shelf', 'shelves'], desc: `There are surprisingly few movie cases on the shelves. Actually, there are just three.`},
-        {name: ['movies', 'cases'], desc: `The only titles they seem to have are *Toxic Avenger*, *The Bodyguard* and *Purple Rain*.`},
+        {
+          name: ['movies', 'cases', 'toxic avenger', 'the bodyguard', 'purple rain'],
+          desc: `The only titles they seem to have are *Toxic Avenger*, *The Bodyguard* and *Purple Rain*.`,
+          onTake() {
+            println(`Each time you lean over to pick up a case, the clerk clears their throat loudly enough to stop you.`);
+          },
+        },
         {name: ['tv', 'mallrats'], desc: `Kevin Smith is dressed like Batman.`},
       ],
       exits: [
