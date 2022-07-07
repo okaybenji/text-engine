@@ -4,7 +4,12 @@ const urDead = () => ({
   roomId: 'title',
   todo: [{id: 0, desc: `Figure out where you are.`}],
   inventory: [
-    {name: 'compass', desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`},
+    {
+      name: 'compass',
+      desc: `You'd held onto it as a keepsake, even though in life the busted thing didn't work at all. Weirdly enough, it seems to function fine down here.`,
+      onLook: go,
+      onUse: go
+    },
     {
       name: ['to-do list', 'todo list'],
       desc: `The list contains the following to-do items:`,
