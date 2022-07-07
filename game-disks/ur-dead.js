@@ -386,6 +386,9 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
                 const room = getRoom('livingRoom');
                 const caseIndex = room.items.findIndex(item => item === videoCase);
                 room.items.splice(caseIndex, 1);
+
+                // add a topic to the clerk convo at blockbuster
+                getCharacter('clerk').chatLog.push('gotStone');
               },
               'Purple Rain': () => {
                 // TODO!
@@ -847,6 +850,11 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
             disk.todo.push({id: 4, desc: `Return *Romancing the Stone*.`})
           },
         },
+        {
+          option: `I'm here to RETURN *Romancing the Stone*`,
+          line: `"That's great! Unfortunately this is all Benji has written of the game you are playing. He's breaking the fourth wall to tell you that, through me. Bug him on Twitter to get him to write more. (Be sure to use the EXPORT command to save your game in the meantime.)"`,
+          prereqs: ['gotStone'],
+        }
       ],
     },
   ],
