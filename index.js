@@ -609,6 +609,7 @@ let help = () => {
     USE:            'use door'
     TALK:           'talk to mary'
     ITEMS:          list items in the room
+    CHARS:          list characters in the room
     INV:            list inventory items
     SAVE/LOAD:      save current game, or load a saved game (in memory)
     IMPORT/EXPORT:  save current game, or load a saved game (on disk)
@@ -658,6 +659,7 @@ let commands = [
     use,
     chars,
     help,
+    characters: chars,
     say,
     save,
     load,
