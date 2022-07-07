@@ -889,6 +889,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
 const customCommands = {
   play: () => println(`You're already playing a game.`),
+  leave: () => go(),
   // set player's name
   name(arg) {
     if (!arg.length) {
