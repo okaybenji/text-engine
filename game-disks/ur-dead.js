@@ -66,7 +66,7 @@ const urDead = () => ({
         if (room.visits === 1) {
           println(`The bad news is you are dead. The good news is, it's not so bad. Type LOOK to have a look around.`);
 
-          room.desc = `You see a couple of skeletons playing HORSE. A gate leads NORTH.`;
+          room.desc = `You see a couple of skeletons playing H.O.R.S.E. A gate leads NORTH.`;
         }
       },
       items: [
@@ -118,7 +118,7 @@ const urDead = () => ({
     {
       name: '🏖 The "Beach"',
       id: 'beach',
-      desc: `There's a sign that reads DEATH'S A BEACH. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
+      desc: `There's a sign that reads *DEATH'S A BEACH*. There's sand, to be sure, but there's no water in sight. And the sky is a pitch-black void.
 
 To the NORTH you see a yacht in the sand, lit up like a Christmas tree. You hear the bassy thumping of dance music.
 
@@ -126,7 +126,7 @@ To the SOUTH is the gate to the half-court.
 
 There's a bearded skeleton by the sign. He seems to want to TALK.`,
       items: [
-        {name: 'sign', desc: `It says: DEATH'S A BEACH.`},
+        {name: 'sign', desc: `It says: *DEATH'S A BEACH*.`},
         {name: 'yacht', desc: `You can't see it too clearly from here. You'll need to go further NORTH.`},
         {name: 'sand', desc: `Just regular old beach sand.`, block: `You try to take it, but it slips through your fingers.`},
         {name: 'no water', desc: `Didn't I say there wasn't any water?`},
@@ -536,7 +536,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
       topics: [
         {
           option: `WHERE am I?`,
-          line: `"This is the UNDERWORLD. Welcome!"`,
+          line: `"This is the ***underworld***. Welcome!"`,
           removeOnRead: true,
           onSelected: () => disk.methods.crossOff(0),
         },
@@ -555,7 +555,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
 
             "Well, one of them."
 
-            You don't know how you can tell he is smiling, but you CAN tell.`,
+            You don't know how you can tell he is smiling, but you __can__ tell.`,
         },
         {
           option: `Will I become a SKELETON, too?`,
@@ -579,19 +579,19 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
           option: `HOW then?`,
           prereqs: ['back'],
           removeOnRead: true,
-          line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your NAME. And two, as you asked before, HOW you died."
+          line: `"To get out of here, and back up there," he points up, "you need two pieces of information. One, your __name__. And two, as you asked before, __how__ you died."
 
           It's at this moment that you realize you don't know your own name.
 
           He continues, "And there's a reason you're not likely to find this information: who would you ask? After all, we're all in the same boat, up the same river."
 
-          He pauses to whistle a bar from COME SAIL AWAY.
+          He pauses to whistle a bar from *Come Sail Away*.
 
-          "In other words, if I don't know so much as MY own name, how could I hope to tell you YOURS. You see?"
+          "In other words, if I don't know so much as *my* own name, how could I hope to tell you *yours*. You see?"
 
           This talking, bearded skeleton is starting to make some sense.
 
-          "Anyway, I wouldn't worry too much about it. If you do happen across your NAME and CAUSE OF DEATH, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
+          "Anyway, I wouldn't worry too much about it. If you do happen across your __name__ and __cause of death__, come back here and I'll tell you where to go and who to talk to about it. But that's a whole other story, and as I said, it's not likely to come up! Just make yourself at home and start getting used to the place."`,
           onSelected() {
             // unlock asking Fran about her name
             const fran = getCharacter('fran');
@@ -631,7 +631,7 @@ There's a bearded skeleton by the sign. He seems to want to TALK.`,
         {
           option: `WHAT was I supposed to be doing again?`,
           prereqs: ['home'],
-          line: `"If you're still trying to get out of here, come back once you've learned your NAME and HOW you died. Otherwise, just check things out and try to have a nice time."`,
+          line: `"If you're still trying to get out of here, come back once you've learned your __name__ and __how you died__. Otherwise, just check things out and try to have a nice time."`,
           onSelected: endConversation,
         },
         {
