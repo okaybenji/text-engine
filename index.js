@@ -640,6 +640,7 @@ let commands = [
   {
     inv,
     i: inv, // shortcut for inventory
+    inventory: inv,
     look,
     l: look, // shortcut for look
     go,
@@ -658,8 +659,8 @@ let commands = [
     items,
     use,
     chars,
-    help,
     characters: chars,
+    help,
     say,
     save,
     load,
