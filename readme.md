@@ -342,7 +342,7 @@ By the way, if you preferred the old save system (which serialized the game stat
 
 ### Updates
 
-* 3.0.0: Switched to command-replay save system; added support for saving to/loading from files; added `getItem` function.
+* 3.0.0: Switched to command-replay save system; added support for saving to/loading from files; added `getItem` function; improved performance.
 * 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, bold/italic/underline text, various bug fixes & improvements.
 * 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.
