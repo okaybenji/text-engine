@@ -86,6 +86,13 @@ let save = (name = 'save') => {
 // reapply inputs from saved game
 // (optionally accepts a name for the save)
 let load = (name = 'save') => {
+  let save = localStorage.getItem(name);
+
+  if (!save) {
+    println(`Save file not found.`);
+    return;
+  }
+
   // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
   if (typeof diskFactory !== 'function' && inputs.length) {
     println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
@@ -95,13 +102,6 @@ let load = (name = 'save') => {
   inputs = [];
   inputsPos = 0;
   loadDisk();
-
-  let save = localStorage.getItem(name);
-
-  if (!save) {
-    println(`Save file not found.`);
-    return;
-  }
 
   applyInputs(save);
 
