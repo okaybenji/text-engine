@@ -275,7 +275,7 @@ const demoDisk = () => ({
         },
         {
           option: `What is a **DISK**?`,
-          line: `A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
+          line: `A disk is a JavaScript function returning an object which describes your game. At minimum, the returned object must have these two top-level properties:
 
           **roomId** (*string*) - This is a reference to the room the player currently occupies. Set this to the **ID** of the room the player should start in.
 
