@@ -195,7 +195,7 @@ const demoDisk = () => ({
 
             // add a special item to the player's inventory
             disk.inventory.push({
-              name: 'style-changer',
+              name: ['style-changer', 'stylechanger'],
               desc: `This is a magical item. Type **USE STYLE-CHANGER** to try it out!`,
               onUse: () => {
                 const currentStylesheet = document.getElementById('styles').getAttribute('href');
