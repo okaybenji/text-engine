@@ -6,15 +6,15 @@
 body {
   background: white;
   color: #AAA;
-  font-size: 2.5vh;
+  font-size: 29px;
   font-family: 'Work Sans', sans-serif;
-  line-height: 4vh;
-  margin: 10vw;
+  line-height: 46.5px;
+  margin: 160px;
 }
 
 /* scrollbar */
 ::-webkit-scrollbar {
-  width: 1vw;
+  width: 16px;
 }
 
 ::-webkit-scrollbar-track {
@@ -28,7 +28,7 @@ body {
 br {
   content: '';
   display: block;
-  margin-bottom: 2vh;
+  margin-bottom: 24px;
 }
 
 .img {
@@ -38,28 +38,27 @@ br {
   left: 50%;
   font-family: 'Nanum Gothic Coding', monospace;
   transform: translateX(-50%);
-  line-height: 1vh;
+  line-height: 11.67px;
 }
 
 .room-name {
-  margin-top: 7.5vh;
+  margin-top: 88px;
   font-family: 'Nanum Gothic Coding', monospace;
-  font-size: 3.5vh;
+  font-size: 40.5px;
 }
 
 .title {
   font-family: 'Nanum Gothic Coding', monospace;
-  font-size: 12vh;
-  margin-bottom: 2.5vh !important;
-  line-height: 9.5vh;
+  font-size: 140px;
+  line-height: 104px;
 }
 
 #output {
-  padding: 2vw 2vw 0 2vw;
+  padding: 33px 33px 0 33px;
 }
 
 #output div {
-  margin-bottom: 1vw;
+  margin-bottom: 16px;
 }
 
 .input {
@@ -67,20 +66,18 @@ br {
 }
 
 #input {
-  height: 4vh;
-  width: 98.5vh;
   color: lightskyblue;
   background: transparent;
-  font-size: 2.5vh;
+  font-size: 29px;
   font-family: 'Work Sans', sans-serif;
   border: none;
   position: relative;
-  bottom: 0.175vh;
-  margin-left: .5vw;
+  bottom: 1px;
+  margin-left: 8px;
 }
 
 .ml-2 {
-  margin-left: 2vw;
+  margin-left: 33px;
 }
 
 #input:focus {
