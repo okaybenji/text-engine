@@ -720,15 +720,14 @@ let commands = [
 // process user input & update game state (bulk of the engine)
 // accepts optional string input; otherwise grabs it from the input element
 let applyInput = (input) => {
-  // asserts the command is not save, load, import or export (could use a better name...)
-  let isNotMeta = (cmd) => !cmd.toLowerCase().startsWith('save')
+  let isNotSaveLoad = (cmd) => !cmd.toLowerCase().startsWith('save')
     && !cmd.toLowerCase().startsWith('load')
     && !cmd.toLowerCase().startsWith('export')
     && !cmd.toLowerCase().startsWith('import');
 
   input = input || getInput();
   inputs.push(input);
-  inputs = inputs.filter(isNotMeta);
+  inputs = inputs.filter(isNotSaveLoad);
   inputsPos = inputs.length;
   println(`> ${input}`);
 
@@ -750,7 +749,7 @@ let applyInput = (input) => {
   // remove articles
   // (except for the say command, which prints back what the user said)
   // (and except for meta commands to allow save names such as 'a')
-  if (args[0] !== 'say' && isNotMeta(args[0])) {
+  if (args[0] !== 'say' && isNotSaveLoad(args[0])) {
     args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
