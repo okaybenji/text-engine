@@ -748,8 +748,10 @@ let applyInput = (input) => {
 
   let args = val.split(' ')
 
-  // remove articles (except for the say command, which prints back what the user said)
-  if (args[0] !== 'say') {
+  // remove articles
+  // (except for the say command, which prints back what the user said)
+  // (and except for meta commands to allow save names such as 'a')
+  if (args[0] !== 'say' && isNotMeta(args[0])) {
     args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
