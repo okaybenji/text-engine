@@ -19,7 +19,7 @@ Very little programming is required, but several JavaScript hooks are provided i
 ### How do I use it?
 To create your own adventure, you can use one of the files in the [game-disks](https://github.com/okaybenji/text-engine/blob/master/game-disks) folder as a template. For example, take a look at [the disk called newDiskTemplate](https://github.com/okaybenji/text-engine/blob/master/game-disks/new-disk-template.js).
 
-Include your "game disk" (JSON data) in index.html and load it with `loadDisk(myGameData)`. (Look at [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) in the repo for an example.)
+Include your "game disk" (a function returning JSON data) in index.html and load it with `loadDisk(myGameData)`. (Look at [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) in the repo for an example.)
 
 The end product will be your very own text adventure game, similar to [this one](http://okaybenji.github.io/text-engine). It's a good idea to give that game a try to get introduced to the engine.
 
@@ -27,10 +27,10 @@ The end product will be your very own text adventure game, similar to [this one]
 
 `text-engine` uses a disk metaphor for the data which represents your game, like the floppy disks of yore.
 
-Including [index.js](https://github.com/okaybenji/text-engine/blob/master/index.js) from this repository in your [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) `<script>` adds a several functions to the global namespace. One of these is called `loadDisk`. `loadDisk` accepts a single argument, which is your disk -- a standard JavaScript object (JSON).
+Including [index.js](https://github.com/okaybenji/text-engine/blob/master/index.js) from this repository in your [index.html](https://github.com/okaybenji/text-engine/blob/master/index.html) `<script>` adds a several functions to the global namespace. One of these is called `loadDisk`. `loadDisk` accepts a single argument, which is your disk -- a function returning a JavaScript object (JSON).
 
 ## Disks
-A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
+A disk is a function which returns a JavaScript object that describes your game. At minimum, that object must have these two top-level properties:
 
 | Property    | Type     | Description |
 | ----------- | -------- | ----------- | 
@@ -71,7 +71,7 @@ An exit is an object with the following properties:
 
 | Property | Type   | Description |
 | -------- | ------ | ----------- | 
-| `dir`    | String | The direction the player must go to leave via this exit (e.g. "north". |
+| `dir`    | String | The direction the player must go to leave via this exit (e.g. "north", but can be anything). |
 | `id`     | String | The ID of the room this exit leads to. |
 
 An exit can optionally have a `block` as well:
@@ -168,6 +168,8 @@ Once your game is running, the player can use the following commands:
   INV:    list inventory items
   SAVE:   save the current game
   LOAD:   load the last saved game
+  IMPORT: save to a file
+  EXPORT: load from a save file
   HELP:   this help menu
 ```
 
@@ -228,6 +230,13 @@ Get an array containing references to each character in a particular room. It ta
 | ------------ | -------- | ----------- |
 | `roomId`     | String   | The unique identifier for the room. |
 
+### getItem
+Get a reference to an item, first looking in inventory, then in the current room. It takes one argument:
+
+| Argument     | Type     | Description |
+| ------------ | -------- | ----------- |
+| `name`       | String   | The name of the item. |
+
 ### getItemInRoom
 Get a reference to an item in a particular room. It takes two arguments:
 
@@ -248,7 +257,7 @@ Every command a player can issue in the game has a corresponding function in tex
 
 For instance, there's a function called "go" that gets called when the player types GO.
 
-You can add your own custom commands, as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/07d5d7488ff00b9d4ceaf6e36a5e0e654b21b7ae/game-disks/demo-disk.js#L463-L482) for an example.
+You can add your own custom commands as well. Take a look at [the "unlock" command in game-disks/demo-disk.js](https://github.com/okaybenji/text-engine/blob/master/game-disks/demo-disk.js#L478-L495) for an example.
 
 #### Overriding the default command set
 If existing commands don't work how you want them to, you can override them by reassigning them to your own function code.
@@ -264,7 +273,7 @@ Here are a few examples of ways to override the default commands:
 ```js
 // Add a command which takes no arguments.
 // In this example, the command is called "play", and the user would type "play" to use the command.
-const play = () => println(`You're already playing a game!`);
+const play = () => println(`You’re already playing a game!`);
 commands[0] = Object.assign(commands[0], {play});
 
 // Override a command's function.
@@ -286,33 +295,37 @@ If you do remove some or all of the default commands, you'll want to override th
 There are several other functions available in the engine! Feel free to take a peek at the [source code](https://github.com/okaybenji/text-engine/blob/master/index.js). It's designed to be open and simple to use and to customize.
 
 ### A word of caution regarding SAVE/LOAD
-The default implementation of saving and loading games in text-engine is quite simple. It converts the current state of the entire game disk to a string and saves that to your browser's Local Storage.
+The default implementation of saving and loading games in text-engine is quite simple. All the commands a player has entered are stored in the save to be "played back" into the game in the same order on load. It's something like the game playing itself back to the point where you left off, instantaneously.
 
-This simplicity comes at a cost. **Here there be dragons.** There are several things you must keep in mind as you write your disk if you want the built-in save functionality to work correctly.
+This simplicity comes at a cost. Asynchronous (e.g. time-delayed) or non-deterministic (e.g. RNG) code can cause issues.
 
-Before we get to that list, I'd like to remind you that these commands can be removed from your game, or you can write your own save/load functions. (See *Overriding the default command set* above.)
+As an example, consider the coin toss in the demo disk. If you pick up the dime and use it, it will land on either heads or tails (at random). Say you flip the dime and it lands on heads, then you save the game. When you come back to load the game later, it may appear that the dime landed on tails instead. Because the command `use dime` is all that was stored in the save file, the dime is re-flipped each time you load the game.
 
-Without further ado, **here are the requirements for supporting the built-in "save" and "load" commands**:
+If you choose to use asynchronous or non-deterministic code in your game and you're unhappy with the result when loading saves,
+remember that these commands can be removed from your game, or you can write your own save/load functions. (See *Overriding the default command set* above.)
 
-* If you publish changes to your game disk, old saves are not likely to be compatible. This is because the save contains the entire disk, and loading the save overwrites the new disk with the old one.
-* Certain keywords such as "key" and "window" must be avoided as object names (because these are reserved by JavaScript and will not survive the parse). The recommended way around this is to add adjectives to your names, such as "silver key" or "tall window".
-* Circular JSON structures are not supported (a property cannot point to its object's ancestor).
+### A note on the 3.0 disk format
+Although text-engine's disks are now (as of version 3.0) expected to be *functions* which *return* a JavaScript object, prior versions expected disks to just be objects. The reason for this change was to support the ability to save and load games with the command-replay save system without ever forcing the user to reload the browser. (Returning an object from a function gives the engine a convenient way to reset the game state before reapplying the player's input history.)
 
-If you are writing functions for your game, you'll need to keep these in mind as well:
-
-* Functions attached to the disk must not rely on [closures](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36). Closures are lost when a JSON object is converted to a string representation.
-* You cannot use the [shorthand syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions) for defining methods. That is,
+That said, the older format is still supported. If your disk is a JavaScript object, the player will be instructed to reload the browser when they load a save. You can avoid this by wrapping your disk in a function. For example, if your disk looks like this:
 
 ```js
-{
-  onUse() {
-    // This version will not work.
-  },
-  onUse: () => {
-    // This one is okay!
-  },
-}
+const myDisk = {
+  roomId: 'myFirstRoom',
+  rooms: [...],
+};
+
 ```
+
+You can 'upgrade' it to the new format by changing it to this:
+```js
+const myDisk = () => ({
+  roomId: 'myFirstRoom',
+  rooms: [...],
+});
+```
+
+By the way, if you preferred the old save system (which serialized the game state), you can always grab its code [here](https://github.com/okaybenji/text-engine/blob/cd8d0acc87040d1dcff7f5dcd5a38e3563d8d310/index.js#L74-L104).
 
 ## Etc.
 ### Useful Tools
@@ -329,6 +342,7 @@ If you are writing functions for your game, you'll need to keep these in mind as
 
 ### Updates
 
+* 3.0.0: Switched to command-replay save system; added support for saving to/loading from files; added `getItem` function; improved performance; handled more variations of commands (i.e. "characters", "inventory", "go n", etc. are valid now).
 * 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, bold/italic/underline text, various bug fixes & improvements.
 * 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.

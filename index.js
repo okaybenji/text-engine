@@ -1,12 +1,16 @@
 // global properties, assigned with let for easy overriding by the user
+let diskFactory;
 let disk;
 
 // store user input history
-let inputs = [''];
+let inputs = [];
 let inputsPos = 0;
 
 // define list style
 let bullet = '•';
+
+// queue output for improved performance
+let printQueue = [];
 
 // reference to the input element
 let input = document.querySelector('#input');
@@ -71,36 +75,122 @@ let setup = () => {
   });
 };
 
-// convert the disk to JSON and store it
+// store player input history
 // (optionally accepts a name for the save)
-let save = (name) => {
-  const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
-  localStorage.setItem(name, save);
+let save = (name = 'save') => {
+  localStorage.setItem(name, JSON.stringify(inputs));
   const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
   println(line);
 };
 
-// restore the disk from storage
+// reapply inputs from saved game
 // (optionally accepts a name for the save)
-let load = (name) => {
-  const save = localStorage.getItem(name);
+let load = (name = 'save') => {
+  let save = localStorage.getItem(name);
 
   if (!save) {
     println(`Save file not found.`);
     return;
   }
 
-  disk = JSON.parse(save, (key, value) => {
-    try {
-      return eval(value);
-    } catch (error) {
-      return value;
-    }
-  });
+  // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
+  if (typeof diskFactory !== 'function' && inputs.length) {
+    println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
+  inputs = [];
+  inputsPos = 0;
+  loadDisk();
+
+  applyInputs(save);
 
   const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
   println(line);
-  enterRoom(disk.roomId);
+};
+
+// export current game to disk (optionally accepts a filename)
+let exportSave = (name) => {
+  const filename = `${name.length ? name : 'text-engine-save'}.txt`;
+  saveFile(JSON.stringify(inputs), filename);
+  println(`Game exported to "${filename}".`);
+};
+
+// import a previously exported game from disk
+let importSave = () => {
+  // if the disk provided is an object rather than a factory function, the game state must be reset by reloading
+  if (typeof diskFactory !== 'function' && inputs.length) {
+    println(`You cannot load this disk in the middle of the game. Please reload the browser, then run the **LOAD** command again.`);
+    return;
+  }
+
+  const input = openFile();
+  input.onchange = () => {
+    const fr = new FileReader();
+    const file = input.files[0];
+
+    // register file loaded callback
+    fr.onload = () => {
+      // load the game
+      inputs = [];
+      inputsPos = 0;
+      loadDisk();
+      applyInputs(fr.result);
+      println(`Game "${file.name}" was loaded.`);
+      input.remove();
+    };
+
+    // register error handling
+    fr.onerror = (event) => {
+      println(`An error occured loading ${file.name}. See console for more information.`);
+      console.error(`Reader error: ${fr.error}
+        Reader error event: ${event}`);
+      input.remove();
+    };
+
+    // attempt to load the text from the selected file
+    fr.readAsText(file);
+  };
+};
+
+// saves text from memory to disk
+let saveFile = (content, filename) => {
+  const a = document.createElement('a');
+  const file = new Blob([content], {type: 'text/plain'});
+
+  a.href = URL.createObjectURL(file);
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+};
+
+// creates input element to open file prompt (allows user to load exported game from disk)
+let openFile = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'file');
+  input.click();
+
+  return input;
+};
+
+// applies string representing an array of input strings (used for loading saved games)
+let applyInputs = (string) => {
+  let ins = [];
+
+  try {
+    ins = JSON.parse(string);
+  } catch(err) {
+    println(`An error occurred. See error console for more details.`);
+    console.error(`An error occurred while attempting to parse text-engine inputs.
+      Inputs: ${string}
+      Error: ${err}`);
+    return;
+  }
+
+  while (ins.length) {
+    applyInput(ins.shift());
+  }
 };
 
 // list player inventory
@@ -205,6 +295,19 @@ let getExit = (dir, exits) => exits.find(exit =>
     : exit.dir === dir
 );
 
+// shortcuts for cardinal directions
+// (allows player to type e.g. 'go n')
+let shortcuts = {
+  n: 'north',
+  s: 'south',
+  e: 'east',
+  w: 'west',
+  ne: 'northeast',
+  nw: 'northwest',
+  se: 'southeast',
+  sw: 'southwest',
+};
+
 // go the passed direction
 // string -> nothing
 let goDir = (dir) => {
@@ -219,7 +322,12 @@ let goDir = (dir) => {
   const nextRoom = getExit(dir, exits);
 
   if (!nextRoom) {
-    println(`There is no exit in that direction.`);
+    // check if the dir is a shortcut
+    if (shortcuts[dir]) {
+      goDir(shortcuts[dir]);
+    } else {
+      println(`There is no exit in that direction.`);
+    }
     return;
   }
 
@@ -232,6 +340,7 @@ let goDir = (dir) => {
 };
 
 // shortcuts for cardinal directions
+// (allows player to type just e.g. 'n')
 let n = () => goDir('north');
 let s = () => goDir('south');
 let e = () => goDir('east');
@@ -515,15 +624,16 @@ let chars = () => {
 // display help menu
 let help = () => {
   const instructions = `The following commands are available:
-    LOOK:   'look at key'
-    TAKE:   'take book'
-    GO:     'go north'
-    USE:    'use door'
-    TALK:   'talk to mary'
-    ITEMS:  list items in the room
-    INV:    list inventory items
-    SAVE:   save the current game
-    LOAD:   load the last saved game
+    LOOK:           'look at key'
+    TAKE:           'take book'
+    GO:             'go north'
+    USE:            'use door'
+    TALK:           'talk to mary'
+    ITEMS:          list items in the room
+    CHARS:          list characters in the room
+    INV:            list inventory items
+    SAVE/LOAD:      save current game, or load a saved game (in memory)
+    IMPORT/EXPORT:  save current game, or load a saved game (on disk)
     HELP:   this help menu
   `;
   println(instructions);
@@ -551,6 +661,7 @@ let commands = [
   {
     inv,
     i: inv, // shortcut for inventory
+    inventory: inv,
     look,
     l: look, // shortcut for look
     go,
@@ -569,11 +680,14 @@ let commands = [
     items,
     use,
     chars,
+    characters: chars,
     help,
     say,
     save,
     load,
     restore: load,
+    export: exportSave,
+    import: importSave,
   },
   // one argument (e.g. "go north", "take book")
   {
@@ -588,6 +702,8 @@ let commands = [
     restore: x => load(x),
     x: x => lookAt([null, x]), // IF standard shortcut for look at
     t: x => talkToOrAboutX('to', x), // IF standard shortcut for talk
+    export: exportSave,
+    import: importSave, // (ignores the argument)
   },
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
@@ -604,8 +720,14 @@ let commands = [
 // process user input & update game state (bulk of the engine)
 // accepts optional string input; otherwise grabs it from the input element
 let applyInput = (input) => {
+  let isNotSaveLoad = (cmd) => !cmd.toLowerCase().startsWith('save')
+    && !cmd.toLowerCase().startsWith('load')
+    && !cmd.toLowerCase().startsWith('export')
+    && !cmd.toLowerCase().startsWith('import');
+
   input = input || getInput();
   inputs.push(input);
+  inputs = inputs.filter(isNotSaveLoad);
   inputsPos = inputs.length;
   println(`> ${input}`);
 
@@ -624,8 +746,10 @@ let applyInput = (input) => {
 
   let args = val.split(' ')
 
-  // remove articles (except for the say command, which prints back what the user said)
-  if (args[0] !== 'say') {
+  // remove articles
+  // (except for the say command, which prints back what the user said)
+  // (and except for meta commands to allow save names such as 'a')
+  if (args[0] !== 'say' && isNotSaveLoad(args[0])) {
     args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
@@ -718,8 +842,10 @@ let println = (line, className) => {
     str = str.replace('\n', '<br>');
   }
 
-  output.appendChild(newLine).innerHTML = str;
-  window.scrollTo(0, document.body.scrollHeight);
+  newLine.innerHTML = str;
+
+  // push into the queue to print to the DOM
+  printQueue.push(newLine);
 };
 
 // predict what the user is trying to type
@@ -891,6 +1017,10 @@ let getItemInRoom = (itemName, roomId) => {
 // string -> item
 let getItemInInventory = (name) => disk.inventory.find(item => objectHasName(item, name));
 
+// get item by name
+// string -> item
+let getItem = (name) => getItemInInventory(name) || getItemInRoom(name, disk.roomId)
+
 // retrieves a keyword from a topic
 // topic -> string
 let getKeywordFromTopic = (topic) => {
@@ -945,18 +1075,38 @@ let endConversation = () => {
 // load the passed disk and start the game
 // disk -> nothing
 let loadDisk = (uninitializedDisk) => {
+  if (uninitializedDisk) {
+    diskFactory = uninitializedDisk;
+    // start listening for user input
+    setup();
+  }
+
   // initialize the disk
-  disk = init(uninitializedDisk);
+  // (although we expect the disk to be a factory function, we still support the old object format)
+  disk = init(typeof diskFactory === 'function' ? diskFactory() : diskFactory);
 
   // start the game
   enterRoom(disk.roomId);
 
-  // start listening for user input
-  setup();
-
   // focus on the input
   input.focus();
 };
+
+// append any pending lines to the DOM each frame
+let print = () => {
+  if (printQueue.length) {
+    while (printQueue.length) {
+      output.appendChild(printQueue.shift());
+    }
+
+    // scroll to the most recent output at the bottom of the page
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  requestAnimationFrame(print);
+}
+
+requestAnimationFrame(print);
 
 // npm support
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {

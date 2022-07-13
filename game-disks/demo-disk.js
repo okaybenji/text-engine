@@ -1,4 +1,4 @@
-const demoDisk = {
+const demoDisk = () => ({
   roomId: 'foyer', // the ID of the room the player starts in
   rooms: [
     {
@@ -14,7 +14,7 @@ const demoDisk = {
         const room = getRoom('foyer');
         room.desc = `You are currently standing in the foyer. There's a huge **MONSTERA** plant to your right, and a massive **WINDOW** to your left bathing the room in natural light. Both the **PLANT** and the **WINDOW** stretch to the ceiling, which must be at least 25 feet high.
 
-        ***Rooms** form the foundation of the engine's design. At any given time, your player will be standing in one of the rooms you built for them. These can be literal rooms like the foyer you find yourself in now, or metaphorical rooms like **The End of Time** or **Purgatory**.
+        ***Rooms** form the foundation of the engine's design. At any given time, your player will be standing in one of the rooms you built for them. These can be literal rooms like the foyer you find yourself in now, or metaphorical rooms like **The End of Time** or **A Dream**.
 
         Each room you create should have a description. (That's what you're reading now!)
 
@@ -38,7 +38,7 @@ const demoDisk = {
           block: `It's far too large for you to carry.`, // optional reason player cannot pick up this item
           // when player looks at the plant, they discover a shiny object which turns out to be a key
           onLook: () => {
-            if (getItemInRoom('shiny', 'foyer') || getItemInInventory('shiny')) {
+            if (getItem('shiny')) {
               // the key is already in the pot or the player's inventory
               return;
             }
@@ -48,7 +48,7 @@ const demoDisk = {
             // put the silver key in the pot
             foyer.items.push({
               name: ['shiny thing', 'something shiny', 'pot'],
-              onUse: () => {
+              onUse() {
                 const room = getRoom(disk.roomId);
                 if (room.id === 'foyer') {
                   println(`There's nothing to unlock in the foyer.`);
@@ -58,15 +58,15 @@ const demoDisk = {
                   const exit = getExit('east', room.exits);
                   delete exit.block;
                   // this item can only be used once
-                  const key = getItemInInventory('shiny');
+                  const key = getItem('shiny');
                   key.onUse = () => println(`The lab has already been unlocked.`);
                 } else {
                   println(`There's nothing to unlock here.`);
                 }
               },
               desc: `It's a silver **KEY**!`,
-              onLook: () => {
-                const key = getItemInInventory('shiny') || getItemInRoom('shiny', 'foyer');
+              onLook() {
+                const key = getItem('shiny');
 
                 // now that we know it's a key, place that name first so the engine calls it by that name
                 key.name.unshift('silver key');
@@ -78,10 +78,10 @@ const demoDisk = {
                 delete key.onLook;
               },
               isTakeable: true,
-              onTake: () => {
+              onTake() {
                 println(`You took it.`);
                 // update the monstera's description, removing everything starting at the line break
-                const plant = getItemInRoom('plant', 'foyer');
+                const plant = getItem('plant');
                 plant.desc = plant.desc.slice(0, plant.desc.indexOf('\n'));
               },
             });
@@ -97,7 +97,7 @@ const demoDisk = {
 
           Type **INV** to see a list of items in your inventory.*`),
           // using the dime randomly prints HEADS or TAILS
-          onUse: () => {
+          onUse() {
             const side = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
             println(`You flip the dime. It lands on ${side}.`);
           },
@@ -128,7 +128,7 @@ const demoDisk = {
         {
           name: 'door',
           desc: `There are 4" metal letters nailed to the door. They spell out: "RESEARCH LAB".`,
-          onUse: () => {
+          onUse() {
             const reception = getRoom('reception');
             const exit = getExit('east', reception.exits);
             if (exit.block) {
@@ -195,7 +195,7 @@ const demoDisk = {
 
             // add a special item to the player's inventory
             disk.inventory.push({
-              name: 'style-changer',
+              name: ['style-changer', 'stylechanger'],
               desc: `This is a magical item. Type **USE STYLE-CHANGER** to try it out!`,
               onUse: () => {
                 const currentStylesheet = document.getElementById('styles').getAttribute('href');
@@ -275,7 +275,7 @@ const demoDisk = {
         },
         {
           option: `What is a **DISK**?`,
-          line: `A disk is a JavaScript object which describes your game. At minimum, it must have these two top-level properties:
+          line: `A disk is a JavaScript function returning an object which describes your game. At minimum, the returned object must have these two top-level properties:
 
           **roomId** (*string*) - This is a reference to the room the player currently occupies. Set this to the **ID** of the room the player should start in.
 
@@ -441,8 +441,14 @@ const demoDisk = {
           **roomId** (*string*) - The unique identifier for the room.`
         },
         {
+          option: `Tell me about **GETITEM**`,
+          line: `<code>getItem</code> is a function you can use to get a reference to an item in the player's inventory or in the current room. It takes one argument:
+
+          **name** (*string*) - The name of the item.`
+        },
+        {
           option: `Tell me about **GETITEMINROOM**`,
-          line: `<code>getItemInRoom</code> is a function you can use to get a reference to an item in a particular room. It takes two arguments:
+          line: `<code>getItemInRoom</code> is a function you can use to get a reference to an item in any room. It takes two arguments:
 
           **itemName** (*string*) - The name of the item.
 
@@ -461,7 +467,7 @@ const demoDisk = {
       ],
     },
   ],
-};
+});
 
 // custom functions used by this disk
 // change the CSS stylesheet to the one with the passed name

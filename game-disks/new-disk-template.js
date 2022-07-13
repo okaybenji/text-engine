@@ -1,6 +1,6 @@
 // This simple game disk can be used as a starting point to create a new adventure.
 // Change anything you want, add new rooms, etc.
-const newDiskTemplate = {
+const newDiskTemplate = () => ({
   roomId: 'start', // Set this to the ID of the room you want the player to start in.
   rooms: [
     {
@@ -21,7 +21,7 @@ const newDiskTemplate = {
           name: 'axe',
           desc: `You could probably USE it to cut the VINES, unblocking the door.`,
           isTakeable: true, // Allows the player to take the item.
-          onUse: () => {
+          onUse() {
             // Remove the block on the room's only exit.
             const room = getRoom('start');
             const exit = getExit('north', room.exits);
@@ -29,6 +29,9 @@ const newDiskTemplate = {
             if (exit.block) {
               delete exit.block;
               println(`You cut through the vines, unblocking the door to the NORTH.`);
+
+              // Update the axe's description.
+              getItem('axe').desc = `You USED it to cut the VINES, unblocking the door.`;
             } else {
               println(`There is nothing to use the axe on.`);
             }
@@ -55,4 +58,4 @@ const newDiskTemplate = {
       ],
     }
   ],
-};
+});
