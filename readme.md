@@ -305,9 +305,9 @@ If you choose to use asynchronous or non-deterministic code in your game and you
 remember that these commands can be removed from your game, or you can write your own save/load functions. (See *Overriding the default command set* above.)
 
 ### A note on the 3.0 disk format
-Although text-engine's disks are now (as of version 3.0) expected to be *functions* which *return* a JavaScript object, prior versions expected disks to just be objects. The reason for this change was to support the ability to save and load games with the command-replay save system without forcing the user to reload the browser every time they loaded a save. (Returning an object from a function gives the engine a convenient way to reset the game state before reapplying the player's input history.)
+Although text-engine's disks are now (as of version 3.0) expected to be *functions* which *return* a JavaScript object, prior versions expected disks to just be objects. The reason for this change was to support the ability to save and load games with the command-replay save system without ever forcing the user to reload the browser. (Returning an object from a function gives the engine a convenient way to reset the game state before reapplying the player's input history.)
 
-That said, the older format is still supported. If your disk is a JavaScript object, the player will be instructed to reload the browser when they load. You can avoid this by wrapping your disk in a function. For example, if your disk looks like this:
+That said, the older format is still supported. If your disk is a JavaScript object, the player will be instructed to reload the browser when they load a save. You can avoid this by wrapping your disk in a function. For example, if your disk looks like this:
 
 ```js
 const myDisk = {
@@ -342,7 +342,7 @@ By the way, if you preferred the old save system (which serialized the game stat
 
 ### Updates
 
-* 3.0.0: Switched to command-replay save system; added support for saving to/loading from files; added `getItem` function; improved performance; handle more variations of commands (i.e. "characters", "inventory", "go n", etc. are valid now).
+* 3.0.0: Switched to command-replay save system; added support for saving to/loading from files; added `getItem` function; improved performance; handled more variations of commands (i.e. "characters", "inventory", "go n", etc. are valid now).
 * 2.0.0: Added characters, conversations, auto-complete, `items` command, `save` & `load` commands, navigation shortcuts, global methods for utility or overriding, support for custom commands, `onLook` & `onTalk` callbacks, upgraded `go` command, support for `blocks` on exits, support for providing class name to `println` function, support for randomizing printed lines, bold/italic/underline text, various bug fixes & improvements.
 * 1.3.0: Rooms can define `onEnter` methods.
 * 1.2.0: New orange default theme.
