@@ -178,7 +178,6 @@ let openFile = () => {
 let applyInputs = (string) => {
   let ins = [];
 
-  // parse, filtering out the save/load commands & empty strings
   try {
     ins = JSON.parse(string);
   } catch(err) {
