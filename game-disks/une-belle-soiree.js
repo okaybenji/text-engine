@@ -166,11 +166,11 @@ const branchingConversationTopics = (characterName) => {
 // Handle the carriage arriving at its destination.
 const arrive = ({room}) => {
   const fadeAudio = setInterval(function () {
-    adagio.volume -= 0.05;
-    if (adagio.volume <= 0.05) {
+    adagio.volume -= 0.02;
+    if (adagio.volume <= 0.06) {
       clearInterval(fadeAudio);
     }
-  }, 400);
+  }, 1600);
 
   const door = {
     name: 'door',
@@ -179,8 +179,8 @@ const arrive = ({room}) => {
       clearTimeout(room.openTimeout);
       println(`Uncharacteristically, you open the door rather than wait for assistance. As you exit the carriage, the servant, preoccupied with some tasks, looks to you with panic. "Pardon mademoiselle! I was coming just now to accomodate you. Please forgive my lateness. I was briefly kept by the coachman and had every intention of assisting you myself."`);
       adagio.volume = 1;
-      adagio.currentTime = (6 * 60) + 25;
-      setTimeout(() =>  enterRoom('gate'),4000);
+      adagio.currentTime = (8 * 60) + 47;
+      setTimeout(() =>  enterRoom('gate'),6000);
     },
   };
 
@@ -197,7 +197,7 @@ const arrive = ({room}) => {
 };
 
 const uneBelleSoiree = {
-  roomId: 'kitchen',
+  roomId: 'start',
   guilt: 2,
   inventory: [{
     name: ['hand-mirror', 'mirror'],
