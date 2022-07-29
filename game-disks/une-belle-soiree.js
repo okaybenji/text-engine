@@ -179,7 +179,7 @@ const arrive = ({room}) => {
       clearTimeout(room.openTimeout);
       println(`Uncharacteristically, you open the door rather than wait for assistance. As you exit the carriage, the servant, preoccupied with some tasks, looks to you with panic. "Pardon mademoiselle! I was coming just now to accomodate you. Please forgive my lateness. I was briefly kept by the coachman and had every intention of assisting you myself."`);
       adagio.volume = 1;
-      adagio.currentTime = (8 * 60) + 47;
+      adagio.currentTime = (8 * 60) + 47.5;
       setTimeout(() =>  enterRoom('gate'),6000);
     },
   };
@@ -188,8 +188,8 @@ const arrive = ({room}) => {
     println(`The servant opens the door.`),
     door.onUse = () => {
       adagio.volume = 1;
-      adagio.currentTime = (6 * 60) + 25;
-      setTimeout(() =>  enterRoom('gate'),4000);
+      adagio.currentTime = (8 * 60) + 47.5;
+      setTimeout(() =>  enterRoom('gate'),6000);
     };
   }, 10000);
 
