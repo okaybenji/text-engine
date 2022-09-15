@@ -1,3 +1,4 @@
+"use strict";
 // global properties, assigned with let for easy overriding by the user
 let diskFactory;
 let disk;
@@ -753,28 +754,28 @@ let applyInput = (input) => {
     args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
-  const [command, ...arguments] = args;
+  const [command, ...argmnts] = args;
   const room = getRoom(disk.roomId);
 
-  if (arguments.length === 1) {
-    exec(commands[1][command], arguments[0]);
-  } else if (command === 'take' && arguments.length) {
+  if (argmnts.length === 1) {
+    exec(commands[1][command], argmnts[0]);
+  } else if (command === 'take' && argmnts.length) {
     // support for taking items with spaces in the names
     // (just tries to match on the first word)
-    takeItem(arguments[0]);
-  } else if (command === 'use' && arguments.length) {
+    takeItem(argmnts[0]);
+  } else if (command === 'use' && argmnts.length) {
     // support for using items with spaces in the names
     // (just tries to match on the first word)
-    useItem(arguments[0]);
-  } else if (arguments.length >= commands.length) {
-    exec(commands[commands.length - 1][command], arguments);
+    useItem(argmnts[0]);
+  } else if (argmnts.length >= commands.length) {
+    exec(commands[commands.length - 1][command], argmnts);
   } else if (room.exits && getExit(command, room.exits)) {
     // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
     talkToOrAboutX('about', command);
   } else {
-    exec(commands[arguments.length][command], arguments);
+    exec(commands[argmnts.length][command], argmnts);
   }
 };
 
@@ -809,7 +810,7 @@ let println = (line, className) => {
     return;
   }
 
-  str =
+  let str =
     // if this is an array of lines, pick one at random
     Array.isArray(line) ? pickOne(line)
     // if this is a method returning a string, evaluate it
