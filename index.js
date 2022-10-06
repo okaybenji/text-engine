@@ -744,37 +744,37 @@ let applyInput = (input) => {
     }
   };
 
-  let args = val.split(' ')
+  let values = val.split(' ')
 
   // remove articles
   // (except for the say command, which prints back what the user said)
   // (and except for meta commands to allow save names such as 'a')
-  if (args[0] !== 'say' && isNotSaveLoad(args[0])) {
-    args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
+  if (values[0] !== 'say' && isNotSaveLoad(values[0])) {
+    values = values.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
-  const [command, ...arguments] = args;
+  const [command, ...args] = values;
   const room = getRoom(disk.roomId);
 
-  if (arguments.length === 1) {
-    exec(commands[1][command], arguments[0]);
-  } else if (command === 'take' && arguments.length) {
+  if (args.length === 1) {
+    exec(commands[1][command], args[0]);
+  } else if (command === 'take' && args.length) {
     // support for taking items with spaces in the names
     // (just tries to match on the first word)
-    takeItem(arguments[0]);
-  } else if (command === 'use' && arguments.length) {
+    takeItem(args[0]);
+  } else if (command === 'use' && args.length) {
     // support for using items with spaces in the names
     // (just tries to match on the first word)
-    useItem(arguments[0]);
-  } else if (arguments.length >= commands.length) {
-    exec(commands[commands.length - 1][command], arguments);
+    useItem(args[0]);
+  } else if (args.length >= commands.length) {
+    exec(commands[commands.length - 1][command], args);
   } else if (room.exits && getExit(command, room.exits)) {
     // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
     talkToOrAboutX('about', command);
   } else {
-    exec(commands[arguments.length][command], arguments);
+    exec(commands[args.length][command], args);
   }
 };
 
@@ -809,7 +809,7 @@ let println = (line, className) => {
     return;
   }
 
-  str =
+  let str =
     // if this is an array of lines, pick one at random
     Array.isArray(line) ? pickOne(line)
     // if this is a method returning a string, evaluate it
