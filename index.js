@@ -1,4 +1,3 @@
-"use strict";
 // global properties, assigned with let for easy overriding by the user
 let diskFactory;
 let disk;
