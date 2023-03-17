@@ -1,42 +1,75 @@
 const gameDisk = {
-  roomId: 'secretRoom',
+  roomId: 'courtyard',
   rooms: [
     {
       id: 'courtyard',
       name: 'Courtyard',
       desc: 'You are standing in the courtyard of the castle. There is a fountain in the center of the courtyard.',
-      north: { roomId: 'castleEntrance', block: true },
-      items: [{ id: 'key', name: 'key', desc: 'A shiny gold key.' }]
+      items: [
+        {
+          id: 'key',
+          name: 'key',
+          desc: 'A shiny gold key.',
+          onUse: () => {
+            const courtyard = getRoom('courtyard');
+            const entrance = getExit('north', courtyard.exits);
+            delete entrance.block;
+            println(`You unlock the door with the key.`);
+            getItem('key').desc = 'You have already used the key.';
+          },
+        },
+      ],
+      exits: [
+        { dir: 'north', id: 'castleEntrance', block: 'The castle entrance is locked. You need a key to unlock it.' },
+      ],
     },
     {
       id: 'castleEntrance',
       name: 'Castle Entrance',
       desc: 'You are standing in the entrance of the castle. There is a grand staircase leading up to the second floor.',
-      south: { roomId: 'courtyard' },
-      up: { roomId: 'secondFloor' }
+      exits: [
+        { dir: 'south', id: 'courtyard' },
+        { dir: 'up', id: 'secondFloor' },
+      ],
+      items: [
+        {
+          name: 'staircase',
+          desc: 'It is a spiral staircase leading up to the second floor of the castle.',
+          onUse: () => {
+            println('You climb up the spiral staircase to the second floor.');
+            enterRoom('secondFloor');
+          },
+        },
+      ],
     },
     {
       id: 'secondFloor',
       name: 'Second Floor',
       desc: 'You are standing on the second floor of the castle. There are two doors leading to different rooms.',
-      down: { roomId: 'castleEntrance' },
       items: [{ id: 'game', name: 'adventure game', desc: 'A disk with an adventure game on it.' }],
-      east: { roomId: 'secretRoom', block: true },
-      west: { roomId: 'throneRoom' }
+      exits: [
+        { dir: 'down', id: 'castleEntrance' },
+        { dir: 'east', id: 'secretRoom' },
+        { dir: 'west', id: 'throneRoom' },
+      ],
     },
     {
       id: 'throneRoom',
       name: 'Throne Room',
       desc: 'You are standing in the throne room. There is a throne in the center of the room, and two guards standing on either side of it.',
-      east: { roomId: 'secondFloor' },
       items: [{ id: 'sword', name: 'sword', desc: 'A sharp, sturdy sword.' }],
-      onEnter: () => console.log('"Halt!" one of the guards says. "No one may enter without the king\'s permission."')
+      onEnter: () => println('"Halt!" one of the guards says. "No one may enter without the king\'s permission."'),
+      exits: [
+        { dir: 'east', id: 'secondFloor' },
+      ],
     },
     {
       id: 'secretRoom',
       name: 'Secret Room',
       desc: 'You are in a secret room. There is a table with some items on it, and a character standing in the corner.',
-      west: { roomId: 'secondFloor' },
+      exits: [
+        { dir: 'west', id: 'secondFloor' },
+      ],
       items: [{ id: 'map', name: 'map', desc: 'A map of the castle.' }],
     },
   ],
