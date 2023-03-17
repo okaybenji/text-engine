@@ -54,7 +54,7 @@ const castleAdventure = () => ({
           name: 'staircase',
           desc: 'A spiral staircase that leads up to the next level of the castle.',
           onUse: () => {
-            setRoomId('tower');
+            enterRoom('tower');
             println('You climb the staircase and arrive at the tower.');
           },
         },
