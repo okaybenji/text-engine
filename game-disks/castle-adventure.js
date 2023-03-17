@@ -14,9 +14,19 @@ const castleAdventure = () => ({
         },
         {
           name: 'key',
-          desc: 'A rusted old key.',
+          desc: 'A shiny golden key.',
           isTakeable: true,
-          onUse: () => println('You unlock the door with the key and enter the castle.'),
+          onUse() {
+            const room = getRoom('courtyard');
+            const exit = getExit('north', room.exits);
+
+            if (exit.block) {
+              delete exit.block;
+              println('You insert the key into the lock and turn it. You hear a satisfying "click" as the door unlocks.');
+            } else {
+              println('You have already unlocked the door.');
+            }
+          }
         },
         {
           name: 'statue',
