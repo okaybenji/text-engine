@@ -11,9 +11,9 @@ const myGameDisk = () => ({
           name: 'key',
           desc: 'It looks like a key to the castle entrance.',
           onUse: () => {
-            const entrance = getRoom('entrance');
-            const entranceNorth = getExit('north', entrance.exits);
-            delete entranceNorth.block;
+            const courtyard = getRoom('courtyard');
+            const entrance = getExit('north', courtyard.exits);
+            delete entrance.block;
             println(`You unlock the door with the key.`);
             getItem('key').desc = 'You have already used the key.';
           },
@@ -23,7 +23,7 @@ const myGameDisk = () => ({
         {
           dir: 'north',
           id: 'entrance',
-          //block: 'The castle entrance is locked. You need a key to unlock it.',
+          block: 'The castle entrance is locked. You need a key to unlock it.',
         },
         {
           dir: 'east',
