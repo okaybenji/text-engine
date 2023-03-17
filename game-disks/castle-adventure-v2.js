@@ -51,9 +51,9 @@ const myGameDisk = () => ({
           name: 'staircase',
           desc: 'It is a spiral staircase leading up to the second floor of the castle.',
           onUse: () => {
+            println('You climb up the spiral staircase to the second floor.');
             const secondFloor = getRoom('second-floor');
             enterRoom(secondFloor.id);
-            println('You climb up the spiral staircase to the second floor.');
           },
         },
       ],
