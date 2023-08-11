@@ -181,6 +181,25 @@ const demoDisk = () => ({
       name: ['Benji', 'Benj', 'receptionist'],
       roomId: 'reception',
       desc: 'He looks... helpful!', // printed when the player looks at the character
+      img: `
+      .------\\ /------.
+      |       -       |
+      |               |
+      |               |
+      |               |
+   _______________________
+   ===========.===========
+     / ~~~~~     ~~~~~ \\
+    /|     |     |\\
+    W   ---  / \\  ---   W
+    \\.      |o o|      ./
+     |                 |
+     \\    #########    /
+      \\  ## ----- ##  /
+       \\##         ##/
+        \\_____v_____/
+  
+      `,
       // optional callback, run when the player talks to this character
       onTalk: () => println(`"Hi," he says, "How can I help you?"`),
       // things the player can discuss with the character
