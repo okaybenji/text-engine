@@ -243,12 +243,18 @@ let lookAt = (args) => {
   } else {
     const character = getCharacter(name, getCharactersInRoom(disk.roomId));
     if (character) {
+      // show character image if available
+      if(character.img) {
+        println(character.img, 'img');
+      }
+      
       // Look at a character.
       if (character.desc) {
         println(character.desc);
       } else {
         println(`You don't notice anything remarkable about them.`);
       }
+
 
       if (typeof(character.onLook) === 'function') {
         character.onLook({disk, println, getRoom, enterRoom, item});
