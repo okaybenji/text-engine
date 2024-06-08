@@ -712,6 +712,9 @@ let commands = [
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
     look: lookAt,
+    take: (args) => takeItem(args.join(' ')),
+    get: (args) => takeItem(args.join(' ')),
+    use: (args) => useItem(args.join(' ')),
     say(args) {
       const str = args.reduce((cur, acc) => cur + ' ' + acc, '');
       sayString(str);
@@ -762,14 +765,6 @@ let applyInput = (input) => {
 
   if (args.length === 1) {
     exec(commands[1][command], args[0]);
-  } else if (command === 'take' && args.length) {
-    // support for taking items with spaces in the names
-    // (just tries to match on the first word)
-    takeItem(args[0]);
-  } else if (command === 'use' && args.length) {
-    // support for using items with spaces in the names
-    // (just tries to match on the first word)
-    useItem(args[0]);
   } else if (args.length >= commands.length) {
     exec(commands[commands.length - 1][command], args);
   } else if (room.exits && getExit(command, room.exits)) {
