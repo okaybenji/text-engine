@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Last Observatory</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+        
+        #output {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+        
+        #input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #666;
+            border-radius: 5px;
+            color: #e8e8e8;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        
+        #input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .room-name {
+            color: #87ceeb;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(135, 206, 235, 0.3);
+        }
+        
+        .character-speech {
+            color: #98fb98;
+            font-style: italic;
+        }
+        
+        .system-message {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .description {
+            color: #ddd;
+        }
+        
+        .item-highlight {
+            color: #ffa500;
+            font-weight: bold;
+        }
+        
+        pre {
+            color: #87ceeb;
+            font-size: 12px;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 5px rgba(135, 206, 235, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⭐ The Last Observatory ⭐</h1>
+        <div id="output"></div>
+        <input id="input" type="text" placeholder="What would you like to do?" autofocus>
+    </div>
+
+    <script>
+        // Text Engine Core
+        let disk = {};
+        let commands = [];
+        let commandHistory = [];
+        let outputElement, inputElement;
+        
+        function println(line, className = '') {
+            const lines = line.replaceAll(' ', '&nbsp;').split(/\r?\n/);
+            while (lines.length) {
+                const div = document.createElement('div');
+                div.innerHTML = lines.shift();
+                if (className) div.className = className;
+                outputElement.appendChild(div);
+                outputElement.scrollTop = outputElement.scrollHeight;
+            }
+        }
+        
+        function pickOne(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+        
+        function getRoom(id) {
+            return disk.rooms.find(room => room.id === id);
+        }
+        
+        function enterRoom(id) {
+            const room = getRoom(id);
+            if (!room) return;
+            
+            disk.roomId = id;
+            
+            if (room.img) {
+                println(room.img);
+            }
+            
+            println(room.name, 'room-name');
+            
+            const desc = Array.isArray(room.desc) ? pickOne(room.desc) : room.desc;
+            println(desc, 'description');
+            
+            // List items
+            if (room.items && room.items.length > 0) {
+                const visibleItems = room.items.filter(item => !item.hidden);
+                if (visibleItems.length > 0) {
+                    const itemNames = visibleItems.map(item => 
+                        Array.isArray(item.name) ? item.name[0] : item.name
+                    );
+                    println(`You can see: ${itemNames.join(', ')}`, 'item-highlight');
+                }
+            }
+            
+            // List characters
+            const charactersHere = getCharactersInRoom(id);
+            if (charactersHere.length > 0) {
+                const charNames = charactersHere.map(char => 
+                    Array.isArray(char.name) ? char.name[0] : char.name
+                );
+                println(`Present: ${charNames.join(', ')}`, 'character-speech');
+            }
+            
+            if (room.onEnter) {
+                room.onEnter();
+            }
+        }
+        
+        function getCharactersInRoom(roomId) {
+            return (disk.characters || []).filter(char => char.roomId === roomId);
+        }
+        
+        function getCharacter(name, chars = disk.characters || []) {
+            return chars.find(char => {
+                const names = Array.isArray(char.name) ? char.name : [char.name];
+                return names.some(n => n.toLowerCase().includes(name.toLowerCase()));
+            });
+        }
+        
+        function getItem(name) {
+            // Check inventory first
+            let item = getItemInInventory(name);
+            if (item) return item;
+            
+            // Then check current room
+            const room = getRoom(disk.roomId);
+            if (room && room.items) {
+                item = room.items.find(item => {
+                    const names = Array.isArray(item.name) ? item.name : [item.name];
+                    return names.some(n => n.toLowerCase().includes(name.toLowerCase()));
+                });
+            }
+            return item;
+        }
+        
+        function getItemInInventory(name) {
+            if (!disk.inventory) return null;
+            return disk.inventory.find(item => {
+                const names = Array.isArray(item.name) ? item.name : [item.name];
+                return names.some(n => n.toLowerCase().includes(name.toLowerCase()));
+            });
+        }
+        
+        function getItemInRoom(itemName, roomId) {
+            const room = getRoom(roomId);
+            if (!room || !room.items) return null;
+            return room.items.find(item => {
+                const names = Array.isArray(item.name) ? item.name : [item.name];
+                return names.some(n => n.toLowerCase().includes(itemName.toLowerCase()));
+            });
+        }
+        
+        // Commands
+        commands[0] = {
+            look: () => {
+                const room = getRoom(disk.roomId);
+                enterRoom(disk.roomId);
+            },
+            items: () => {
+                const room = getRoom(disk.roomId);
+                if (!room.items || room.items.length === 0) {
+                    println("There's nothing here.");
+                    return;
+                }
+                const visibleItems = room.items.filter(item => !item.hidden);
+                if (visibleItems.length === 0) {
+                    println("There's nothing here.");
+                    return;
+                }
+                const itemNames = visibleItems.map(item => 
+                    Array.isArray(item.name) ? item.name[0] : item.name
+                );
+                println(`Items here: ${itemNames.join(', ')}`);
+            },
+            inv: () => {
+                if (!disk.inventory || disk.inventory.length === 0) {
+                    println("You're not carrying anything.");
+                    return;
+                }
+                const itemNames = disk.inventory.map(item => 
+                    Array.isArray(item.name) ? item.name[0] : item.name
+                );
+                println(`You're carrying: ${itemNames.join(', ')}`);
+            },
+            help: () => {
+                println(`Available commands:
+LOOK - examine your surroundings
+GO [direction] - move in a direction
+TAKE [item] - pick up an item
+USE [item] - use an item
+TALK TO [character] - start a conversation
+ITEMS - list items in the room
+INV - show your inventory
+HELP - show this help`);
+            }
+        };
+        
+        commands[1] = {
+            go: (dir) => {
+                const room = getRoom(disk.roomId);
+                const exit = room.exits.find(e => e.dir.toLowerCase() === dir.toLowerCase());
+                
+                if (!exit) {
+                    println("You can't go that way.");
+                    return;
+                }
+                
+                if (exit.block) {
+                    println(exit.block);
+                    return;
+                }
+                
+                enterRoom(exit.id);
+            },
+            take: (itemName) => {
+                const room = getRoom(disk.roomId);
+                if (!room.items) {
+                    println("There's nothing to take here.");
+                    return;
+                }
+                
+                const item = room.items.find(item => {
+                    const names = Array.isArray(item.name) ? item.name : [item.name];
+                    return names.some(n => n.toLowerCase().includes(itemName.toLowerCase()));
+                });
+                
+                if (!item) {
+                    println("I don't see that here.");
+                    return;
+                }
+                
+                if (item.hidden) {
+                    println("I don't see that here.");
+                    return;
+                }
+                
+                if (!item.isTakeable) {
+                    println("You can't take that.");
+                    return;
+                }
+                
+                // Remove from room, add to inventory
+                room.items = room.items.filter(i => i !== item);
+                if (!disk.inventory) disk.inventory = [];
+                disk.inventory.push(item);
+                
+                itemName = Array.isArray(item.name) ? item.name[0] : item.name;
+                println(`You take the ${itemName}.`);
+                
+                if (item.onTake) {
+                    item.onTake();
+                }
+            },
+            use: (itemName) => {
+                const item = getItem(itemName);
+                if (!item) {
+                    println("You don't have that.");
+                    return;
+                }
+                
+                if (item.onUse) {
+                    item.onUse();
+                } else {
+                    println("You can't use that right now.");
+                }
+            }
+        };
+        
+        commands[2] = {
+            'look': (prep, target) => {
+                if (prep === 'at') {
+                    // Look at item
+                    const item = getItem(target);
+                    if (item) {
+                        const desc = Array.isArray(item.desc) ? pickOne(item.desc) : item.desc;
+                        println(desc || "You see nothing special about it.");
+                        if (item.onLook) item.onLook();
+                        return;
+                    }
+                    
+                    // Look at character
+                    const character = getCharacter(target);
+                    if (character && character.roomId === disk.roomId) {
+                        const desc = Array.isArray(character.desc) ? pickOne(character.desc) : character.desc;
+                        println(desc || "You see nothing special about them.");
+                        if (character.onLook) character.onLook();
+                        return;
+                    }
+                    
+                    println("I don't see that here.");
+                }
+            },
+            'talk': (prep, target) => {
+                if (prep === 'to') {
+                    const character = getCharacter(target);
+                    if (!character) {
+                        println("I don't see them here.");
+                        return;
+                    }
+                    
+                    if (character.roomId !== disk.roomId) {
+                        println("They're not here right now.");
+                        return;
+                    }
+                    
+                    if (character.onTalk) {
+                        character.onTalk();
+                    } else if (character.topics) {
+                        if (typeof character.topics === 'string') {
+                            println(character.topics, 'character-speech');
+                        } else {
+                            // Show conversation options
+                            const charName = Array.isArray(character.name) ? character.name[0] : character.name;
+                            println(`${charName} is willing to talk. What would you like to discuss?`);
+                            
+                            character.topics.forEach(topic => {
+                                if (!topic.prereqs || topic.prereqs.every(req => 
+                                    character.chatLog && character.chatLog.includes(req))) {
+                                    println(`- ${topic.option}`);
+                                }
+                            });
+                        }
+                    } else {
+                        println("They don't seem interested in talking right now.");
+                    }
+                }
+            }
+        };
+        
+        function processInput(input) {
+            const words = input.toLowerCase().trim().split(/\s+/);
+            
+            if (words.length === 0) return;
+            
+            // Check for topic selection in conversations
+            const room = getRoom(disk.roomId);
+            const charactersHere = getCharactersInRoom(disk.roomId);
+            
+            for (let character of charactersHere) {
+                if (character.topics && Array.isArray(character.topics)) {
+                    const topic = character.topics.find(t => {
+                        const keyword = t.keyword || t.option.match(/[A-Z]+/)?.[0]?.toLowerCase();
+                        return keyword && words.includes(keyword);
+                    });
+                    
+                    if (topic) {
+                        if (!character.chatLog) character.chatLog = [];
+                        const keyword = topic.keyword || topic.option.match(/[A-Z]+/)?.[0]?.toLowerCase();
+                        character.chatLog.push(keyword);
+                        
+                        if (topic.line) {
+                            println(topic.line, 'character-speech');
+                        }
+                        
+                        if (topic.onSelected) {
+                            topic.onSelected();
+                        }
+                        
+                        if (topic.removeOnRead) {
+                            const index = character.topics.indexOf(topic);
+                            character.topics.splice(index, 1);
+                        }
+                        return;
+                    }
+                }
+            }
+            
+            // Process regular commands
+            const commandFunc = commands[words.length - 1]?.[words[0]];
+            if (commandFunc) {
+                commandFunc(...words.slice(1));
+            } else {
+                println("I don't understand that command. Type HELP for available commands.");
+            }
+        }
+        
+        function loadDisk(diskFunction) {
+            disk = diskFunction();
+            enterRoom(disk.roomId);
+        }
+        
+        function init() {
+            outputElement = document.getElementById('output');
+            inputElement = document.getElementById('input');
+            
+            inputElement.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const input = inputElement.value.trim();
+                    if (input) {
+                        println(`> ${input}`, 'system-message');
+                        processInput(input);
+                        inputElement.value = '';
+                    }
+                }
+            });
+        }
+        
+        // Game Disk
+        const observatoryDisk = () => ({
+            roomId: 'entrance',
+            inventory: [],
+            rooms: [
+                {
+                    id: 'entrance',
+                    name: 'Observatory Entrance',
+                    img: `        🌟
+       /|||\\
+      / ||| \\
+     /  |||  \\
+    |   |||   |
+    |    🔭   |
+    |_________|`,
+                    desc: [
+                        'The old Meridian Observatory stands before you, its copper dome green with age. A weathered brass plaque by the door reads "Founded 1952 - In Memory of Those Who Sought the Stars." The heavy oak door is slightly ajar.',
+                        'Ivy creeps up the stone walls of the observatory, but the building still holds a quiet dignity. Someone has been maintaining the grounds - the path is clear and the windows, though dusty, aren\'t broken.'
+                    ],
+                    exits: [
+                        { dir: 'north', id: 'lobby' },
+                        { dir: 'south', id: 'garden' }
+                    ],
+                    items: [
+                        {
+                            name: ['plaque', 'brass plaque'],
+                            desc: [
+                                '"The Meridian Observatory - Founded 1952 by Dr. Helena Voss. Dedicated to the memory of those who sought wonder in the infinite darkness." Below, in smaller text: "Restored 1987 in loving memory of Dr. Marcus Webb (1934-1986)."',
+                                'The brass has developed a beautiful patina over the decades. Someone polished it recently - you can still see cloth marks in the metal\'s surface.'
+                            ],
+                            isTakeable: false
+                        }
+                    ]
+                },
+                {
+                    id: 'garden',
+                    name: 'Memorial Garden',
+                    desc: [
+                        'A small, carefully tended garden spreads behind the observatory. Stone benches sit among night-blooming flowers - jasmine, moonflower, and evening primrose. Their pale petals seem to glow in the dim light.',
+                        'This garden was designed for nighttime contemplation. Every plant here blooms after dark, filling the air with gentle fragrance. A small stone sundial stands at the center, though it\'s of little use now.'
+                    ],
+                    exits: [
+                        { dir: 'north', id: 'entrance' }
+                    ],
+                    items: [
+                        {
+                            name: ['sundial', 'stone sundial'],
+                            desc: 'The sundial is carved from dark granite, its gnomon pointing true north. An inscription around the base reads: "We are all made of star-stuff, and to the stars we shall return. - H.V."',
+                            isTakeable: false
+                        },
+                        {
+                            name: ['flowers', 'moonflower', 'jasmine'],
+                            desc: 'These flowers only bloom in darkness, filling the night with their sweet perfume. Someone tends them with great care - there\'s not a dead bloom to be seen.',
+                            isTakeable: false
+                        }
+                    ]
+                },
+                {
+                    id: 'lobby',
+                    name: 'Observatory Lobby',
+                    desc: 'The lobby feels frozen in time. Glass display cases line the walls, filled with old star charts, meteorite fragments, and faded photographs of the night sky. A narrow spiral staircase leads up to the dome, while a hallway stretches east toward what must have been offices.',
+                    exits: [
+                        { dir: 'south', id: 'entrance' },
+                        { dir: 'up', id: 'dome' },
+                        { dir: 'east', id: 'office' }
+                    ],
+                    items: [
+                        {
+                            name: ['meteorite', 'meteorite fragment', 'fragments'],
+                            desc: [
+                                'A collection of meteorite fragments, each labeled with the date and location where it was found. Most are from the 1960s and 70s. One label, in different handwriting, reads: "Perseids shower, August 12, 1987 - M.W."',
+                                'These chunks of space rock have traveled unimaginable distances to end up behind glass in this quiet observatory. The iron-nickel specimens have a beautiful metallic luster.'
+                            ],
+                            isTakeable: false
+                        },
+                        {
+                            name: ['photographs', 'photos', 'star charts', 'charts'],
+                            desc: 'Black and white photographs of nebulae, star clusters, and galaxies cover the walls. Many are signed "H. Voss 1952-1979." The star charts are hand-drawn with meticulous detail, showing constellations and their mythological figures.',
+                            isTakeable: false
+                        }
+                    ]
+                },
+                {
+                    id: 'office',
+                    name: 'Director\'s Office',
+                    desc: 'This small office is surprisingly well-preserved. Books on astronomy line every wall, and a large desk sits beneath a window that faces east. Papers are scattered across the desk - observation logs, calculations, and what appears to be personal correspondence.',
+                    exits: [
+                        { dir: 'west', id: 'lobby' }
+                    ],
+                    items: [
+                        {
+                            name: ['books', 'astronomy books'],
+                            desc: 'The books range from technical manuals to philosophical treatises on humanity\'s place in the cosmos. Many have bookmarks and margin notes in two different hands - one precise and scientific, the other more flowing and contemplative.',
+                            isTakeable: false
+                        },
+                        {
+                            name: ['desk', 'papers'],
+                            desc: 'The desk holds decades of work. Observation logs detail meteor showers, planetary positions, and deep sky objects. Personal letters are mixed in - some addressed to "My dearest Helena" and signed "With all my love, Marcus."',
+                            isTakeable: false,
+                            onLook: () => {
+                                const room = getRoom('office');
+                                const letter = room.items.find(item => 
+                                    Array.isArray(item.name) ? item.name.includes('letter') : item.name === 'letter'
+                                );
+                                if (letter) {
+                                    letter.hidden = false;
+                                    println('Among the papers, you notice a letter that seems more recent than the others.', 'system-message');
+                                }
+                            }
+                        },
+                        {
+                            name: ['letter', 'recent letter'],
+                            desc: 'The letter is dated just three months ago. It reads: "Helena - I know you\'re gone, but I still come here to feel close to you. The telescope still works perfectly. I\'ve been teaching some local kids about the stars, just like you would have wanted. The universe feels less lonely when you share it. - Always yours, Marcus." Below that, in shaky handwriting: "This was my last letter to you. I hope whoever finds this knows how much love lived in these walls."',
+                            isTakeable: true,
+                            hidden: true
+                        }
+                    ]
+                },
+                {
+                    id: 'dome',
+                    name: 'Observatory Dome',
+                    desc: 'The dome houses a beautiful old refractor telescope, its brass fittings gleaming despite their age. The dome\'s opening has been left slightly ajar, letting in the night air. Star charts and observation notes are pinned to a bulletin board nearby.',
+                    exits: [
+                        { dir: 'down', id: 'lobby' }
+                    ],
+                    items: [
+                        {
+                            name: ['telescope', 'refractor'],
+                            desc: 'This is a magnificent old refractor telescope, probably from the 1950s. Its brass fittings have been lovingly maintained, and the optics are pristine. Someone has been taking very good care of it.',
+                            isTakeable: false,
+                            onUse: () => {
+                                println('You peer through the telescope. The night sky opens before you in breathtaking detail - craters on the moon, the rings of Saturn, the dancing moons of Jupiter. For a moment, you understand why people dedicate their lives to these distant lights.', 'description');
+                                println('A small notebook by the telescope is open to a recent entry: "Showed the Andromeda Galaxy to Emma and Jake tonight. Their faces when they realized they were seeing light from two million years ago... that\'s why we do this."', 'character-speech');
+                            }
+                        },
+                        {
+                            name: ['notes', 'observation notes', 'bulletin board'],
+                            desc: 'The bulletin board is covered with observation notes spanning decades. Recent additions are in a different handwriting: "Jupiter visible all night," "Saturn\'s rings beautiful at 200x magnification," "Don\'t forget to show kids the Orion Nebula next week."',
+                            isTakeable: false
+                        }
+                    ],
+                    onEnter: () => {
+                        const characters = disk.characters || [];
+                        const marcus = characters.find(char => 
+                            Array.isArray(char.name) ? char.name.includes('Marcus') : char.name === 'Marcus'
+                        );
+                        if (marcus && !marcus.introduced) {
+                            setTimeout(() => {
+                                println('A gentle voice behind you says, "Beautiful night for stargazing, isn\'t it?"', 'character-speech');
+                                marcus.roomId = 'dome';
+                                marcus.introduced = true;
+                                println('An elderly man with kind eyes steps out from behind the telescope.', 'description');
+                            }, 2000);
+                        }
+                    }
+                }
+            ],
+            characters: [
+                {
+                    name: ['Marcus', 'man', 'elderly man'],
+                    roomId: null,
+                    desc: [
+                        'Marcus appears to be in his seventies, with silver hair and eyes that twinkle with warmth and intelligence. He moves with the careful confidence of someone who has spent countless nights in this dome.',
+                        'There\'s something peaceful about Marcus, as if he\'s found exactly where he belongs in the world. His hands are gentle but sure as he adjusts the telescope\'s settings.'
+                    ],
+                    topics: [
+                        {
+                            option: 'Ask about the OBSERVATORY',
+                            keyword: 'observatory',
+                            line: 'Marcus\'s eyes light up. "Helena built this place in 1952. She was brilliant - could calculate orbital mechanics in her head faster than most people could with machines. This was her dream, to share the wonder of the cosmos with everyone."',
+                            onSelected: () => {
+                                println('He gazes around the dome lovingly. "I was just a graduate student when I first met her. She changed my life completely."', 'character-speech');
+                            }
+                        },
+                        {
+                            option: 'Ask about HELENA',
+                            keyword: 'helena',
+                            prereqs: ['observatory'],
+                            line: 'Marcus\'s expression grows tender. "Helena was... she was everything. Brilliant scientist, wonderful teacher, the love of my life. We worked together here for thirty-three years before she passed."',
+                            onSelected: () => {
+                                println('"She always said the stars belonged to everyone, not just astronomers. That\'s why she insisted on keeping the observatory open to the public, even when funding was tight."', 'character-speech');
+                            }
+                        },
+                        {
+                            option: 'Ask about the CHILDREN',
+                            keyword: 'children',
+                            prereqs: ['helena'],
+                            line: 'Marcus smiles warmly. "Helena and I never had children of our own, but we\'ve taught thousands of kids about the stars over the years. Some of them became scientists, others just learned to look up once in a while."',
+                            onSelected: () => {
+                                println('"I still give lessons here twice a week. Emma and Jake are my regulars now - they remind me so much of Helena and myself when we were young and full of questions."', 'character-speech');
+                            }
+                        },
+                        {
+                            option: 'Ask about his LETTERS',
+                            keyword: 'letters',
+                            prereqs: ['helena'],
+                            line: 'Marcus looks surprised, then sad. "You found my letters to her? I... I know it might seem foolish, but writing to Helena helps me feel less alone. This place holds so many memories."',
+                            onSelected: () => {
+                                println('"I suppose I should stop eventually, but not yet. There\'s still so much I want to tell her about the children I\'m teaching, the things I\'ve seen through the telescope."', 'character-speech');
+                                const letter = getItemInInventory('letter');
+                                if (letter) {
+                                    println('Marcus notices the letter in your hands and smiles gently. "I hope that doesn\'t seem too strange to you. Love doesn\'t end just because someone isn\'t physically here anymore."', 'character-speech');
+                                }
+                            }
+                        },
+                        {
+                            option: 'Ask about the FUTURE',
+                            keyword: 'future',
+                            prereqs: ['children', 'letters'],
+                            line: 'Marcus looks thoughtful. "I won\'t be around forever, but I hope someone else will keep this place alive. The city wants to tear it down, but there are people fighting to preserve it."',
+                            onSelected: () => {
+                                println('"Helena always said that as long as there are people who look up at the stars and wonder, places like this will matter. I believe she was right."', 'character-speech');
+                                println('Marcus extends his hand to you. "Thank you for visiting. Helena would have liked you - I can tell."', 'character-speech');
+                                println('Achievement unlocked: You\'ve learned the story of the Last Observatory.', 'system-message');
+                            }
+                        }
+                    ],
+                    onTalk: () => {
+                        const marcus = getCharacter('Marcus');
+                        if (!marcus.chatLog || marcus.chatLog.length === 0) {
+                            println('"Welcome to the Meridian Observatory," Marcus says warmly. "I\'m Marcus. I\'ve been the caretaker here since... well, for a very long time."', 'character-speech');
+                            println('What would you like to know?', 'description');
+                            
+                            marcus.topics.forEach(topic => {
+                                if (!topic.prereqs) {
+                                    println(`- ${topic.option}`);
+                                }
+                            });
+                        } else {
+                            println('Marcus looks at you expectantly. "What else would you like to know?"', 'character-speech');
+                            
+                            marcus.topics.forEach(topic => {
+                                if (!topic.prereqs || topic.prereqs.every(req => 
+                                    marcus.chatLog && marcus.chatLog.includes(req))) {
+                                    if (!marcus.chatLog.includes(topic.keyword || topic.option.match(/[A-Z]+/)?.[0]?.toLowerCase())) {
+                                        println(`- ${topic.option}`);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+        
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            println('Welcome to The Last Observatory', 'system-message');
+            println('A short interactive story about memory, love, and the stars that connect us all.', 'description');
+            println('');
+            loadDisk(observatoryDisk);
+        });
+    </script>
+</body>
+</html>
